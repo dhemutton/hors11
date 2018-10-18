@@ -1,0 +1,7 @@
+HORS11
+
+A hotel reservation system.
+Pair project for IS2103
+
+Assumptions
+1. Assume that if guest does not check in the 1st day, reservation is released
