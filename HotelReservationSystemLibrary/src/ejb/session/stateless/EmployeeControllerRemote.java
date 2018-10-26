@@ -6,20 +6,24 @@
 package ejb.session.stateless;
 
 import entity.Employee;
-import javax.ejb.Remote;
+import exceptions.EmployeeExistException;
+import java.util.List;
+import util.exception.EmployeeNotFoundException;
 
 /**
  *
  * @author matthealoo
  */
-@Remote
+
 public interface EmployeeControllerRemote {
     
-    public Employee createNewEmployee(Employee employee);
+    public Employee createNewEmployee(Employee employee) throws EmployeeExistException;
     
-    public Employee retrieveEmployeeByNric(String nric);
+    public Employee retrieveEmployeeByNric(String nric) throws EmployeeNotFoundException;
     
-    public Employee retrieveEmployeeById(Long employeeId);
+    public Employee retrieveEmployeeById(Long employeeId)throws EmployeeNotFoundException;
+    
+     public List<Employee> retrieveAllEmployee();
 
     
 }

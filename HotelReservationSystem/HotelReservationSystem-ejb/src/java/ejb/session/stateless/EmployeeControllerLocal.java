@@ -5,13 +5,22 @@
  */
 package ejb.session.stateless;
 
-import javax.ejb.Local;
+import entity.Employee;
+import exceptions.EmployeeExistException;
+import java.util.List;
+import util.exception.EmployeeNotFoundException;
 
 /**
  *
  * @author matthealoo
  */
-@Local
 public interface EmployeeControllerLocal {
+     public Employee createNewEmployee(Employee employee) throws EmployeeExistException;
     
+    public Employee retrieveEmployeeByNric(String nric) throws EmployeeNotFoundException;
+    
+    public Employee retrieveEmployeeById(Long employeeId)throws EmployeeNotFoundException;
+    
+     public List<Employee> retrieveAllEmployee();
+
 }
