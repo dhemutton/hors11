@@ -5,3 +5,64 @@ Pair project for IS2103
 
 Assumptions
 1. Assume that if guest does not check in the 1st day, reservation is released
+
+QUESTIONS CLARIFIED:
+1. Confirm rates are absolute amounts & not percentages
+
+Generally is absolute amt
+
+
+2. Customers can have 1 booking, with multiple reservation across multiple dates for each reservation?
+	E.g. Booking 1
+		Reservation 1: Deluxe 10/10/18-11/10/18
+		Reservation 2: Super 12/10/18-13/10/18
+
+Up to us to decide
+As long as can checkout more than one room
+Norm is same booking period
+Make our own assumptions to be stated in the word document
+
+3. Rates format(by start/end date or weekly, monthly, etc)
+	E.g. Weekend/weekly promos vs promos from start date to end date
+
+Can define as day of week (but more difficult)
+
+
+4. Partners can only have 1 account? Only maximum 1 account login at any time
+Multiple ppl can login to the same account
+
+5. Exception report is an entity?
+
+It can be an online statement that you display to user. But you need
+to store the records as an entity class to do this.
+
+6. How does system know it is 2am? Must the manager key in time to "auto generate" (start session bean for 2am business methods)
+
+You will be learning the EJB timer service in this week's lecture,
+which will shows you how to run time-based scheduled tasks.
+
+
+Under room type entity:
+
+1. size is what data type
+
+This can be an integer indicating the room size in square meter or
+square feet.
+
+
+2. bed is what data type(assumed is int)
+
+Can just be a string describing the bed(s) in the room type. See
+https://www.marinabaysands.com/hotel/rooms-suites.html for an example.
+
+3. capacity is what data type
+
+Again, this can just be a string. See the MBS example above.
+
+4. Amenities is what data type
+
+Can be string too.
+
+When partners make a booking, it is for the partner’s customer (there is a difference between guests and partner’s customers)
+
+Partner record MUST be separated

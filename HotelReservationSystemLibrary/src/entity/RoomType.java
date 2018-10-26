@@ -20,32 +20,32 @@ public class RoomType implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roomTypeId;
 
-    public Long getId() {
-        return id;
+    public Long getRoomTypeId() {
+        return roomTypeId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRoomTypeId(Long roomTypeId) {
+        this.roomTypeId = roomTypeId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (roomTypeId != null ? roomTypeId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the roomTypeId fields are not set
         if (!(object instanceof RoomType)) {
             return false;
         }
         RoomType other = (RoomType) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.roomTypeId == null && other.roomTypeId != null) || (this.roomTypeId != null && !this.roomTypeId.equals(other.roomTypeId))) {
             return false;
         }
         return true;
@@ -53,7 +53,7 @@ public class RoomType implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.RoomType[ id=" + id + " ]";
+        return "entity.RoomType[ id=" + roomTypeId + " ]";
     }
     
 }

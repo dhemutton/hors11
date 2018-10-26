@@ -6,10 +6,14 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -20,21 +24,89 @@ public class Partner implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long partnerId;
+    @Column(length = 32, nullable = false, unique = true)
+    private String username;
+    @Column(length = 32, nullable = false)
+    private String password;
+    private Boolean isLogin;
+    
+    @OneToMany(mappedBy = "partner")
+    private List<Booking> bookings;
+    
+    @OneToMany(mappedBy = "partner")
+    private List<PartnerCustomer> partnerCustomers;
 
-    public Long getId() {
-        return id;
+    public Partner() {
+         bookings = new ArrayList<>();
+         partnerCustomers = new ArrayList<>();
+
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Partner(Long partnerId, String username, String password) {
+        this();
+        this.partnerId = partnerId;
+        this.username = username;
+        this.password = password;
     }
+
+    public List<PartnerCustomer> getPartnerCustomers() {
+        return partnerCustomers;
+    }
+
+    public void setPartnerCustomers(List<PartnerCustomer> partnerCustomers) {
+        this.partnerCustomers = partnerCustomers;
+    }
+
+    
+    public Long getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(Long partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getIsLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(Boolean isLogin) {
+        this.isLogin = isLogin;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+   
+    
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (partnerId != null ? partnerId.hashCode() : 0);
         return hash;
     }
 
@@ -45,7 +117,7 @@ public class Partner implements Serializable {
             return false;
         }
         Partner other = (Partner) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.partnerId == null && other.partnerId != null) || (this.partnerId != null && !this.partnerId.equals(other.partnerId))) {
             return false;
         }
         return true;
@@ -53,7 +125,7 @@ public class Partner implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Partner[ id=" + id + " ]";
+        return "entity.Partner[ id=" + partnerId + " ]";
     }
     
 }

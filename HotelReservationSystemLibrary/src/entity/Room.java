@@ -6,10 +6,13 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -20,32 +23,94 @@ public class Room implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roomId;
+    @Column(length = 4, nullable = false, unique = true)
+    private String roomNumber;
+    private Boolean isEnabled;
+    private Boolean isVacant;
+    
+    @OneToOne (mappedBy ="room")
+    private Reservation reservation;
 
-    public Long getId() {
-        return id;
+    @ManyToOne
+    private RoomType roomType;
+
+    public Room() {
+        
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Room(Long roomId, String roomNumber, RoomType roomType) {
+        this.roomId = roomId;
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+    }
+
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public Boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    public Boolean getIsVacant() {
+        return isVacant;
+    }
+
+    public void setIsVacant(Boolean isVacant) {
+        this.isVacant = isVacant;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+    
+    
+    
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (roomId != null ? roomId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the roomId fields are not set
         if (!(object instanceof Room)) {
             return false;
         }
         Room other = (Room) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.roomId == null && other.roomId != null) || (this.roomId != null && !this.roomId.equals(other.roomId))) {
             return false;
         }
         return true;
@@ -53,7 +118,7 @@ public class Room implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Room[ id=" + id + " ]";
+        return "entity.Room[ id=" + roomId + " ]";
     }
     
 }
