@@ -1,0 +1,35 @@
+
+
+# Compiled class file
+*.class
+
+
+# Log file
+*.log
+
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+
+# User defined
+nbproject/private/
+build/
+dist/
+HotelReservationSystem-ejb/nbproject/private/
+HotelReservationSystem-ejb/build/
+HotelReservationSystem-ejb/dist/
+
+HotelReservationSystem-war/nbproject/private/
+HotelReservationSystem-war/build/
+HotelReservationSystem-war/dist/
+
+HotelManagementClient/nbproject/private/
+HotelManagementClient/build/
+HotelManagementClient/dist/
+
+HotelReservationSystemLibrarynbproject/private/
+HotelReservationSystemLibrary/build/
+HotelReservationSystemLibrary/dist/
