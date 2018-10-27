@@ -33,3 +33,7 @@ HotelManagementClient/dist/
 HotelReservationSystemLibrarynbproject/private/
 HotelReservationSystemLibrary/build/
 HotelReservationSystemLibrary/dist/
+
+HotelReservationSystem/HotelReservationSystem-ejb/nbproject/private/
+HotelReservationSystem/HotelReservationSystem-ejb/build/
+HotelReservationSystem/HotelReservationSystem-ejb/dist/
