@@ -6,7 +6,7 @@
 package ejb.session.stateless;
 
 import entity.RoomType;
-import exceptions.RoomTypeeExistException;
+import exceptions.RoomTypeExistException;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ public interface RoomTypeControllerRemote {
     
     public void persist(Object object);
 
-    public RoomType createRoomType(RoomType roomType) throws RoomTypeeExistException;
+    public RoomType createRoomType(RoomType roomType) throws RoomTypeExistException;
 
     public List<RoomType> retrieveAllRoomtype();
 

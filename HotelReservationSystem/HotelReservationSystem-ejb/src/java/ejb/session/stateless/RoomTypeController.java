@@ -5,7 +5,7 @@
  */
 package ejb.session.stateless;
 
-import exceptions.RoomTypeeExistException;
+import exceptions.RoomTypeExistException;
 import entity.RoomType;
 import java.util.List;
 import javax.ejb.Local;
@@ -34,7 +34,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     }
 
     @Override
-    public RoomType createRoomType(RoomType roomType) throws RoomTypeeExistException {
+    public RoomType createRoomType(RoomType roomType) throws RoomTypeExistException {
         try {
             em.persist(roomType);
             em.flush();
@@ -42,7 +42,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
             return roomType;
         } catch (PersistenceException ex) {
              
-                throw new RoomTypeeExistException("Employee with same NRIC already exists");
+                throw new RoomTypeExistException("Room type already exists");
             }
     }
     

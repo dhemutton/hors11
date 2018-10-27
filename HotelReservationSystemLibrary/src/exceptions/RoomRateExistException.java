@@ -9,13 +9,11 @@ package exceptions;
  *
  * @author sleep
  */
-public class RoomTypeeExistException extends Exception {
-
-    public RoomTypeeExistException() {
+public class RoomRateExistException extends Exception {
+    public RoomRateExistException() {
     }
-    public RoomTypeeExistException(String msg)
+    public RoomRateExistException(String msg)
     {
         super(msg);
     }
-    
 }
