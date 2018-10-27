@@ -5,13 +5,21 @@
  */
 package ejb.session.stateless;
 
-import javax.ejb.Remote;
+import entity.Booking;
+import exceptions.BookingNotFoundException;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author matthealoo
  */
-@Remote
 public interface BookingControllerRemote {
-    
+    public Booking createNewBooking(Booking booking) ;
+        
+        public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException;
+        
+        public List<Booking> retrieveAllBookingsOnDate(Date startDate);
+
+        public void updateBooking(Booking booking);
 }

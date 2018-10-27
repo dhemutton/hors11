@@ -24,5 +24,5 @@ public interface ReservationControllerLocal {
 
     public List<Reservation> retrieveAllReservationFromBooking(Long bookingId);
     
-
+    
 }

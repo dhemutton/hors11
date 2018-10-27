@@ -5,13 +5,24 @@
  */
 package ejb.session.stateless;
 
-import javax.ejb.Local;
+import entity.Booking;
+import exceptions.BookingNotFoundException;
+import java.util.Date;
+import java.util.List;
+
 
 /**
  *
  * @author matthealoo
  */
-@Local
 public interface BookingControllerLocal {
-    
+    public Booking createNewBooking(Booking booking) ;
+        
+        public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException;
+        
+        public List<Booking> retrieveAllBookingsOnDate(Date startDate);
+
+        public void updateBooking(Booking booking);
+        
+      
 }
