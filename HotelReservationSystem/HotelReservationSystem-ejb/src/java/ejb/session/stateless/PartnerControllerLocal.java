@@ -6,9 +6,9 @@
 package ejb.session.stateless;
 
 import entity.Partner;
-import exceptions.EmployeeExistException;
+import exceptions.PartnerExistException;
+import exceptions.PartnerNotFoundException;
 import java.util.List;
-import util.exception.EmployeeNotFoundException;
 
 
 /**
@@ -23,6 +23,5 @@ public interface PartnerControllerLocal {
 
     public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException;
 
-    public List<Partner> retrieveAllEmployee();
-    
+    public List<Partner> retrieveAllPartner();
 }

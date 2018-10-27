@@ -5,13 +5,21 @@
  */
 package ejb.session.stateless;
 
-import javax.ejb.Remote;
+import entity.Partner;
+import exceptions.PartnerExistException;
+import exceptions.PartnerNotFoundException;
+import java.util.List;
 
 /**
  *
  * @author matthealoo
  */
-@Remote
 public interface PartnerControllerRemote {
-    
+    public Partner createNewPartner(Partner partner) throws PartnerExistException;
+
+    public Partner retrievePartnerByUsername(String username) throws PartnerNotFoundException;
+
+    public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException;
+
+    public List<Partner> retrieveAllPartner();
 }
