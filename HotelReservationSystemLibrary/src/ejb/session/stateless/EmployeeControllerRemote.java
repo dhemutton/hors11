@@ -8,14 +8,12 @@ package ejb.session.stateless;
 import entity.Employee;
 import exceptions.EmployeeExistException;
 import java.util.List;
-import javax.ejb.Remote;
 import util.exception.EmployeeNotFoundException;
 
 /**
  *
  * @author matthealoo
  */
-@Remote
 public interface EmployeeControllerRemote {
 
     public Employee createNewEmployee(Employee employee) throws EmployeeExistException;
