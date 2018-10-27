@@ -5,13 +5,35 @@
  */
 package ejb.session.stateless;
 
-import javax.ejb.Local;
+import entity.RoomRate;
+import entity.RoomType;
+import exceptions.RoomRateExistException;
+import java.util.List;
 
 /**
  *
  * @author sleep
  */
-@Local
 public interface RoomRateControllerLocal {
+
+    public void persist(Object object);
+
+    public RoomRate createRoom(RoomRate roomRate) throws RoomRateExistException;
+
+    public List<RoomRate> retrieveAllRoomRates();
+
+    public List<RoomRate> retrieveAllRoomRatesByRoomType(RoomType roomType);
+
+    public List<RoomRate> retrieveAllEnabledRoomRates();
+
+    public List<RoomRate> retrieveAllDisabledRoomRates();
+
+    public List<RoomRate> retrieveAllRoomRatesForPartners();
+
+    public List<RoomRate> retrieveAllRoomRatesForNonPartners();
+
+    public void updateRoomRate(RoomRate roomRate);
+
+    public void deleteRoomRate(RoomRate roomRate);
     
 }
