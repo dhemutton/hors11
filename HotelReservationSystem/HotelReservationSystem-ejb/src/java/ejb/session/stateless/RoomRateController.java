@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.RoomRate;
 import entity.RoomType;
 import exceptions.RoomRateExistException;
+import exceptions.RoomRateNotFoundException;
 import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -82,6 +83,17 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     public List<RoomRate> retrieveAllRoomRatesForNonPartners() {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.forPartner=false");
         return query.getResultList();
+    }
+    
+    @Override
+    public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException {
+        RoomRate roomRate = em.find(RoomRate.class, RoomRateId);
+        
+        if (roomRate != null) {
+            return roomRate;
+        } else {
+            throw new RoomRateNotFoundException("Employee ID " + RoomRateId + " does not exist");
+        }
     }
     
     @Override
