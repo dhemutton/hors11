@@ -9,6 +9,7 @@ import ejb.session.stateless.EmployeeControllerRemote;
 import ejb.session.stateless.PartnerControllerRemote;
 import entity.Employee;
 import entity.Partner;
+import enums.EmployeeTypeEnum;
 import exceptions.EmployeeExistException;
 import exceptions.PartnerExistException;
 import java.util.List;
@@ -67,7 +68,31 @@ class SystemAdministratorModule {
             newEmployee.setFirstName(scanner.nextLine().trim());
             System.out.print("Enter Last Name> ");
             newEmployee.setLastName(scanner.nextLine().trim());
-            
+            System.out.print("Enter employee role " + "\n");
+            System.out.print("1. SYSTEMADMIN" + "\n");
+            System.out.print("2. OPERATIONSMANAGER" + "\n");
+            System.out.print("3. SALESMANAGER" + "\n");
+            System.out.print("4. GUESTRELATIONS" + "\n");
+            int input = scanner.nextInt();
+            while (true) {
+                if (input == 1){
+                    newEmployee.setEmployeeType(EmployeeTypeEnum.SYSTEMADMIN);
+                    break;
+                } else if (input == 2){
+                    newEmployee.setEmployeeType(EmployeeTypeEnum.OPERATIONSMANAGER);
+                    break;
+                    
+                } else if (input == 3){
+                    newEmployee.setEmployeeType(EmployeeTypeEnum.SALESMANAGER);
+                    break;
+                    
+                } else if (input == 4) {
+                    newEmployee.setEmployeeType(EmployeeTypeEnum.GUESTRELATIONS);
+                    break;
+                } else {
+                    System.out.println("Invalid input. Try again.");
+                }
+            }
             
             System.out.print("Enter NRIC> ");
             newEmployee.setNric(scanner.nextLine().trim());
