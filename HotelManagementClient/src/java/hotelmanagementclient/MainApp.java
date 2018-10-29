@@ -16,6 +16,7 @@ import ejb.session.stateless.RoomTypeControllerRemote;
 import entity.Employee;
 import static enums.EmployeeTypeEnum.GUESTRELATIONS;
 import static enums.EmployeeTypeEnum.SYSTEMADMIN;
+import exceptions.EmployeeExistException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
@@ -52,11 +53,15 @@ class MainApp {
     public MainApp() {
     }
 
-    public void runApp() throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException {
+    public void runApp() throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException {
+        System.out.println("*** Welcome to HoRS Management Client  ***\n");
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your NRIC");
         String nric = sc.nextLine().trim();
+        
+        try {
         Employee loginEmployee = employeeControllerRemote.retrieveEmployeeByNric(nric);
+        
         while (true) {
             System.out.println("Please enter password");
             String password = sc.nextLine().trim();
@@ -83,6 +88,10 @@ class MainApp {
             }
         }
         loginEmployee.setIsLogin(false);
+    }
+        catch(EmployeeNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving customer: " + ex.getMessage() + "\n");
+        }
     }
 
 }
