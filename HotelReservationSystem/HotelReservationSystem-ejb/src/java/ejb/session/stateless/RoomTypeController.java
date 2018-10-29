@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import exceptions.RoomTypeExistException;
 import entity.RoomType;
+import exceptions.RoomTypeNotFoundException;
 import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -50,6 +51,17 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     public List<RoomType> retrieveAllRoomtype() {
         Query query  = em.createQuery("SELECT rt FROM RoomType rt");
         return query.getResultList();
+    }
+    
+    @Override
+    public RoomType retrieveRoomTypeById(Long RoomTypeId) throws RoomTypeNotFoundException {
+        RoomType roomType = em.find(RoomType.class, RoomTypeId);
+        
+        if (roomType != null) {
+            return roomType;
+        } else {
+            throw new RoomTypeNotFoundException("Employee ID " + RoomTypeId + " does not exist");
+        }
     }
     
     @Override

@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.RoomType;
 import exceptions.RoomTypeExistException;
+import exceptions.RoomTypeNotFoundException;
 import java.util.List;
 
 /**
@@ -24,5 +25,7 @@ public interface RoomTypeControllerLocal {
     public void updateRoomType(RoomType roomType);
 
     public void deleteRoomType(RoomType roomType);
+
+    public RoomType retrieveRoomTypeById(Long RoomTypeId) throws RoomTypeNotFoundException;
     
 }

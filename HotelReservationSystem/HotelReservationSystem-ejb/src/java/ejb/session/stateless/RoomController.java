@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Room;
 import entity.RoomType;
 import exceptions.RoomExistException;
+import exceptions.RoomNotFoundException;
 import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -70,6 +71,17 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     public List<Room> retrieveAllOccupiedRooms() {
         Query query = em.createQuery("SELECT r FROM Room WHERE r.vacancy=false");
         return query.getResultList();
+    }
+    
+    @Override
+    public Room retrieveRoomById(Long RoomId) throws RoomNotFoundException {
+        Room room = em.find(Room.class, RoomId);
+        
+        if (room != null) {
+            return room;
+        } else {
+            throw new RoomNotFoundException("Employee ID " + RoomId + " does not exist");
+        }
     }
     
     @Override

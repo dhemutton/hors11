@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.RoomRate;
 import entity.RoomType;
 import exceptions.RoomRateExistException;
+import exceptions.RoomRateNotFoundException;
 import java.util.List;
 
 /**
@@ -35,5 +36,7 @@ public interface RoomRateControllerLocal {
     public void updateRoomRate(RoomRate roomRate);
 
     public void deleteRoomRate(RoomRate roomRate);
+
+    public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException;
     
 }

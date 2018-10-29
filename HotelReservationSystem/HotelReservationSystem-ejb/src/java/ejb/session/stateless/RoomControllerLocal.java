@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Room;
 import entity.RoomType;
 import exceptions.RoomExistException;
+import exceptions.RoomNotFoundException;
 import java.util.List;
 
 /**
@@ -31,5 +32,7 @@ public interface RoomControllerLocal {
     public void persist(Object object);
 
     public Room createRoom(Room room) throws RoomExistException;
+
+    public Room retrieveRoomById(Long RoomId) throws RoomNotFoundException;
     
 }
