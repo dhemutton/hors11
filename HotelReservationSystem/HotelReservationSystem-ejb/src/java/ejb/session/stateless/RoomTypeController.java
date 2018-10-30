@@ -60,7 +60,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         if (roomType != null) {
             return roomType;
         } else {
-            throw new RoomTypeNotFoundException("Employee ID " + RoomTypeId + " does not exist");
+            throw new RoomTypeNotFoundException("Room Type ID " + RoomTypeId + " does not exist");
         }
     }
     

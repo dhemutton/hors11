@@ -31,6 +31,8 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
+    @Column(length = 32, nullable = false)
+    private String name;
     @Enumerated(EnumType.STRING)
     private RateTypeEnum rateType;
     @Column(nullable = false, precision = 18, scale = 2)
@@ -50,16 +52,25 @@ private List<RoomType> roomTypes;
         roomTypes = new ArrayList<>();
     }
 
-    public RoomRate(Long roomRateId, RateTypeEnum rateType, BigDecimal ratePerNight, Date startDate, Date endDate, Boolean isUsed, Boolean isEnabled, Boolean forPartner) {
+    public RoomRate(Long roomRateId, String name, RateTypeEnum rateType, BigDecimal ratePerNight, Date startDate, Date endDate) {
+        this();
         this.roomRateId = roomRateId;
+        this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.isUsed = isUsed;
-        this.isEnabled = isEnabled;
-        this.forPartner = forPartner;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
 
     public RateTypeEnum getRateType() {
         return rateType;

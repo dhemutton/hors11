@@ -35,6 +35,8 @@ class SystemAdministratorModule {
     public void runSystemAdminModule() throws EmployeeExistException {
         Scanner sc = new Scanner(System.in);
         while (true) {
+            System.out.println("*** HoRS :: System Administration ***\n");
+
             System.out.println("1. Create new employee");
             System.out.println("2. View all employees");
             System.out.println("3. Create new partner");
