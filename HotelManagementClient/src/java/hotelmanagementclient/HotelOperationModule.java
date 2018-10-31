@@ -20,6 +20,8 @@ import exceptions.RoomTypeExistException;
 import exceptions.RoomTypeNotFoundException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -305,52 +307,122 @@ class HotelOperationModule {
     private void doCreateRoom() {
         Room room = new Room();
         Scanner scanner = new Scanner(System.in);
-
+        Long roomTypeId;
         try {
             System.out.println("*** HoRS ::Hotel Operations :: Create New Room ***\n");
             System.out.print("Enter room number (4 digits only): ");
             room.setRoomNumber(scanner.nextLine().trim());
             System.out.print("Select room type: ");
-            List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
+            List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllEnabledRoomType();
 
-            for (int i = 1; i <= roomTypes.size(); i++) {
-                System.out.println(i + ". " + roomTypes.get(i).getName());
+            for (int i = 0; i < roomTypes.size(); i++) {
+                System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
             }
             while (true) {
                 int input = scanner.nextInt();
-                input--;
                 if (input >= 0 && input < roomTypes.size()) {
-                    room.setRoomType(roomTypes.get(input));
+                    roomTypeId = roomTypes.get(input).getRoomTypeId();
                     break;
                 } else {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
             room.setIsVacant(Boolean.TRUE);
-            room = roomControllerRemote.createRoom(room);
+            room = roomControllerRemote.createRoom(room, roomTypeId);
 
             System.out.println("New room:  " + room.getRoomNumber() + " created successfully!" + "\n");
 
         } catch (RoomExistException ex) {
             System.out.println("An error has occurred while creating the new room: " + ex.getMessage() + "!\n");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving existing room type: " + ex.getMessage() + "!\n");
         }
     }
 
-    private void doUpdateRoomDetails() throws RoomNotFoundException {
+    private void doUpdateRoomDetails() {
         System.out.println("*** HoRS ::Hotel Operations :: Editing Room Details ***\n");
         Scanner scanner = new Scanner(System.in);
-        String roomNum = scanner.nextLine().trim();
-        Room room = roomControllerRemote.retrieveRoomByRoomNum(roomNum);//need implement 
-        System.out.print("Enter Room Number (blank if no change)> ");
-        String input = scanner.nextLine().trim();
-        if (input.length() > 0) {
-            room.setRoomNumber(input);
+        String input;
+        Long oldroomTypeId;
+        Long newroomTypeId;
+
+        try {
+            System.out.println("Which room would you like to edit details of?  (Enter room number) ");
+            input = scanner.nextLine().trim();
+            Room room = roomControllerRemote.retrieveRoomByRoomNum(input);
+            oldroomTypeId = room.getRoomType().getRoomTypeId();
+            newroomTypeId = room.getRoomType().getRoomTypeId();
+
+            System.out.println("Current Details: ");
+            System.out.println("Room Number: " + room.getRoomNumber());
+            System.out.println("Room Type: " + room.getRoomType().getName());
+            System.out.println("*********************************************************************");
+
+            System.out.println("Enter New Room Number (blank if no change)> ");
+            input = scanner.nextLine().trim();
+            if (input.length() > 0) {
+                room.setRoomNumber(input);
+            }
+
+            System.out.println("Change room type?  (Enter 'Y' to change) ");
+
+            if (scanner.nextLine().trim().equals("Y")) {
+                System.out.print("Select room type: ");
+                List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllEnabledRoomType();
+
+                for (int i = 0; i < roomTypes.size(); i++) {
+                    System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
+                }
+                while (true) {
+                    int choice = scanner.nextInt();
+                    choice--;
+                    if (choice >= 0 && choice < roomTypes.size()) {
+                        newroomTypeId = roomTypes.get(choice).getRoomTypeId();
+                        break;
+                    } else {
+                        System.out.println("Incorrect input, please try again.");
+                    }
+                }
+
+                roomControllerRemote.updateRoom(room.getRoomId(), oldroomTypeId, newroomTypeId);
+                System.out.println("Room updated successfully!: \n");
+            }
+        } catch (RoomNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the room " + ex.getMessage() + "!\n");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
         }
-        //STILL EDITING
     }
 
     private void doDeleteRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        System.out.println("*** HoRS ::Hotel Operations :: Deleting Room Details ***\n");
+        Scanner scanner = new Scanner(System.in);
+        String input;
+
+        try {
+            System.out.println("Which room would you like to delete?  (Enter room number) ");
+            input = scanner.nextLine().trim();
+            Room room = roomControllerRemote.retrieveRoomByRoomNum(input);
+
+            System.out.println("Current Details: ");
+            System.out.println("Room Number: " + room.getRoomNumber());
+            System.out.println("Room Type: " + room.getRoomType().getName());
+            System.out.println("*********************************************************************");
+
+            if (room.getIsVacant()) {
+                System.out.println("Delete room?  (Enter 'Y' to change) ");
+                if (scanner.nextLine().trim().equals("Y")) {
+                     roomControllerRemote.deleteRoom(room.getRoomId());
+                    System.out.println("Successfully deleted room record.");
+                }
+            } else {
+                System.out.println("Room is occupied, unable to delete room record.");
+            }
+
+        } catch (RoomNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the room " + ex.getMessage() + "!\n");
+        }
     }
 
     private void doViewAllRoom() throws RoomNotFoundException {

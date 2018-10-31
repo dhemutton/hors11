@@ -9,7 +9,11 @@ import entity.Room;
 import entity.RoomType;
 import exceptions.RoomExistException;
 import exceptions.RoomNotFoundException;
+import exceptions.RoomTypeNotFoundException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -31,6 +35,8 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
+    @EJB
+    private RoomTypeControllerLocal roomTypeControllerLocal;
 
     @Override
     public void persist(Object object) {
@@ -38,75 +44,104 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     }
 
     @Override
-    public Room createRoom(Room room) throws RoomExistException {
+    public Room createRoom(Room room, Long roomTypeId) throws RoomExistException, RoomTypeNotFoundException {
         try {
+            RoomType roomType = roomTypeControllerLocal.retrieveRoomTypeById(roomTypeId);
             em.persist(room);
+
+            room.setRoomType(roomType);
+            roomType.getRooms().add(room);
             em.flush();
 
             return room;
         } catch (PersistenceException ex) {
-             
-                throw new RoomExistException("Room already exists");
-            }
+            throw new RoomExistException("Room already exists");
+            
+        } catch (RoomTypeNotFoundException ex) {
+            throw new RoomTypeNotFoundException("Unable to create new room as the room type record does not exist");
+        }
     }
-    
+
     @Override
     public List<Room> retrieveAllRooms() {
         Query query = em.createQuery("SELECT r FROM Room r");
         return query.getResultList();
     }
-    
+
     @Override
     public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType) {
         Query query = em.createQuery("SELECT r FROM Room WHERE r.roomType=:roomType");
         query.setParameter("roomType", roomType);
         return query.getResultList();
     }
-    
+
     @Override
     public List<Room> retrieveAllVacantRooms() {
-        Query query = em.createQuery("SELECT r FROM Room WHERE r.vacancy=true");
+        Query query = em.createQuery("SELECT r FROM Room WHERE r.isVacant=true");
         return query.getResultList();
     }
-    
+
     @Override
     public List<Room> retrieveAllOccupiedRooms() {
-        Query query = em.createQuery("SELECT r FROM Room WHERE r.vacancy=false");
+        Query query = em.createQuery("SELECT r FROM Room WHERE r.isVacant=false");
         return query.getResultList();
     }
-    
+
     @Override
     public Room retrieveRoomById(Long RoomId) throws RoomNotFoundException {
         Room room = em.find(Room.class, RoomId);
-        
+
         if (room != null) {
             return room;
         } else {
-            throw new RoomNotFoundException("Employee ID " + RoomId + " does not exist");
+            throw new RoomNotFoundException("Room ID " + RoomId + " does not exist");
         }
     }
-    
+
     @Override
     public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException {
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNum = :arg");
         query.setParameter("arg", roomNum);
-        
-        try
-        { 
-            return (Room)query.getSingleResult();
+
+        try {
+            return (Room) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RoomNotFoundException("Room Number " + roomNum + " does not exist!");
         }
-        catch(NoResultException | NonUniqueResultException ex)
-        {    throw new RoomNotFoundException("Room Number " + roomNum + " does not exist!");
-        }   
     }
-    
+
     @Override
-    public void updateRoom(Room room) {
-        em.merge(room);
+    public void updateRoom(Long roomId, Long oldroomTypeId, Long newRoomTypeId) throws RoomTypeNotFoundException {
+        
+        try {
+            Room room = em.find(Room.class, roomId);
+            RoomType newroomType = roomTypeControllerLocal.retrieveRoomTypeById(oldroomTypeId);
+            newroomType.getRooms().size();
+
+            if (!oldroomTypeId.equals(newRoomTypeId)) { //change in roomtype
+                    RoomType oldroomType = roomTypeControllerLocal.retrieveRoomTypeById(oldroomTypeId);
+                    oldroomType.getRooms().size();
+
+                    oldroomType.getRooms().remove(room);
+                    room.setRoomType(newroomType); //set new room type to room
+                     newroomType.getRooms().add(room); //add new room to room type
+            }
+            
+            em.merge(room);
+            
+        } catch (RoomTypeNotFoundException ex) {
+            throw new RoomTypeNotFoundException("Room Type not found! ");
+        }
+        
     }
-    
+
     @Override
-    public void deleteRoom(Room room) {
+    public void deleteRoom(Long roomId) {
+        Room room = em.find(Room.class, roomId);
+        room.setIsEnabled(Boolean.FALSE);
+        room.getRoomType().getRooms().size();
+        room.getRoomType().getRooms().remove(room);
+        
         em.remove(room);
     }
 }

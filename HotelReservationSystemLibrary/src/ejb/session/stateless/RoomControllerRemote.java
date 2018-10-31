@@ -9,6 +9,7 @@ import entity.Room;
 import entity.RoomType;
 import exceptions.RoomExistException;
 import exceptions.RoomNotFoundException;
+import exceptions.RoomTypeNotFoundException;
 import java.util.List;
 
 /**
@@ -27,13 +28,13 @@ public interface RoomControllerRemote {
     
    public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException;
 
-    public void updateRoom(Room room);
+    public void updateRoom(Long roomId, Long oldroomTypeId, Long newroomTypeId ) throws RoomTypeNotFoundException;
 
-    public void deleteRoom(Room room);
+    public void deleteRoom(Long roomId);
 
     public void persist(Object object);
 
-    public Room createRoom(Room room) throws RoomExistException;
+    public Room createRoom(Room room, Long roomTypeId) throws RoomExistException, RoomTypeNotFoundException;
     
     public Room retrieveRoomById(Long RoomId) throws RoomNotFoundException;
     

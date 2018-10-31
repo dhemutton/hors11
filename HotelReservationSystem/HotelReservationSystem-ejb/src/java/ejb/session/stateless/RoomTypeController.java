@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Room;
 import exceptions.RoomTypeExistException;
 import entity.RoomType;
 import exceptions.RoomTypeNotFoundException;
@@ -50,6 +51,12 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     @Override
     public List<RoomType> retrieveAllRoomtype() {
         Query query  = em.createQuery("SELECT rt FROM RoomType rt");
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<RoomType> retrieveAllEnabledRoomType() {
+        Query query = em.createQuery("SELECT r FROM RoomType WHERE r.isEnabled=true");
         return query.getResultList();
     }
     

@@ -21,6 +21,9 @@ public interface RoomTypeControllerRemote {
     public RoomType createRoomType(RoomType roomType) throws RoomTypeExistException;
 
     public List<RoomType> retrieveAllRoomtype();
+    
+    public List<RoomType> retrieveAllEnabledRoomType();
+
 
     public void updateRoomType(RoomType roomType);
 
