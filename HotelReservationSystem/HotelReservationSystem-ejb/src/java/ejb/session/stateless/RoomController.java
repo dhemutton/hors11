@@ -14,6 +14,8 @@ import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -82,6 +84,20 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
         } else {
             throw new RoomNotFoundException("Employee ID " + RoomId + " does not exist");
         }
+    }
+    
+    @Override
+    public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNum = :arg");
+        query.setParameter("arg", roomNum);
+        
+        try
+        { 
+            return (Room)query.getSingleResult();
+        }
+        catch(NoResultException | NonUniqueResultException ex)
+        {    throw new RoomNotFoundException("Room Number " + roomNum + " does not exist!");
+        }   
     }
     
     @Override

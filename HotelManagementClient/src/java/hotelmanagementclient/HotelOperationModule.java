@@ -13,6 +13,7 @@ import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import static enums.EmployeeTypeEnum.OPERATIONSMANAGER;
+import exceptions.RoomExistException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeExistException;
@@ -248,7 +249,7 @@ class HotelOperationModule {
                 System.out.println("Choose one of the following options");
                 System.out.println("1. Add room rate to room type");
                 System.out.println("2. Delete room rate from room type");
-                System.out.println("3. Exit");
+                System.out.println("3. Done editing room rates for room type");
 
                 int choice = scanner.nextInt();
                 if (choice == 1) {
@@ -261,7 +262,7 @@ class HotelOperationModule {
                     System.out.println("Invalid option selected. Please try again");
                 }
             }
-            
+
             roomTypeControllerRemote.updateRoomType(roomType);
             System.out.println("Room type " + roomType.getName() + " updated successfully! \n");
         }
@@ -301,8 +302,54 @@ class HotelOperationModule {
         System.out.println("*********************************************************************");
     }
 
-    
     private void doCreateRoom() {
+        Room room = new Room();
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("*** HoRS ::Hotel Operations :: Create New Room ***\n");
+            System.out.print("Enter room number (4 digits only): ");
+            room.setRoomNumber(scanner.nextLine().trim());
+            System.out.print("Select room type: ");
+            List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
+
+            for (int i = 1; i <= roomTypes.size(); i++) {
+                System.out.println(i + ". " + roomTypes.get(i).getName());
+            }
+            while (true) {
+                int input = scanner.nextInt();
+                input--;
+                if (input >= 0 && input < roomTypes.size()) {
+                    room.setRoomType(roomTypes.get(input));
+                    break;
+                } else {
+                    System.out.println("Incorrect input, please try again.");
+                }
+            }
+            room.setIsVacant(Boolean.TRUE);
+            room = roomControllerRemote.createRoom(room);
+
+            System.out.println("New room:  " + room.getRoomNumber() + " created successfully!" + "\n");
+
+        } catch (RoomExistException ex) {
+            System.out.println("An error has occurred while creating the new room: " + ex.getMessage() + "!\n");
+        }
+    }
+
+    private void doUpdateRoomDetails() throws RoomNotFoundException {
+        System.out.println("*** HoRS ::Hotel Operations :: Editing Room Details ***\n");
+        Scanner scanner = new Scanner(System.in);
+        String roomNum = scanner.nextLine().trim();
+        Room room = roomControllerRemote.retrieveRoomByRoomNum(roomNum);//need implement 
+        System.out.print("Enter Room Number (blank if no change)> ");
+        String input = scanner.nextLine().trim();
+        if (input.length() > 0) {
+            room.setRoomNumber(input);
+        }
+        //STILL EDITING
+    }
+
+    private void doDeleteRoom() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -346,16 +393,6 @@ class HotelOperationModule {
                 doViewRoomRateDetails(option);
             }
         }
-    }
-
-    
-
-    private void doUpdateRoomDetails() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void doDeleteRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void doViewRoomRateDetails(Long option) throws RoomRateNotFoundException {

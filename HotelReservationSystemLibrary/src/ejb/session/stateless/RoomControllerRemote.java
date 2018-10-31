@@ -24,6 +24,8 @@ public interface RoomControllerRemote {
     public List<Room> retrieveAllVacantRooms();
 
     public List<Room> retrieveAllOccupiedRooms();
+    
+   public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException;
 
     public void updateRoom(Room room);
 
