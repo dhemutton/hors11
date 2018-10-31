@@ -14,6 +14,8 @@ import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -43,66 +45,86 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
 
             return roomRate;
         } catch (PersistenceException ex) {
-             
-                throw new RoomRateExistException("Room Rate already exists");
-            }
+
+            throw new RoomRateExistException("Room Rate already exists");
+        }
     }
-    
+
     @Override
     public List<RoomRate> retrieveAllRoomRates() {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr");
         return query.getResultList();
     }
-    
+
     @Override
     public List<RoomRate> retrieveAllRoomRatesByRoomType(RoomType roomType) {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=:roomType");
         query.setParameter("roomType", roomType);
         return query.getResultList();
     }
-    
+
     @Override
     public List<RoomRate> retrieveAllEnabledRoomRates() {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.isEnabled=:true");
         return query.getResultList();
     }
-    
+
     @Override
     public List<RoomRate> retrieveAllDisabledRoomRates() {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.isEnabled=false");
         return query.getResultList();
     }
-    
+
     @Override
     public List<RoomRate> retrieveAllRoomRatesForPartners() {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.forPartner=true");
         return query.getResultList();
     }
-    
+
     @Override
     public List<RoomRate> retrieveAllRoomRatesForNonPartners() {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.forPartner=false");
         return query.getResultList();
     }
-    
+
     @Override
     public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException {
         RoomRate roomRate = em.find(RoomRate.class, RoomRateId);
-        
+
         if (roomRate != null) {
             return roomRate;
         } else {
             throw new RoomRateNotFoundException("Employee ID " + RoomRateId + " does not exist");
         }
     }
-    
+
+    @Override
+    public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException {
+        Query query = em.createQuery("SELECT r FROM RoomRate r WHERE r.name = :arg");
+        query.setParameter("arg", roomRateName);
+
+        try {
+            return (RoomRate) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RoomRateNotFoundException("Room Rate Name " + roomRateName + " does not exist!");
+        }
+    }
+
     @Override
     public void updateRoomRate(RoomRate roomRate) {
         em.merge(roomRate);
     }
-    
+
     @Override
-    public void deleteRoomRate(RoomRate roomRate) {
+    public void deleteRoomRate(Long roomRateId) {
+        RoomRate roomRate = em.find(RoomRate.class, roomRateId);
+        roomRate.setIsEnabled(Boolean.FALSE);
+        roomRate.getRoomTypes().size();
+        List<RoomType> list = roomRate.getRoomTypes();
+        for (RoomType roomType: list) {
+            roomType.getRoomRates().size();
+            roomType.getRoomRates().remove(roomRate);
+        }
         em.remove(roomRate);
     }
 }

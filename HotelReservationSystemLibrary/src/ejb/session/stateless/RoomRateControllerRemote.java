@@ -20,6 +20,9 @@ public interface RoomRateControllerRemote {
     public void persist(Object object);
 
     public RoomRate createRoomRate(RoomRate roomRate) throws RoomRateExistException;
+    
+    public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException;
+
 
     public List<RoomRate> retrieveAllRoomRates();
 
@@ -35,7 +38,7 @@ public interface RoomRateControllerRemote {
 
     public void updateRoomRate(RoomRate roomRate);
 
-    public void deleteRoomRate(RoomRate roomRate);
+    public void deleteRoomRate(Long roomRateId);
     
     public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException;
     

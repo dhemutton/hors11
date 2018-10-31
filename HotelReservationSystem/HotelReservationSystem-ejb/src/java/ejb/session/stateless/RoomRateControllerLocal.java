@@ -21,6 +21,8 @@ public interface RoomRateControllerLocal {
 
     public RoomRate createRoomRate(RoomRate roomRate) throws RoomRateExistException;
 
+    public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException;
+
     public List<RoomRate> retrieveAllRoomRates();
 
     public List<RoomRate> retrieveAllRoomRatesByRoomType(RoomType roomType);
@@ -35,8 +37,8 @@ public interface RoomRateControllerLocal {
 
     public void updateRoomRate(RoomRate roomRate);
 
-    public void deleteRoomRate(RoomRate roomRate);
+    public void deleteRoomRate(Long roomRateId);
 
     public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException;
-    
+
 }

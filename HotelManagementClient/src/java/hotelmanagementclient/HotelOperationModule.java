@@ -368,6 +368,16 @@ class HotelOperationModule {
                 room.setRoomNumber(input);
             }
 
+            System.out.println("Change room status?  (Enter 'Y' to change) ");
+
+            if (scanner.nextLine().trim().equals("Y")) {
+                System.out.println("Set to vacant?  (Enter 'Y' to set) ");
+                if (scanner.nextLine().trim().equals("Y")) {
+                    room.setIsVacant(Boolean.TRUE);
+                } else {
+                    room.setIsVacant(Boolean.FALSE);
+                }
+            }
             System.out.println("Change room type?  (Enter 'Y' to change) ");
 
             if (scanner.nextLine().trim().equals("Y")) {
@@ -517,7 +527,7 @@ class HotelOperationModule {
         } catch (RoomRateExistException ex) {
             System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
         }
-        
+
     }
 
     private void doViewAllRoomRate() throws RoomRateNotFoundException {
@@ -527,6 +537,8 @@ class HotelOperationModule {
         for (RoomRate roomRate : list) {
             System.out.println("Room Rate Name: " + roomRate.getName());
             System.out.println("Room Rate Type: " + roomRate.getRateType());
+            System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
+
             System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
             System.out.println("Room Rate End Date: " + roomRate.getEndDate());
 
@@ -536,32 +548,137 @@ class HotelOperationModule {
 
     private void doViewRoomRateDetails(Long option) throws RoomRateNotFoundException {
         Scanner sc = new Scanner(System.in);
-        RoomRate roomRate = roomRateControllerRemote.retrieveRoomRateById(option);
-        System.out.println("Print out room rate details here");
-        while (true) {
-            System.out.println("Choose following options");
-            System.out.println("1. Update room details");
-            System.out.println("2. Delete room");
-            System.out.println("3. Exit");
-            int choice = sc.nextInt();
-            if (choice == 1) {
-                doUpdateRoomRateDetails(roomRate);
-            } else if (choice == 2) {
-                doDeleteRoomRate(roomRate);
-            } else if (choice == 3) {
-                break;
-            } else {
-                System.out.println("Invalid option selected. Please try again");
+        System.out.println("*** HoRS ::Hotel Operations :: View Room Rate Details ***\n");
+        String input;
+        try {
+            System.out.println("Which room rate would you like to view details of?  (Enter room rate name) ");
+            input = sc.nextLine().trim();
+            RoomRate roomRate = roomRateControllerRemote.retrieveRoomRateByName(input);
+
+            System.out.println("Room Rate Details: ");
+            System.out.println("Room Rate Name: " + roomRate.getName());
+            System.out.println("Room Rate Type: " + roomRate.getRateType());
+            System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
+
+            System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
+            System.out.println("Room Rate End Date: " + roomRate.getEndDate());
+            System.out.println("*********************************************************************");
+            while (true) {
+                System.out.println("Choose following options");
+                System.out.println("1. Update room details");
+                System.out.println("2. Delete room");
+                System.out.println("3. Exit");
+                int choice = sc.nextInt();
+                if (choice == 1) {
+                    doUpdateRoomRateDetails(roomRate);
+                } else if (choice == 2) {
+                    doDeleteRoomRate(roomRate);
+                } else if (choice == 3) {
+                    break;
+                } else {
+                    System.out.println("Invalid option selected. Please try again");
+                }
             }
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the room rate" + ex.getMessage() + "!\n");
         }
     }
 
     private void doUpdateRoomRateDetails(RoomRate roomRate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("*** HoRS ::Hotel Operations :: Edit Room Rate Details ***\n");
+
+        String input;
+        System.out.println("Enter New Room Rate Name (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        if (input.length() > 0) {
+            roomRate.setName(input);
+        }
+
+        System.out.println("Change rate type?  (Enter 'Y' to change) ");
+        if (scanner.nextLine().trim().equals("Y")) {
+            System.out.print("Select rate type: ");
+            System.out.println("1. Published");
+            System.out.println("2. Normal");
+            System.out.println("3. Peak");
+            System.out.println("4. Promo");
+
+            while (true) {
+                int choice = scanner.nextInt();
+
+                if (choice == 1) {
+                    roomRate.setRateType(RateTypeEnum.PUBLISHED);
+                    roomRate.setForPartner(Boolean.FALSE);
+                    break;
+                } else if (choice == 2) {
+                    roomRate.setRateType(RateTypeEnum.NORMAL);
+                    roomRate.setForPartner(Boolean.TRUE);
+
+                    break;
+
+                } else if (choice == 3) {
+                    roomRate.setRateType(RateTypeEnum.PEAK);
+                    roomRate.setForPartner(Boolean.TRUE);
+
+                    break;
+
+                } else if (choice == 2) {
+                    roomRate.setRateType(RateTypeEnum.PROMO);
+                    roomRate.setForPartner(Boolean.TRUE);
+
+                    break;
+
+                } else {
+                    System.out.println("Incorrect input, please try again.");
+                }
+            }
+            System.out.println("Change Rate Per Night?  (Enter 'Y' to change) ");
+            if (scanner.nextLine().trim().equals("Y")) {
+                System.out.println("Enter Rate Per Night: ");
+                roomRate.setRatePerNight(scanner.nextBigDecimal());
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            System.out.println("Change start date?  (Enter 'Y' to change) ");
+            if (scanner.nextLine().trim().equals("Y")) {
+                System.out.println("Enter start date (format: dd/mm/yyyy) >");
+                String startDate = scanner.nextLine().trim();
+                try {
+                    formatter.parse(startDate);
+                } catch (ParseException ex) {
+                    System.out.println("Incorrect date format.");
+                }
+            }
+            System.out.println("Change end date?  (Enter 'Y' to change) ");
+            if (scanner.nextLine().trim().equals("Y")) {
+                System.out.println("Enter end date (format: dd/mm/yyyy) >");
+                String endDate = scanner.nextLine().trim();
+
+                try {
+                    formatter.parse(endDate);
+                } catch (ParseException ex) {
+                    System.out.println("Incorrect date format.");
+                }
+            }
+        }
     }
 
     private void doDeleteRoomRate(RoomRate roomRate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        System.out.println("*** HoRS ::Hotel Operations :: Deleting Room Rate ***\n");
+        Scanner scanner = new Scanner(System.in);
+        String input;
 
+        System.out.println("Which room rate would you like to delete?  (Enter room rate name) ");
+        input = scanner.nextLine().trim();
+
+        if (!roomRate.getIsUsed()) {
+            System.out.println("Delete room rate?  (Enter 'Y' to change) ");
+            if (scanner.nextLine().trim().equals("Y")) {
+                roomRateControllerRemote.deleteRoomRate(roomRate.getRoomRateId());
+                System.out.println("Successfully deleted room rate record.");
+            }
+        } else {
+            System.out.println("Room rate is used, unable to delete room rate record.");
+        }
+    }
 }
