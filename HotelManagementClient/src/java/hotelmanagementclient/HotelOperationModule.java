@@ -13,11 +13,15 @@ import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import static enums.EmployeeTypeEnum.OPERATIONSMANAGER;
+import enums.RateTypeEnum;
 import exceptions.RoomExistException;
 import exceptions.RoomNotFoundException;
+import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeExistException;
 import exceptions.RoomTypeNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -395,7 +399,7 @@ class HotelOperationModule {
     }
 
     private void doDeleteRoom() {
-        
+
         System.out.println("*** HoRS ::Hotel Operations :: Deleting Room Details ***\n");
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -413,7 +417,7 @@ class HotelOperationModule {
             if (room.getIsVacant()) {
                 System.out.println("Delete room?  (Enter 'Y' to change) ");
                 if (scanner.nextLine().trim().equals("Y")) {
-                     roomControllerRemote.deleteRoom(room.getRoomId());
+                    roomControllerRemote.deleteRoom(room.getRoomId());
                     System.out.println("Successfully deleted room record.");
                 }
             } else {
@@ -426,17 +430,15 @@ class HotelOperationModule {
     }
 
     private void doViewAllRoom() throws RoomNotFoundException {
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("Enter ID of room for more details(Enter 0 to exit)");
-            List<Room> roomList = roomControllerRemote.retrieveAllRooms();
-            String title1 = "Room ID";
-            String title2 = "Room Number";
-            System.out.printf("%-15s %-15s %n", title1, title2);
-            for (int i = 0; i < roomList.size(); i++) {
-                System.out.printf("%-15d %-15s %n", roomList.get(i).getRoomId(), roomList.get(i).getRoomNumber());
-            }
+        System.out.println("*** HoRS ::Hotel Operations :: View All Rooms ***\n");
+        List<Room> list = roomControllerRemote.retrieveAllRooms();
+
+        for (Room room : list) {
+            System.out.println("Room Number: " + room.getRoomNumber());
+            System.out.println("Room Type: " + room.getRoomType());
+            System.out.println("*********************************************************************");
         }
+
     }
 
     private void doRoomAllocationExceptionReport() {
@@ -444,26 +446,91 @@ class HotelOperationModule {
     }
 
     private void doCreateRoomRate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        RoomRate roomRate = new RoomRate();
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.println("*** HoRS ::Hotel Operations :: Create New Room Rate ***\n");
+            System.out.print("Enter name of room rate: ");
+            roomRate.setName(scanner.nextLine().trim());
+            System.out.print("Select rate type: ");
+            System.out.println("1. Published");
+            System.out.println("2. Normal");
+            System.out.println("3. Peak");
+            System.out.println("4. Promo");
+
+            while (true) {
+                int choice = scanner.nextInt();
+
+                if (choice == 1) {
+                    roomRate.setRateType(RateTypeEnum.PUBLISHED);
+                    roomRate.setForPartner(Boolean.FALSE);
+                    break;
+                } else if (choice == 2) {
+                    roomRate.setRateType(RateTypeEnum.NORMAL);
+                    roomRate.setForPartner(Boolean.TRUE);
+
+                    break;
+
+                } else if (choice == 3) {
+                    roomRate.setRateType(RateTypeEnum.PEAK);
+                    roomRate.setForPartner(Boolean.TRUE);
+
+                    break;
+
+                } else if (choice == 2) {
+                    roomRate.setRateType(RateTypeEnum.PROMO);
+                    roomRate.setForPartner(Boolean.TRUE);
+
+                    break;
+
+                } else {
+                    System.out.println("Incorrect input, please try again.");
+                }
+            }
+
+            System.out.println("Enter Rate Per Night: ");
+            roomRate.setRatePerNight(scanner.nextBigDecimal());
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            System.out.println("Enter start date (format: dd/mm/yyyy) >");
+            String startDate = scanner.nextLine().trim();
+            try {
+                formatter.parse(startDate);
+            } catch (ParseException ex) {
+                System.out.println("Incorrect date format.");
+            }
+
+            System.out.println("Enter end date (format: dd/mm/yyyy) >");
+            String endDate = scanner.nextLine().trim();
+
+            try {
+                formatter.parse(endDate);
+            } catch (ParseException ex) {
+                System.out.println("Incorrect date format.");
+            }
+            roomRate.setIsUsed(Boolean.FALSE);
+            roomRate.setIsEnabled(Boolean.TRUE);
+            roomRate = roomRateControllerRemote.createRoomRate(roomRate);
+
+            System.out.println("New room type:  " + roomRate.getName() + " created successfully!" + "\n");
+
+        } catch (RoomRateExistException ex) {
+            System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
+        }
+        
     }
 
     private void doViewAllRoomRate() throws RoomRateNotFoundException {
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("Enter ID of room type for more details(Enter 0 to exit)");
-            List<RoomRate> roomRateList = roomRateControllerRemote.retrieveAllRoomRates();
-            String title1 = "Room rate ID";
-            String title2 = "Room rate";
-            System.out.printf("%-15s %-15s %n", title1, title2);
-            for (int i = 0; i < roomRateList.size(); i++) {
-                System.out.printf("%-15d %n", roomRateList.get(i).getRoomRateId());
-            }
-            Long option = sc.nextLong();
-            if (option == 0) {
-                break;
-            } else {
-                doViewRoomRateDetails(option);
-            }
+        System.out.println("*** HoRS ::Hotel Operations :: View All Room Rates ***\n");
+        List<RoomRate> list = roomRateControllerRemote.retrieveAllRoomRates();
+
+        for (RoomRate roomRate : list) {
+            System.out.println("Room Rate Name: " + roomRate.getName());
+            System.out.println("Room Rate Type: " + roomRate.getRateType());
+            System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
+            System.out.println("Room Rate End Date: " + roomRate.getEndDate());
+
+            System.out.println("*********************************************************************");
         }
     }
 

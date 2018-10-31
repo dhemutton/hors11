@@ -19,7 +19,7 @@ public interface RoomRateControllerLocal {
 
     public void persist(Object object);
 
-    public RoomRate createRoom(RoomRate roomRate) throws RoomRateExistException;
+    public RoomRate createRoomRate(RoomRate roomRate) throws RoomRateExistException;
 
     public List<RoomRate> retrieveAllRoomRates();
 

@@ -36,7 +36,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     }
 
     @Override
-    public RoomRate createRoom(RoomRate roomRate) throws RoomRateExistException {
+    public RoomRate createRoomRate(RoomRate roomRate) throws RoomRateExistException {
         try {
             em.persist(roomRate);
             em.flush();
@@ -44,7 +44,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             return roomRate;
         } catch (PersistenceException ex) {
              
-                throw new RoomRateExistException("Room already exists");
+                throw new RoomRateExistException("Room Rate already exists");
             }
     }
     

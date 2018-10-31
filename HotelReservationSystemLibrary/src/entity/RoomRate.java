@@ -31,7 +31,7 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
-    @Column(length = 32, nullable = false)
+    @Column(length = 32, nullable = false, unique = true)
     private String name;
     @Enumerated(EnumType.STRING)
     private RateTypeEnum rateType;
