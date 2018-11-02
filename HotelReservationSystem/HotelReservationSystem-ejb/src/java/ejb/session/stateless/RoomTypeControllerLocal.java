@@ -32,4 +32,9 @@ public interface RoomTypeControllerLocal {
 
     public RoomType retrieveRoomTypeById(Long RoomTypeId) throws RoomTypeNotFoundException;
 
+       public RoomType updateRoomTypeAddRoomRate(RoomType roomType, List<Long> ids);
+       
+              public RoomType updateRoomTypeRemoveRoomRate(RoomType roomType, List<Long> ids);
+
+
 }

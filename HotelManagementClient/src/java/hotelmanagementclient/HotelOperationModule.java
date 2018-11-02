@@ -22,6 +22,7 @@ import exceptions.RoomTypeExistException;
 import exceptions.RoomTypeNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -213,8 +214,8 @@ class HotelOperationModule {
             System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
         }
     }
-    
-     private void doUpdateRoomTypeDetails(RoomType roomType) {
+
+    private void doUpdateRoomTypeDetails(RoomType roomType) {
         System.out.println("*** HoRS ::Hotel Operations :: Editing Room Type Details ***\n");
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -259,8 +260,12 @@ class HotelOperationModule {
             System.out.println("No room rates");
         } else {
             for (RoomRate roomRate : roomType.getRoomRates()) {
-                System.out.println("Rate Type: " + roomRate.getRateType());
-                System.out.println("Rate Name: " + roomRate.getName());
+                System.out.println("Room Rate Name: " + roomRate.getName());
+                System.out.println("Room Rate Type: " + roomRate.getRateType());
+                System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
+
+                System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
+                System.out.println("Room Rate End Date: " + roomRate.getEndDate());
                 System.out.println("*************************************");
             }
 
@@ -272,7 +277,7 @@ class HotelOperationModule {
 
                 int choice = scanner.nextInt();
                 if (choice == 1) {
-                    addRoomRateToRoomType(roomType);
+                    roomType = addRoomRateToRoomType(roomType);
                 } else if (choice == 2) {
                     removeRoomRateFromRoomType(roomType);
                 } else if (choice == 3) {
@@ -287,18 +292,68 @@ class HotelOperationModule {
         }
     }
 
-    private void addRoomRateToRoomType(RoomType roomType) {
+    private RoomType addRoomRateToRoomType(RoomType roomType) {
+        Scanner scanner = new Scanner(System.in);
+
         //get list of enabled room rates
-        //print out
-        //request linking
+        List<RoomRate> roomRatesEnabled = roomRateControllerRemote.retrieveAllEnabledRoomRates();
+        List<Long> roomRateIdsToAdd = new ArrayList<Long>();
+        for (RoomRate roomRate : roomRatesEnabled) {
+            //print out
+            if (!roomType.getRoomRates().contains(roomRate)) {
+                System.out.println("Room Rate Name: " + roomRate.getName());
+                System.out.println("Room Rate Type: " + roomRate.getRateType());
+                System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
+
+                System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
+                System.out.println("Room Rate End Date: " + roomRate.getEndDate());
+
+                System.out.println("*********************************************************************");
+                //request linking
+
+                System.out.println("Add room rate?  (Enter 'Y' to add) ");
+                if (scanner.nextLine().trim().equals("Y")) {
+                    System.out.println("Added room rate  " + roomRate.getName() + " !");
+
+                    roomRateIdsToAdd.add(roomRate.getRoomRateId());
+                }
+            }
+        }
         //link room rate to room type using roomtype controller. send in roomtype id, room rate id
         //print success
-
+        roomType = roomTypeControllerRemote.updateRoomTypeAddRoomRate(roomType, roomRateIdsToAdd);
+        return roomType;
     }
 
-    private void removeRoomRateFromRoomType(RoomType roomType) {
+    private RoomType removeRoomRateFromRoomType(RoomType roomType) {
+        Scanner scanner = new Scanner(System.in);
+        List<RoomRate> roomRates = roomType.getRoomRates();
+        List<Long> roomRateIdsToRemove = new ArrayList<Long>();
 
-    }
+        if (roomRates.size() == 0) {
+            System.out.println("No room rates to delete");
+        } else {
+            for (RoomRate roomRate : roomRates) {
+                System.out.println("Room Rate Name: " + roomRate.getName());
+                System.out.println("Room Rate Type: " + roomRate.getRateType());
+                System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
+
+                System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
+                System.out.println("Room Rate End Date: " + roomRate.getEndDate());
+                System.out.println("*************************************");
+                System.out.println("Remove room rate?  (Enter 'Y' to remove) ");
+                if (scanner.nextLine().trim().equals("Y")) {
+                    System.out.println("Removed room rate  " + roomRate.getName() + " !");
+                    roomRateIdsToRemove.add(roomRate.getRoomRateId());
+                }
+            }
+
+        }
+            roomType = roomTypeControllerRemote.updateRoomTypeRemoveRoomRate(roomType, roomRateIdsToRemove);
+            return roomType;
+        }
+
+    
 
     private void doDeleteRoomType(RoomType roomType) {
         if (roomType.getIsUsed() == false) {

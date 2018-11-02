@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Room;
+import entity.RoomRate;
 import exceptions.RoomTypeExistException;
 import entity.RoomType;
 import exceptions.RoomTypeNotFoundException;
@@ -67,7 +68,9 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         RoomType roomType = em.find(RoomType.class, RoomTypeId);
         
         if (roomType != null) {
-            return roomType;
+            roomType.getRoomRates().size();
+            roomType.getRooms().size();
+                    return roomType;
         } else {
             throw new RoomTypeNotFoundException("Room Type ID " + RoomTypeId + " does not exist");
         }
@@ -96,5 +99,31 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     @Override
     public void deleteRoomType(RoomType roomType) {
         em.remove(roomType);
+    }
+    
+    @Override
+    public RoomType updateRoomTypeAddRoomRate(RoomType roomType, List<Long> ids) {
+                em.merge(roomType);
+                roomType.getRoomRates().size();
+        for (Long id: ids) {
+            RoomRate roomRate = em.find(RoomRate.class, id);
+            roomType.getRoomRates().add(roomRate);
+        }
+        em.merge(roomType);
+        em.flush();
+        return roomType;
+    }
+    
+    @Override
+    public RoomType updateRoomTypeRemoveRoomRate(RoomType roomType, List<Long> ids) {
+                em.merge(roomType);
+                roomType.getRoomRates().size();
+        for (Long id: ids) {
+            RoomRate roomRate = em.find(RoomRate.class, id);
+            roomType.getRoomRates().remove(roomRate);
+        }
+        em.merge(roomType);
+        em.flush();
+        return roomType;
     }
 }
