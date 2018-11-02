@@ -20,8 +20,10 @@ public interface RoomTypeControllerLocal {
 
     public RoomType createRoomType(RoomType roomType) throws RoomTypeExistException;
 
+    public RoomType retrieveRoomTypeByName(String roomTypeName) throws RoomTypeNotFoundException;
+
     public List<RoomType> retrieveAllRoomtype();
-    
+
     public List<RoomType> retrieveAllEnabledRoomType();
 
     public void updateRoomType(RoomType roomType);
@@ -29,5 +31,5 @@ public interface RoomTypeControllerLocal {
     public void deleteRoomType(RoomType roomType);
 
     public RoomType retrieveRoomTypeById(Long RoomTypeId) throws RoomTypeNotFoundException;
-    
+
 }

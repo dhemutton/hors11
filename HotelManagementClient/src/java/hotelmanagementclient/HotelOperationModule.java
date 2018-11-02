@@ -123,6 +123,7 @@ class HotelOperationModule {
         }
     }
 
+    //when we create room type we don't attach room rate yet
     private void doCreateRoomType() {
         RoomType roomType = new RoomType();
         Scanner scanner = new Scanner(System.in);
@@ -140,7 +141,7 @@ class HotelOperationModule {
             System.out.print("Enter capacity> ");
             roomType.setCapacity(scanner.nextLine().trim());
             System.out.print("Enter amenities> ");
-            roomType.setBed(scanner.nextLine().trim());
+            roomType.setAmenities(scanner.nextLine().trim());
             roomType.setIsEnabled(Boolean.FALSE); //since no room rate yet
             roomType.setIsUsed(Boolean.FALSE); //since no one can book yet
 
@@ -155,12 +156,12 @@ class HotelOperationModule {
 
     private void doViewRoomTypeDetails() throws RoomTypeNotFoundException {
         System.out.println("*** HoRS ::Hotel Operations :: View Room Type Details ***\n");
-        System.out.println("Enter the room type id: \n");
+        System.out.println("Enter the room type name: \n");
 
         Scanner sc = new Scanner(System.in);
         try {
-            Long option = sc.nextLong();
-            RoomType roomType = roomTypeControllerRemote.retrieveRoomTypeById(option);
+
+            RoomType roomType = roomTypeControllerRemote.retrieveRoomTypeByName(sc.nextLine().trim());
             System.out.println("Room Type Details: ");
             System.out.println("Name: " + roomType.getName());
             System.out.println("Description: " + roomType.getDescription());
@@ -178,6 +179,18 @@ class HotelOperationModule {
                     System.out.println("Rate Name: " + roomRate.getName());
                     System.out.println("*************************************");
                 }
+            }
+
+            System.out.println("Rooms: ");
+
+            if (roomType.getRooms().size() == 0) {
+                System.out.println("No rooms of this room type");
+            } else {
+                for (Room room : roomType.getRooms()) {
+                    System.out.println("Room Number: " + room.getRoomNumber());
+                }
+                System.out.println("*************************************");
+
             }
 
             while (true) {
@@ -200,8 +213,8 @@ class HotelOperationModule {
             System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
         }
     }
-
-    private void doUpdateRoomTypeDetails(RoomType roomType) {
+    
+     private void doUpdateRoomTypeDetails(RoomType roomType) {
         System.out.println("*** HoRS ::Hotel Operations :: Editing Room Type Details ***\n");
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -522,10 +535,10 @@ class HotelOperationModule {
             roomRate.setIsEnabled(Boolean.TRUE);
             roomRate = roomRateControllerRemote.createRoomRate(roomRate);
 
-            System.out.println("New room type:  " + roomRate.getName() + " created successfully!" + "\n");
+            System.out.println("New room rate:  " + roomRate.getName() + " created successfully!" + "\n");
 
         } catch (RoomRateExistException ex) {
-            System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
+            System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "!\n");
         }
 
     }
@@ -565,8 +578,8 @@ class HotelOperationModule {
             System.out.println("*********************************************************************");
             while (true) {
                 System.out.println("Choose following options");
-                System.out.println("1. Update room details");
-                System.out.println("2. Delete room");
+                System.out.println("1. Update room rate details");
+                System.out.println("2. Delete room rate");
                 System.out.println("3. Exit");
                 int choice = sc.nextInt();
                 if (choice == 1) {

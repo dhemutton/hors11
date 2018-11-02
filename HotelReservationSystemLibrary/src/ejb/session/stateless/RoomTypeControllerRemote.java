@@ -24,6 +24,7 @@ public interface RoomTypeControllerRemote {
     
     public List<RoomType> retrieveAllEnabledRoomType();
 
+    public RoomType retrieveRoomTypeByName(String roomTypeName) throws RoomTypeNotFoundException;
 
     public void updateRoomType(RoomType roomType);
 

@@ -14,6 +14,8 @@ import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -68,6 +70,21 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
             return roomType;
         } else {
             throw new RoomTypeNotFoundException("Room Type ID " + RoomTypeId + " does not exist");
+        }
+    }
+    
+    @Override
+    public RoomType retrieveRoomTypeByName(String roomTypeName) throws RoomTypeNotFoundException {
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.name = :arg");
+        query.setParameter("arg", roomTypeName);
+
+        try {
+            RoomType roomType = (RoomType) query.getSingleResult();
+            roomType.getRooms().size();
+            roomType.getRoomRates().size();
+            return roomType;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RoomTypeNotFoundException("Room Type Name " + roomTypeName + " does not exist!");
         }
     }
     
