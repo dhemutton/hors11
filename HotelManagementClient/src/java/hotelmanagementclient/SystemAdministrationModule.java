@@ -95,7 +95,7 @@ class SystemAdministratorModule {
                     System.out.println("Invalid input. Try again.");
                 }
             }
-            
+            scanner.nextLine();
             System.out.print("Enter NRIC> ");
             newEmployee.setNric(scanner.nextLine().trim());
             System.out.print("Enter password> ");

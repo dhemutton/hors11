@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/sleep/Documents/IS2103/hors11/HotelReservationSystemLibrary/src/exceptions/RoomRateExistException.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystemLibrary/src/entity/Booking.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystemLibrary/src/entity/Guest.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystemLibrary/src/entity/Partner.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystemLibrary/src/entity/RoomType.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystemLibrary/src/entity/PartnerCustomer.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystemLibrary/src/entity/Reservation.java</file>
         </group>
     </open-files>
 </project-private>

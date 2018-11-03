@@ -3,8 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/sleep/Documents/IS2103/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomRateController.java</file>
-            <file>file:/C:/Users/sleep/Documents/IS2103/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomController.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/singleton/DataInitialization.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomTypeController.java</file>
         </group>
     </open-files>
 </project-private>
