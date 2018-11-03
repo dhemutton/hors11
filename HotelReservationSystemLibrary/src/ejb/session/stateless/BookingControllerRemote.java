@@ -15,11 +15,13 @@ import java.util.List;
  * @author matthealoo
  */
 public interface BookingControllerRemote {
-    public Booking createNewBooking(Booking booking) ;
-        
-        public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException;
-        
-        public List<Booking> retrieveAllBookingsOnDate(Date startDate);
+    public Booking createNewBooking(Booking booking);
 
-        public void updateBooking(Booking booking);
+    public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException;
+
+    public List<Booking> retrieveAllBookingsOnStartDate(Date startDate);
+
+    public void updateBooking(Booking booking);
+
+    public List<Booking> retrieveAllBookingsOnEndDate(Date endDate);
 }

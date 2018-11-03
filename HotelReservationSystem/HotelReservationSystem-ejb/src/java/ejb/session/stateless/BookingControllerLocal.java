@@ -10,19 +10,20 @@ import exceptions.BookingNotFoundException;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  *
  * @author matthealoo
  */
 public interface BookingControllerLocal {
-    public Booking createNewBooking(Booking booking) ;
-        
-        public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException;
-        
-        public List<Booking> retrieveAllBookingsOnDate(Date startDate);
 
-        public void updateBooking(Booking booking);
-        
-      
+    public Booking createNewBooking(Booking booking);
+
+    public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException;
+
+    public List<Booking> retrieveAllBookingsOnStartDate(Date startDate);
+
+    public void updateBooking(Booking booking);
+
+    public List<Booking> retrieveAllBookingsOnEndDate(Date endDate);
+
 }

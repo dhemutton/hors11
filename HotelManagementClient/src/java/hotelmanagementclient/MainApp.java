@@ -78,7 +78,7 @@ class MainApp {
                     break;
                 }
                 else {
-                    HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote);
+                    HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, reservationControllerRemote, bookingControllerRemote);
                     hotelOperations.runHotelOperationsModule(loginEmployee);
                     break;
                 }

@@ -5,10 +5,14 @@
  */
 package hotelmanagementclient;
 
+import ejb.session.stateless.BookingControllerRemote;
+import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
+import entity.Booking;
 import entity.Employee;
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
@@ -23,10 +27,13 @@ import exceptions.RoomTypeNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Schedule;
 
 /**
  *
@@ -37,17 +44,24 @@ class HotelOperationModule {
     private RoomControllerRemote roomControllerRemote;
     private RoomRateControllerRemote roomRateControllerRemote;
     private RoomTypeControllerRemote roomTypeControllerRemote;
+    private ReservationControllerRemote reservationControllerRemote;
+    private BookingControllerRemote bookingControllerRemote;
 
     public HotelOperationModule() {
     }
 
-    public HotelOperationModule(RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote) {
+    public HotelOperationModule(RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote,
+            RoomTypeControllerRemote roomTypeControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote) {
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
+        this.reservationControllerRemote = reservationControllerRemote;
+        this.bookingControllerRemote = bookingControllerRemote;
+        
     }
 
     public void runHotelOperationsModule(Employee employee) throws RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException {
+        dailyReservationRoomAssignment();
         Scanner sc = new Scanner(System.in);
         if (employee.getEmployeeType().equals(OPERATIONSMANAGER)) { //Operations Manager
             while (true) {
@@ -767,5 +781,30 @@ class HotelOperationModule {
         } else {
             System.out.println("Room rate is used, unable to delete room rate record.");
         }
+    }
+
+    @Schedule(hour="2")
+    private void dailyReservationRoomAssignment() {
+        //SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date day1 = new Date();
+        Date day2 = new Date();
+        day2.setDate(day2.getDate()-1);
+        List<Booking> day1BookingList = bookingControllerRemote.retrieveAllBookingsOnEndDate(day1);
+        List<Booking> day2BookingList = bookingControllerRemote.retrieveAllBookingsOnStartDate(day2);
+        List<Reservation> day1ReservationList = new ArrayList<>();
+        List<Reservation> day2ReservationList = new ArrayList<>();
+        
+        //Obtain a list of all ending reservations(checking out)
+        for(Booking booking : day1BookingList) {
+            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
+            day1ReservationList.addAll(temp);
+        }
+        //Obtain a list of all starting reservations(checking in)
+        for(Booking booking : day2BookingList) {
+            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
+            day2ReservationList.addAll(temp);
+        }
+        
+        
     }
 }

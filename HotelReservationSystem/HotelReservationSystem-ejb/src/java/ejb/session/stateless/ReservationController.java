@@ -53,6 +53,4 @@ public class ReservationController implements ReservationControllerRemote, Reser
 
         return query.getResultList();     
     }
-
-    
 }
