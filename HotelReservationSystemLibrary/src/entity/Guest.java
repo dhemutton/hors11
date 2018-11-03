@@ -36,7 +36,7 @@ public class Guest implements Serializable {
     private String contactNumber;
     @Column(length = 32, nullable = false)
     private String password;
-    private Boolean isLogin;
+    private Boolean isLogin = false;
     
     @OneToMany(mappedBy = "guest")
     private List<Booking> bookings;

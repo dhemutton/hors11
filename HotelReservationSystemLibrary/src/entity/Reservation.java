@@ -36,7 +36,7 @@ public class Reservation implements Serializable {
     private ExceptionTypeEnum exceptionType;
 
     
-    @OneToOne
+    @ManyToOne
     private Room room;
     
     @ManyToOne(optional = false)

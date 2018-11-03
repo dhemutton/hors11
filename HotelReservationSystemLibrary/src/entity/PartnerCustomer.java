@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -31,9 +32,9 @@ public class PartnerCustomer implements Serializable {
     private String username;
     @Column(length = 32, nullable = false)
     private String password;
-    private Boolean isLogin;
+    private Boolean isLogin = false;
     
-    @OneToOne
+    @ManyToOne 
     private Partner partner;
 
     public PartnerCustomer() {

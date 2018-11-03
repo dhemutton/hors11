@@ -210,6 +210,7 @@ class HotelOperationModule {
                     System.out.println("Invalid option selected. Please try again");
                 }
             }
+
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
         }
@@ -269,7 +270,7 @@ class HotelOperationModule {
                 System.out.println("*************************************");
             }
 
-            while (true) {
+            while (true) {//Following 3 functions can be removeds
                 System.out.println("Choose one of the following options");
                 System.out.println("1. Add room rate to room type");
                 System.out.println("2. Delete room rate from room type");
@@ -286,7 +287,12 @@ class HotelOperationModule {
                     System.out.println("Invalid option selected. Please try again");
                 }
             }
-
+            System.out.println("Enable room type? (Enter 'Y' to enable");
+            if (scanner.nextLine().trim().equals("Y")) {
+                roomType.setIsEnabled(Boolean.TRUE);
+            } else {
+                roomType.setIsEnabled(Boolean.FALSE);
+            }
             roomTypeControllerRemote.updateRoomType(roomType);
             System.out.println("Room type " + roomType.getName() + " updated successfully! \n");
         }
@@ -349,13 +355,12 @@ class HotelOperationModule {
             }
 
         }
-            roomType = roomTypeControllerRemote.updateRoomTypeRemoveRoomRate(roomType, roomRateIdsToRemove);
-            return roomType;
-        }
-
-    
+        roomType = roomTypeControllerRemote.updateRoomTypeRemoveRoomRate(roomType, roomRateIdsToRemove);
+        return roomType;
+    }
 
     private void doDeleteRoomType(RoomType roomType) {
+        Scanner sc = new Scanner(System.in);
         if (roomType.getIsUsed() == false) {
             roomType.setIsEnabled(Boolean.FALSE);
             roomTypeControllerRemote.deleteRoomType(roomType);
@@ -363,6 +368,12 @@ class HotelOperationModule {
 
         } else {
             System.out.println("Room type " + roomType.getName() + "is in use. Unable to delete room type record");
+            System.out.println("Do you want to disable room type now? (Enter 'Y' to disable)");
+            if (sc.nextLine().trim().equals("Y")) {
+                System.out.println("Disabled room type  " + roomType.getName() + " !");
+                roomType.setIsEnabled(Boolean.FALSE);
+                roomTypeControllerRemote.updateRoomType(roomType);
+            }
         }
     }
 
@@ -700,35 +711,43 @@ class HotelOperationModule {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
-            System.out.println("Change Rate Per Night?  (Enter 'Y' to change) ");
-            if (scanner.nextLine().trim().equals("Y")) {
-                System.out.println("Enter Rate Per Night: ");
-                roomRate.setRatePerNight(scanner.nextBigDecimal());
-            }
+        }
+        System.out.println("Change Rate Per Night?  (Enter 'Y' to change) ");
+        if (scanner.nextLine().trim().equals("Y")) {
+            System.out.println("Enter Rate Per Night: ");
+            roomRate.setRatePerNight(scanner.nextBigDecimal());
+        }
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            System.out.println("Change start date?  (Enter 'Y' to change) ");
-            if (scanner.nextLine().trim().equals("Y")) {
-                System.out.println("Enter start date (format: dd/mm/yyyy) >");
-                String startDate = scanner.nextLine().trim();
-                try {
-                    formatter.parse(startDate);
-                } catch (ParseException ex) {
-                    System.out.println("Incorrect date format.");
-                }
-            }
-            System.out.println("Change end date?  (Enter 'Y' to change) ");
-            if (scanner.nextLine().trim().equals("Y")) {
-                System.out.println("Enter end date (format: dd/mm/yyyy) >");
-                String endDate = scanner.nextLine().trim();
-
-                try {
-                    formatter.parse(endDate);
-                } catch (ParseException ex) {
-                    System.out.println("Incorrect date format.");
-                }
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.println("Change start date?  (Enter 'Y' to change) ");
+        if (scanner.nextLine().trim().equals("Y")) {
+            System.out.println("Enter start date (format: dd/mm/yyyy) >");
+            String startDate = scanner.nextLine().trim();
+            try {
+                formatter.parse(startDate);
+            } catch (ParseException ex) {
+                System.out.println("Incorrect date format.");
             }
         }
+        System.out.println("Change end date?  (Enter 'Y' to change) ");
+        if (scanner.nextLine().trim().equals("Y")) {
+            System.out.println("Enter end date (format: dd/mm/yyyy) >");
+            String endDate = scanner.nextLine().trim();
+
+            try {
+                formatter.parse(endDate);
+            } catch (ParseException ex) {
+                System.out.println("Incorrect date format.");
+            }
+        }
+        
+        System.out.println("Enable room rate? (Enter 'Y' to enable)");
+            if (scanner.nextLine().trim().equals("Y")) {
+                roomRate.setIsEnabled(Boolean.TRUE);
+            } else {
+                roomRate.setIsEnabled(Boolean.FALSE);
+            }
+
     }
 
     private void doDeleteRoomRate(RoomRate roomRate) {

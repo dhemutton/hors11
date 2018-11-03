@@ -27,8 +27,8 @@ public class Room implements Serializable {
     private Long roomId;
     @Column(length = 4, nullable = false, unique = true)
     private String roomNumber;
-    private Boolean isEnabled;
-    private Boolean isVacant;
+    private Boolean isEnabled = true;
+    private Boolean isVacant = true;
     
     @OneToMany (mappedBy ="room") 
     private Reservation reservation;

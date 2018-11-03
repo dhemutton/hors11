@@ -38,7 +38,7 @@ public class Employee implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EmployeeTypeEnum employeeType;
-    private Boolean isLogin;
+    private Boolean isLogin = false;
 
     public Employee() {
     }

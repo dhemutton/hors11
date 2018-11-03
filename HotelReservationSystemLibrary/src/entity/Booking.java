@@ -54,6 +54,8 @@ public class Booking implements Serializable {
     
     @OneToMany(mappedBy = "booking")
     private List<Reservation> reservation;
+    
+    
 
     public Booking() {
          this.cost = new BigDecimal("0.0000");

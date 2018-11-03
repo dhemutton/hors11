@@ -98,6 +98,8 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     
     @Override
     public void deleteRoomType(RoomType roomType) {
+        em.merge(roomType);
+
         em.remove(roomType);
     }
     

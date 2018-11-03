@@ -30,7 +30,7 @@ public class Partner implements Serializable {
     private String username;
     @Column(length = 32, nullable = false)
     private String password;
-    private Boolean isLogin;
+    private Boolean isLogin = false;
     
     @OneToMany(mappedBy = "partner")
     private List<Booking> bookings;
