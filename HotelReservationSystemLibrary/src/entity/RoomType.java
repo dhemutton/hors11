@@ -27,35 +27,34 @@ public class RoomType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
-     @Column(length = 32, nullable = false, unique = true)
+    @Column(length = 32, nullable = false, unique = true)
     private String name;
-     @Column(length = 128, nullable = false)
+    @Column(length = 128, nullable = false)
     private String description;
-      @Column(nullable = false)
+    @Column(nullable = false)
     private int size;
-      @Column(length = 32, nullable = false)
+    @Column(length = 32, nullable = false)
     private String bed;
-      @Column(length = 32, nullable = false)
+    @Column(length = 32, nullable = false)
     private String capacity;
-      @Column(length = 128, nullable = false)
-      private String amenities;
-      private Boolean isUsed = false; //since not enabled, cannot be used
-      private Boolean isEnabled = false; //never attach room rates upon creation
-      
-      @OneToMany(mappedBy = "roomType")
-      private List<Room> rooms;
-      
-      @ManyToMany
-      private List<RoomRate> roomRates;
+    @Column(length = 128, nullable = false)
+    private String amenities;
+    private Boolean isUsed = false; //since not enabled, cannot be used
+    private Boolean isEnabled = false; //never attach room rates upon creation
+
+    @OneToMany(mappedBy = "roomType")
+    private List<Room> rooms;
+
+    @OneToMany(mappedBy = "roomType")
+    private List<RoomRate> roomRates;
 
     public RoomType() {
-         rooms = new ArrayList<>();
+        rooms = new ArrayList<>();
 
         roomRates = new ArrayList<>();
     }
 
-    public RoomType(Long roomTypeId, String name, String description, int size, String bed, String capacity, String amenities, Boolean isUsed, Boolean isEnabled) {
-        this.roomTypeId = roomTypeId;
+    public RoomType(String name, String description, int size, String bed, String capacity, String amenities, Boolean isUsed, Boolean isEnabled) {
         this.name = name;
         this.description = description;
         this.size = size;
@@ -145,10 +144,6 @@ public class RoomType implements Serializable {
     public void setRoomRates(List<RoomRate> roomRates) {
         this.roomRates = roomRates;
     }
-    
-      
-
-      
 
     public Long getRoomTypeId() {
         return roomTypeId;
@@ -182,5 +177,5 @@ public class RoomType implements Serializable {
     public String toString() {
         return "entity.RoomType[ id=" + roomTypeId + " ]";
     }
-    
+
 }

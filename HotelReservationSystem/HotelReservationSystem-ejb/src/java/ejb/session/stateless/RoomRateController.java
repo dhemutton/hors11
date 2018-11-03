@@ -119,12 +119,6 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     public void deleteRoomRate(Long roomRateId) {
         RoomRate roomRate = em.find(RoomRate.class, roomRateId);
         roomRate.setIsEnabled(Boolean.FALSE);
-        roomRate.getRoomTypes().size();
-        List<RoomType> list = roomRate.getRoomTypes();
-        for (RoomType roomType: list) {
-            roomType.getRoomRates().size();
-            roomType.getRoomRates().remove(roomRate);
-        }
         em.remove(roomRate);
     }
 }

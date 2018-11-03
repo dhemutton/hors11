@@ -8,7 +8,6 @@ package entity;
 import enums.RateTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -18,7 +17,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -42,24 +41,23 @@ public class RoomRate implements Serializable {
     @Column(nullable = false)
     private Date endDate;
     private Boolean isUsed;
-      private Boolean isEnabled;
-      private Boolean forPartner;
-      
-@ManyToMany(mappedBy = "roomRates")
-private List<RoomType> roomTypes;
+    private Boolean isEnabled;
+    private Boolean forPartner;
+
+    @ManyToOne
+    private RoomType roomType;
 
     public RoomRate() {
-        roomTypes = new ArrayList<>();
     }
 
-    public RoomRate(Long roomRateId, String name, RateTypeEnum rateType, BigDecimal ratePerNight, Date startDate, Date endDate) {
+    public RoomRate(String name, RateTypeEnum rateType, BigDecimal ratePerNight, Date startDate, Date endDate, RoomType roomType) {
         this();
-        this.roomRateId = roomRateId;
         this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.roomType = roomType;
     }
 
     public String getName() {
@@ -69,8 +67,6 @@ private List<RoomType> roomTypes;
     public void setName(String name) {
         this.name = name;
     }
-
-    
 
     public RateTypeEnum getRateType() {
         return rateType;
@@ -128,17 +124,6 @@ private List<RoomType> roomTypes;
         this.forPartner = forPartner;
     }
 
-    public List<RoomType> getRoomTypes() {
-        return roomTypes;
-    }
-
-    public void setRoomTypes(List<RoomType> roomTypes) {
-        this.roomTypes = roomTypes;
-    }
-
-
-
-
     public Long getRoomRateId() {
         return roomRateId;
     }
@@ -171,5 +156,19 @@ private List<RoomType> roomTypes;
     public String toString() {
         return "entity.RoomRate[ id=" + roomRateId + " ]";
     }
-    
+
+    /**
+     * @return the roomType
+     */
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
 }

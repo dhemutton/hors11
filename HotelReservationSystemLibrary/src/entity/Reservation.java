@@ -53,11 +53,10 @@ public class Reservation implements Serializable {
         
     }
 
-    public Reservation(Long reservationId, ExceptionTypeEnum exceptionType, RoomType roomType, Booking booking) {
-        this.reservationId = reservationId;
-        this.exceptionType = exceptionType;
+    public Reservation(RoomType roomType, Booking booking, ExceptionTypeEnum exceptionType) {
         this.roomType = roomType;
         this.booking = booking;
+        this.exceptionType = exceptionType;
     }
 
     public Long getReservationId() {
