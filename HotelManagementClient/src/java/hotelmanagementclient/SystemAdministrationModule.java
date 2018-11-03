@@ -118,7 +118,7 @@ class SystemAdministratorModule {
             System.out.println("No employees to view");
         } else {
             for (Employee employee: listOfEmployees) {
-                System.out.println("Id: " + employee.getEmployeeId() + " Name: " + employee.getFirstName() + " " + employee.getLastName() + "/n");
+                System.out.println("Id: " + employee.getEmployeeId() + " Name: " + employee.getFirstName() + " " + employee.getLastName() + "\n");
             }
         }
     }
@@ -151,7 +151,7 @@ class SystemAdministratorModule {
             System.out.println("No partners to view");
         } else {
             for (Partner partner: listOfPartners) {
-                System.out.println("Id: " + partner.getPartnerId()+ " Username: " + partner.getUsername()+ "/n");
+                System.out.println("Id: " + partner.getPartnerId()+ " Username: " + partner.getUsername()+ "\n");
             }
         }
     }
