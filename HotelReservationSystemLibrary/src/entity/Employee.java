@@ -38,18 +38,18 @@ public class Employee implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EmployeeTypeEnum employeeType;
-    private Boolean isLogin = false;
+    private Boolean isLogin;
 
     public Employee() {
     }
 
-    public Employee(Long employeeId, String firstName, String lastName, String nric, String password, EmployeeTypeEnum employeeType) {
-        this.employeeId = employeeId;
+    public Employee(String firstName, String lastName, String nric, String password, EmployeeTypeEnum employeeType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nric = nric;
         this.password = password;
         this.employeeType = employeeType;
+        this.isLogin=false;
     }
 
     public Long getEmployeeId() {

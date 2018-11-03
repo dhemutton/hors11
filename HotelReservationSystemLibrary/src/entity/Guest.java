@@ -37,7 +37,7 @@ public class Guest implements Serializable {
     @Column(length = 32, nullable = false)
     private String password;
     private Boolean isLogin = false;
-    
+
     @OneToMany(mappedBy = "guest")
     private List<Booking> bookings;
 
@@ -45,10 +45,8 @@ public class Guest implements Serializable {
         bookings = new ArrayList<>();
     }
 
-    public Guest(Long guestId, String email, String firstName, String lastName, String contactNumber, String password) {
-       this();
-       
-        this.guestId = guestId;
+    public Guest(String email, String firstName, String lastName, String contactNumber, String password) {
+        this();
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -120,12 +118,6 @@ public class Guest implements Serializable {
         this.bookings = bookings;
     }
 
-    
-
-    
-    
-
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -150,5 +142,5 @@ public class Guest implements Serializable {
     public String toString() {
         return "entity.Guest[ id=" + guestId + " ]";
     }
-    
+
 }

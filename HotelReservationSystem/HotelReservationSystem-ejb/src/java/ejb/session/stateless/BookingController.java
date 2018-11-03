@@ -47,7 +47,7 @@ public class BookingController implements BookingControllerRemote, BookingContro
             throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist");
         }  
     }
-
+    
     @Override
     public List<Booking> retrieveAllBookingsOnDate(Date startDate) {
         Query query = em.createQuery("SELECT b FROM Booking WHERE r.startDate=:startDate");

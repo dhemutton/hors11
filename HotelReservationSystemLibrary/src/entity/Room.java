@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class Room implements Serializable {
     private Boolean isVacant = true;
     
     @OneToMany (mappedBy ="room") 
-    private Reservation reservation;
+    private List<Reservation> reservations;
 
     @ManyToOne
     private RoomType roomType;
@@ -40,8 +41,7 @@ public class Room implements Serializable {
         
     }
 
-    public Room(Long roomId, String roomNumber, RoomType roomType) {
-        this.roomId = roomId;
+    public Room(String roomNumber, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
     }
@@ -68,14 +68,6 @@ public class Room implements Serializable {
 
     public void setIsVacant(Boolean isVacant) {
         this.isVacant = isVacant;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
     }
 
     public RoomType getRoomType() {
@@ -119,6 +111,20 @@ public class Room implements Serializable {
     @Override
     public String toString() {
         return "entity.Room[ id=" + roomId + " ]";
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }

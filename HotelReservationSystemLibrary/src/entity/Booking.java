@@ -63,9 +63,9 @@ public class Booking implements Serializable {
     
     }
 
-    public Booking(Long bookingId, BigDecimal cost, BookingTypeEnum bookingType, BookingStatusEnum bookingStatus, Date startDate, Date endDate) {
-        this.bookingId = bookingId;
-        this.cost = cost;
+    public Booking(BookingTypeEnum bookingType, BookingStatusEnum bookingStatus, Date startDate, Date endDate) {
+        this.cost = new BigDecimal("0.0000");
+        reservation = new ArrayList<>();
         this.bookingType = bookingType;
         this.bookingStatus = bookingStatus;
         this.startDate = startDate;
