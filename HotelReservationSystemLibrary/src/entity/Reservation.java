@@ -29,11 +29,15 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
-    private Boolean checkInEarly;
-    private Boolean checkOutLate;
+    private Boolean checkInEarly = false;
+    private Boolean checkOutLate = false
+            ;
+    private Boolean isCheckedIn = false;
+    private Boolean isCheckedOut = false;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ExceptionTypeEnum exceptionType;
+    
 
     
     @ManyToOne
