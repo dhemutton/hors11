@@ -61,7 +61,7 @@ class HotelOperationModule {
     }
 
     public void runHotelOperationsModule(Employee employee) throws RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException {
-        dailyReservationRoomAssignment();
+//        dailyReservationRoomAssignment();
         Scanner sc = new Scanner(System.in);
         if (employee.getEmployeeType().equals(OPERATIONSMANAGER)) { //Operations Manager
             while (true) {
@@ -126,9 +126,10 @@ class HotelOperationModule {
                 if (choice == 1) {
                     doCreateRoomRate();
                 } else if (choice == 2) {
-                    doViewAllRoomRate();
+                    doViewRoomRateDetails();
                 } else if (choice == 3) {
-                    doViewRoomRateDetails(Long.MIN_VALUE);
+                    doViewAllRoomRate();
+
                 } else if (choice == 4) {
                     break;
                 } else {
@@ -151,6 +152,7 @@ class HotelOperationModule {
             roomType.setDescription(scanner.nextLine().trim());
             System.out.print("Enter size of room type> ");
             roomType.setSize(scanner.nextInt());
+            scanner.nextLine();
             System.out.print("Enter bed details> ");
             roomType.setBed(scanner.nextLine().trim());
             System.out.print("Enter capacity> ");
@@ -218,6 +220,7 @@ class HotelOperationModule {
                     doUpdateRoomTypeDetails(roomType);
                 } else if (choice == 2) {
                     doDeleteRoomType(roomType);
+                    break;
                 } else if (choice == 3) {
                     break;
                 } else {
@@ -265,8 +268,11 @@ class HotelOperationModule {
         }
 
         System.out.print("Enter Size (blank if no change)> ");
-        int newSize = scanner.nextInt();
+        input = scanner.nextLine().trim();
+
         if (input.length() > 0) {
+            int newSize = Integer.parseInt(scanner.nextLine());
+
             roomType.setSize(newSize);
         }
 
@@ -374,8 +380,7 @@ class HotelOperationModule {
     private void doDeleteRoomType(RoomType roomType) {
         Scanner sc = new Scanner(System.in);
         if (roomType.getIsUsed() == false) {
-            roomType.setIsEnabled(Boolean.FALSE);
-            roomTypeControllerRemote.deleteRoomType(roomType);
+            roomTypeControllerRemote.deleteRoomType(roomType.getRoomTypeId());
             System.out.println("Room type successfully deleted! ");
 
         } else {
@@ -407,7 +412,7 @@ class HotelOperationModule {
             System.out.println("*** HoRS ::Hotel Operations :: Create New Room ***\n");
             System.out.print("Enter room number (4 digits only): ");
             room.setRoomNumber(scanner.nextLine().trim());
-            System.out.print("Select room type: ");
+            System.out.println("Select room type: ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllEnabledRoomType();
 
             for (int i = 0; i < roomTypes.size(); i++) {
@@ -415,13 +420,16 @@ class HotelOperationModule {
             }
             while (true) {
                 int input = scanner.nextInt();
-                if (input >= 0 && input < roomTypes.size()) {
+                input--;
+                if (input >= 0 && input <= roomTypes.size()) {
                     roomTypeId = roomTypes.get(input).getRoomTypeId();
                     break;
                 } else {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
+            scanner.nextLine();
+
             room.setIsVacant(Boolean.TRUE);
             room = roomControllerRemote.createRoom(room, roomTypeId);
 
@@ -469,6 +477,8 @@ class HotelOperationModule {
                     room.setIsVacant(Boolean.FALSE);
                 }
             }
+            roomControllerRemote.mergeRoom(room);
+
             System.out.println("Change room type?  (Enter 'Y' to change) ");
 
             if (scanner.nextLine().trim().equals("Y")) {
@@ -488,7 +498,7 @@ class HotelOperationModule {
                         System.out.println("Incorrect input, please try again.");
                     }
                 }
-
+                scanner.nextLine();
                 roomControllerRemote.updateRoom(room.getRoomId(), oldroomTypeId, newroomTypeId);
                 System.out.println("Room updated successfully!: \n");
             }
@@ -516,7 +526,7 @@ class HotelOperationModule {
             System.out.println("*********************************************************************");
 
             if (room.getIsVacant()) {
-                System.out.println("Delete room?  (Enter 'Y' to change) ");
+                System.out.println("Delete room?  (Enter 'Y' to delete) ");
                 if (scanner.nextLine().trim().equals("Y")) {
                     roomControllerRemote.deleteRoom(room.getRoomId());
                     System.out.println("Successfully deleted room record.");
@@ -542,7 +552,7 @@ class HotelOperationModule {
 
         for (Room room : list) {
             System.out.println("Room Number: " + room.getRoomNumber());
-            System.out.println("Room Type: " + room.getRoomType());
+            System.out.println("Room Type: " + room.getRoomType().getName());
             System.out.println("*********************************************************************");
         }
 
@@ -559,9 +569,9 @@ class HotelOperationModule {
 
         try {
             System.out.println("*** HoRS ::Hotel Operations :: Create New Room Rate ***\n");
-            System.out.print("Enter name of room rate: ");
+            System.out.println("Enter name of room rate: ");
             roomRate.setName(scanner.nextLine().trim());
-            System.out.print("Select rate type: ");
+            System.out.println("Select rate type: ");
             System.out.println("1. Published");
             System.out.println("2. Normal");
             System.out.println("3. Peak");
@@ -586,7 +596,7 @@ class HotelOperationModule {
 
                     break;
 
-                } else if (choice == 2) {
+                } else if (choice == 4) {
                     roomRate.setRateType(RateTypeEnum.PROMO);
                     roomRate.setForPartner(Boolean.TRUE);
 
@@ -596,9 +606,11 @@ class HotelOperationModule {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
+            scanner.nextLine();
 
             System.out.println("Enter Rate Per Night: ");
             roomRate.setRatePerNight(scanner.nextBigDecimal());
+            scanner.nextLine();
 
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             System.out.println("Enter start date (format: dd/mm/yyyy) >");
@@ -618,7 +630,7 @@ class HotelOperationModule {
                 System.out.println("Incorrect date format.");
             }
 
-            System.out.print("Select room type to apply this room rate for: (Enter 'Y' to add) ");
+            System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
             for (int i = 0; i < roomTypes.size(); i++) {
                 System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
@@ -633,6 +645,8 @@ class HotelOperationModule {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
+            scanner.nextLine();
+
             System.out.println("Enable room rate? (Enter 'Y' to enable)");
             if (scanner.nextLine().trim().equals("Y")) {
                 roomRate.setIsEnabled(Boolean.TRUE);
@@ -666,7 +680,7 @@ class HotelOperationModule {
         }
     }
 
-    private void doViewRoomRateDetails(Long option) throws RoomRateNotFoundException {
+    private void doViewRoomRateDetails() throws RoomRateNotFoundException {
         Scanner sc = new Scanner(System.in);
         System.out.println("*** HoRS ::Hotel Operations :: View Room Rate Details ***\n");
         String input;
@@ -693,6 +707,7 @@ class HotelOperationModule {
                     doUpdateRoomRateDetails(roomRate);
                 } else if (choice == 2) {
                     doDeleteRoomRate(roomRate);
+                    break;
                 } else if (choice == 3) {
                     break;
                 } else {
@@ -718,7 +733,7 @@ class HotelOperationModule {
 
         System.out.println("Change rate type?  (Enter 'Y' to change) ");
         if (scanner.nextLine().trim().equals("Y")) {
-            System.out.print("Select rate type: ");
+            System.out.println("Select rate type: ");
             System.out.println("1. Published");
             System.out.println("2. Normal");
             System.out.println("3. Peak");
@@ -743,7 +758,7 @@ class HotelOperationModule {
 
                     break;
 
-                } else if (choice == 2) {
+                } else if (choice == 4) {
                     roomRate.setRateType(RateTypeEnum.PROMO);
                     roomRate.setForPartner(Boolean.TRUE);
 
@@ -758,6 +773,8 @@ class HotelOperationModule {
         if (scanner.nextLine().trim().equals("Y")) {
             System.out.println("Enter Rate Per Night: ");
             roomRate.setRatePerNight(scanner.nextBigDecimal());
+            scanner.nextLine();
+
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -785,7 +802,7 @@ class HotelOperationModule {
 
         System.out.println("Change room type for this room rate?  (Enter 'Y' to change) ");
         if (scanner.nextLine().trim().equals("Y")) {
-            System.out.print("Select room type to apply this room rate for: (Enter 'Y' to add) ");
+            System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
             for (int i = 0; i < roomTypes.size(); i++) {
                 System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
@@ -795,6 +812,8 @@ class HotelOperationModule {
                 choice--;
                 if (choice >= 0 && choice < roomTypes.size()) {
                     roomTypeId = roomTypes.get(choice).getRoomTypeId();
+                            scanner.nextLine();
+
                     break;
                 } else {
                     System.out.println("Incorrect input, please try again.");
@@ -810,16 +829,13 @@ class HotelOperationModule {
         }
 
         roomRateControllerRemote.updateRoomRate(roomRate, roomTypeId);
-        System.out.println("Room rate updated successfully!: \n");
+        System.out.println("Room rate updated successfully! \n");
     }
 
     private void doDeleteRoomRate(RoomRate roomRate) {
         System.out.println("*** HoRS ::Hotel Operations :: Deleting Room Rate ***\n");
         Scanner scanner = new Scanner(System.in);
         String input;
-
-        System.out.println("Which room rate would you like to delete?  (Enter room rate name) ");
-        input = scanner.nextLine().trim();
 
         if (!roomRate.getIsUsed()) {
             System.out.println("Delete room rate?  (Enter 'Y' to change) ");
@@ -830,35 +846,35 @@ class HotelOperationModule {
         } else {
             System.out.println("Room rate is used, unable to delete room rate record.");
             System.out.println("Do you want to disable room rate now? (Enter 'Y' to disable)");
-                if (scanner.nextLine().trim().equals("Y")) {
-                    System.out.println("Disabled room rate " + roomRate.getName()+ " !");
-                    roomRate.setIsEnabled(Boolean.FALSE);
-                    roomRateControllerRemote.mergeRoomRate(roomRate);
-                }
+            if (scanner.nextLine().trim().equals("Y")) {
+                System.out.println("Disabled room rate " + roomRate.getName() + " !");
+                roomRate.setIsEnabled(Boolean.FALSE);
+                roomRateControllerRemote.mergeRoomRate(roomRate);
+            }
         }
     }
 
-    @Schedule(hour = "2")
-    private void dailyReservationRoomAssignment() {
-        //SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date day1 = new Date();
-        Date day2 = new Date();
-        day2.setDate(day2.getDate() - 1);
-        List<Booking> day1BookingList = bookingControllerRemote.retrieveAllBookingsOnEndDate(day1);
-        List<Booking> day2BookingList = bookingControllerRemote.retrieveAllBookingsOnStartDate(day2);
-        List<Reservation> day1ReservationList = new ArrayList<>();
-        List<Reservation> day2ReservationList = new ArrayList<>();
-
-        //Obtain a list of all ending reservations(checking out)
-        for (Booking booking : day1BookingList) {
-            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
-            day1ReservationList.addAll(temp);
-        }
-        //Obtain a list of all starting reservations(checking in)
-        for (Booking booking : day2BookingList) {
-            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
-            day2ReservationList.addAll(temp);
-        }
-
-    }
+//    @Schedule(hour = "2")
+//    private void dailyReservationRoomAssignment() {
+//        //SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        Date day1 = new Date();
+//        Date day2 = new Date();
+//        day2.setDate(day2.getDate() - 1);
+//        List<Booking> day1BookingList = bookingControllerRemote.retrieveAllBookingsOnEndDate(day1);
+//        List<Booking> day2BookingList = bookingControllerRemote.retrieveAllBookingsOnStartDate(day2);
+//        List<Reservation> day1ReservationList = new ArrayList<>();
+//        List<Reservation> day2ReservationList = new ArrayList<>();
+//
+//        //Obtain a list of all ending reservations(checking out)
+//        for (Booking booking : day1BookingList) {
+//            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
+//            day1ReservationList.addAll(temp);
+//        }
+//        //Obtain a list of all starting reservations(checking in)
+//        for (Booking booking : day2BookingList) {
+//            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
+//            day2ReservationList.addAll(temp);
+//        }
+//
+//    }
 }

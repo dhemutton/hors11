@@ -59,7 +59,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     
     @Override
     public List<RoomType> retrieveAllEnabledRoomType() {
-        Query query = em.createQuery("SELECT r FROM RoomType WHERE r.isEnabled=true");
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.isEnabled=true");
         return query.getResultList();
     }
     
@@ -97,8 +97,9 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     }
     
     @Override
-    public void deleteRoomType(RoomType roomType) {
-        em.merge(roomType);
+    public void deleteRoomType(Long roomTypeId) {
+        RoomType roomType =em.find(RoomType.class,roomTypeId);
+                     roomType.setIsEnabled(Boolean.FALSE);
 
         em.remove(roomType);
     }

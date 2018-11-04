@@ -56,7 +56,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
             return room;
         } catch (PersistenceException ex) {
             throw new RoomExistException("Room already exists");
-            
+
         } catch (RoomTypeNotFoundException ex) {
             throw new RoomTypeNotFoundException("Unable to create new room as the room type record does not exist");
         }
@@ -70,20 +70,20 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
 
     @Override
     public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType) {
-        Query query = em.createQuery("SELECT r FROM Room WHERE r.roomType=:roomType");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType=:roomType");
         query.setParameter("roomType", roomType);
         return query.getResultList();
     }
 
     @Override
     public List<Room> retrieveAllVacantRooms() {
-        Query query = em.createQuery("SELECT r FROM Room WHERE r.isVacant=true");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.isVacant=true");
         return query.getResultList();
     }
 
     @Override
     public List<Room> retrieveAllOccupiedRooms() {
-        Query query = em.createQuery("SELECT r FROM Room WHERE r.isVacant=false");
+        Query query = em.createQuery("SELECT r FROM Room r  WHERE r.isVacant=false");
         return query.getResultList();
     }
 
@@ -100,7 +100,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
 
     @Override
     public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException {
-        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNum = :arg");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :arg");
         query.setParameter("arg", roomNum);
 
         try {
@@ -112,33 +112,26 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
 
     @Override
     public void mergeRoom(Room room) {
-        
+
         em.merge(room);
     }
-    
+
     @Override
     public void updateRoom(Long roomId, Long oldroomTypeId, Long newRoomTypeId) throws RoomTypeNotFoundException {
-        
-        try {
-            Room room = em.find(Room.class, roomId);
-            RoomType newroomType = roomTypeControllerLocal.retrieveRoomTypeById(oldroomTypeId);
-            newroomType.getRooms().size();
 
-            if (!oldroomTypeId.equals(newRoomTypeId)) { //change in roomtype
-                    RoomType oldroomType = roomTypeControllerLocal.retrieveRoomTypeById(oldroomTypeId);
-                    oldroomType.getRooms().size();
+        Room room = em.find(Room.class, roomId);
+        RoomType newroomType = em.find(RoomType.class, newRoomTypeId);
+        newroomType.getRooms().size();
+        if (!oldroomTypeId.equals(newRoomTypeId)) { //change in roomtype
+            RoomType oldroomType = em.find(RoomType.class, newRoomTypeId);
+            oldroomType.getRooms().size();
 
-                    oldroomType.getRooms().remove(room);
-                    room.setRoomType(newroomType); //set new room type to room
-                     newroomType.getRooms().add(room); //add new room to room type
-            }
-            
-            em.merge(room);
-            
-        } catch (RoomTypeNotFoundException ex) {
-            throw new RoomTypeNotFoundException("Room Type not found! ");
+            oldroomType.getRooms().remove(room);
+            room.setRoomType(newroomType); //set new room type to room
+            newroomType.getRooms().add(room); //add new room to room type
         }
-        
+        em.merge(room);
+
     }
 
     @Override
@@ -147,7 +140,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
         room.setIsEnabled(Boolean.FALSE);
         room.getRoomType().getRooms().size();
         room.getRoomType().getRooms().remove(room);
-        
+
         em.remove(room);
     }
 }

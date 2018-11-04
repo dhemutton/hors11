@@ -46,10 +46,12 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             roomRate.setRoomType(roomType);
             em.persist(roomRate);
             em.flush();
+            
             roomType.getRoomRates().size();
             roomType.getRoomRates().add(roomRate);
             roomType.setIsEnabled(Boolean.TRUE);
             em.merge(roomType);
+            
             return roomRate;
         } catch (PersistenceException ex) {
 
@@ -119,15 +121,21 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
 
     @Override
     public void updateRoomRate(RoomRate roomRate, Long roomTypeId) {
+        if (roomTypeId != null) {
         RoomType roomType = em.find(RoomType.class, roomTypeId);
-        RoomType oldRoomType = roomRate.getRoomType();
+        Long oldRoomTypeId = roomRate.getRoomType().getRoomTypeId();
+        RoomType oldRoomType = em.find(RoomType.class, oldRoomTypeId);
+        oldRoomType.getRoomRates().size();
         oldRoomType.getRoomRates().remove(roomRate); //remove room rate from list of room rates attached to a room type
         
         roomRate.setRoomType(roomType); //set new roomtype for room rate
         em.merge(roomRate);
 
         roomType.getRoomRates().add(roomRate);
+        } else {
+                    em.merge(roomRate);
 
+        }
     }
 
     @Override
