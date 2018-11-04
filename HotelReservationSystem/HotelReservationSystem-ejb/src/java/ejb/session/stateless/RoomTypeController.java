@@ -43,7 +43,6 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         try {
             em.persist(roomType);
             em.flush();
-
             return roomType;
         } catch (PersistenceException ex) {
              
@@ -53,7 +52,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     
     @Override
     public List<RoomType> retrieveAllRoomtype() {
-        Query query  = em.createQuery("SELECT rt FROM RoomType rt ORDER BY rt.rank");
+        Query query  = em.createQuery("SELECT rt FROM RoomType rt ORDER BY rt.ranking");
         return query.getResultList();
     }
     

@@ -559,7 +559,7 @@ class HotelOperationModule {
             System.out.println("*** HoRS ::Hotel Operations :: Create New Room Rate ***\n");
             System.out.print("Enter name of room rate: ");
             roomRate.setName(scanner.nextLine().trim());
-            System.out.print("Select rate type: ");
+            System.out.println("Select rate type: ");
             System.out.println("1. Published");
             System.out.println("2. Normal");
             System.out.println("3. Peak");
@@ -584,7 +584,7 @@ class HotelOperationModule {
 
                     break;
 
-                } else if (choice == 2) {
+                } else if (choice == 4) {
                     roomRate.setRateType(RateTypeEnum.PROMO);
                     roomRate.setForPartner(Boolean.TRUE);
 
@@ -597,7 +597,7 @@ class HotelOperationModule {
 
             System.out.println("Enter Rate Per Night: ");
             roomRate.setRatePerNight(scanner.nextBigDecimal());
-
+            scanner.nextLine();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             System.out.println("Enter start date (format: dd/mm/yyyy) >");
             String startDate = scanner.nextLine().trim();
@@ -894,11 +894,11 @@ class HotelOperationModule {
 
         //Room allocation upgrade      
         for (RoomType roomType : roomRanking) {
-            int upgradeLevel = roomType.getRank() - 1;
+            int upgradeLevel = roomType.getRanking() - 1;
             //If highest ranking level, auto-assign type 2 error
-            if (roomType.getRank() == 1) {
+            if (roomType.getRanking() == 1) {
                 for (Reservation reservation : day2ReservationUpgrade) {
-                    if (reservation.getRoomType().getRank() == 1) {
+                    if (reservation.getRoomType().getRanking() == 1) {
                         reservation.setExceptionType(ExceptionTypeEnum.TYPE2);
                         reservationControllerRemote.updateReservation(reservation);
                         day2ReservationUpgrade.remove(reservation);
@@ -919,7 +919,7 @@ class HotelOperationModule {
                         //Assign room upgrade
                         for(Room room : vacantRoomList) {
                             //Check if there is a vacant room upgrade available
-                            if(room.getRoomType().getRank()==i) {
+                            if(room.getRoomType().getRanking()==i) {
                                 room.setIsVacant(Boolean.FALSE);
                                 reservation.setExceptionType(ExceptionTypeEnum.TYPE1);
                                 reservation.setRoom(room);

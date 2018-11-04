@@ -84,9 +84,11 @@ public class DataInitialization {
     public void PostConstruct() {
         try {
             employeeController.retrieveEmployeeByNric("123");
+            System.out.println("Initialization not needed");
         }
         catch(EmployeeNotFoundException ex) {
             try {
+                System.out.println("Initializing data");
                 initializeData();
             } catch (EmployeeExistException | GuestExistException | RoomTypeExistException | RoomRateExistException | RoomTypeNotFoundException | RoomExistException | PartnerExistException | GuestNotFoundException ex1) {
                 Logger.getLogger(DataInitialization.class.getName()).log(Level.SEVERE, null, ex1);

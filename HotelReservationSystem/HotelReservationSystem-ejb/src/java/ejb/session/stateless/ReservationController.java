@@ -64,7 +64,7 @@ public class ReservationController implements ReservationControllerRemote, Reser
     
     @Override
     public List<Reservation> retrieveAllReservationFromEndDate(Date date) {
-        Query query = em.createQuery("SELECT r FROM Reservation r JOIN r.booking b WHERE b.endDate:endDate");
+        Query query = em.createQuery("SELECT r FROM Reservation r JOIN r.booking b WHERE b.endDate=:endDate");
         query.setParameter("endDate", date);
         return query.getResultList();
     }

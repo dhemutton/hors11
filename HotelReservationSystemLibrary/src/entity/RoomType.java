@@ -13,7 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -40,7 +39,7 @@ public class RoomType implements Serializable {
     @Column(length = 128, nullable = false)
     private String amenities;
     @Column(nullable = false, unique = true)
-    private int rank;
+    private int ranking;
     private Boolean isUsed = false; //since not enabled, cannot be used
     private Boolean isEnabled = false; //never attach room rates upon creation
 
@@ -63,7 +62,7 @@ public class RoomType implements Serializable {
         this.bed = bed;
         this.capacity = capacity;
         this.amenities = amenities;
-        this.rank = rank;
+        this.ranking = rank;
         this.isUsed = isUsed;
         this.isEnabled = isEnabled;
     }
@@ -182,17 +181,17 @@ public class RoomType implements Serializable {
     }
 
     /**
-     * @return the rank
+     * @return the ranking
      */
-    public int getRank() {
-        return rank;
+    public int getRanking() {
+        return ranking;
     }
 
     /**
-     * @param rank the rank to set
+     * @param ranking the ranking to set
      */
-    public void setRank(int rank) {
-        this.rank = rank;
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
     }
 
 }
