@@ -118,25 +118,25 @@ public class DataInitialization {
         roomTypeController.createRoomType(new RoomType("Type C", "Standard room", 4, "1 super single bed", "4-6 people", "Toilet, balcony", false, true));
         roomTypeController.createRoomType(new RoomType("Type D", "Budget room", 2, "1 single bed", "2-4 people", "Toilet", false, true));
         
-        roomRateController.createRoomRate(new RoomRate("Peak promo for type A", PEAK, new BigDecimal(160.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")));
-        roomRateController.createRoomRate(new RoomRate("Published promo for type A", PUBLISHED, new BigDecimal(150.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")));
-        roomRateController.createRoomRate(new RoomRate("Normal promo for type A", NORMAL, new BigDecimal(140.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")));
-        roomRateController.createRoomRate(new RoomRate("Promo promo for type A", PROMO, new BigDecimal(130.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")));
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type A", PEAK, new BigDecimal(160.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type A", PUBLISHED, new BigDecimal(150.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type A", NORMAL, new BigDecimal(140.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type A", PROMO, new BigDecimal(130.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
         
-        roomRateController.createRoomRate(new RoomRate("Peak promo for type B", PEAK, new BigDecimal(120.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")));
-        roomRateController.createRoomRate(new RoomRate("Published promo for type B", PUBLISHED, new BigDecimal(110.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")));
-        roomRateController.createRoomRate(new RoomRate("Normal promo for type B", NORMAL, new BigDecimal(100.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")));
-        roomRateController.createRoomRate(new RoomRate("Promo promo for type B", PROMO, new BigDecimal(90.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")));
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type B", PEAK, new BigDecimal(120.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type B", PUBLISHED, new BigDecimal(110.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type B", NORMAL, new BigDecimal(100.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type B", PROMO, new BigDecimal(90.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
         
-        roomRateController.createRoomRate(new RoomRate("Peak promo for type C", PEAK, new BigDecimal(80.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")));
-        roomRateController.createRoomRate(new RoomRate("Published promo for type C", PUBLISHED, new BigDecimal(70.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")));
-        roomRateController.createRoomRate(new RoomRate("Normal promo for type C", NORMAL, new BigDecimal(60.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")));
-        roomRateController.createRoomRate(new RoomRate("Promo promo for type C", PROMO, new BigDecimal(50.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")));
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type C", PEAK, new BigDecimal(80.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type C", PUBLISHED, new BigDecimal(70.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type C", NORMAL, new BigDecimal(60.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")),roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type C", PROMO, new BigDecimal(50.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
         
-        roomRateController.createRoomRate(new RoomRate("Peak promo for type D", PEAK, new BigDecimal(40.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")));
-        roomRateController.createRoomRate(new RoomRate("Published promo for type D", PUBLISHED, new BigDecimal(30.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")));
-        roomRateController.createRoomRate(new RoomRate("Normal promo for type D", NORMAL, new BigDecimal(20.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")));
-        roomRateController.createRoomRate(new RoomRate("Promo promo for type D", PROMO, new BigDecimal(10.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")));
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type D", PEAK, new BigDecimal(40.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type D", PUBLISHED, new BigDecimal(30.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type D", NORMAL, new BigDecimal(20.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type D", PROMO, new BigDecimal(10.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
         
         roomController.createRoom(new Room("A01", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
         roomController.createRoom(new Room("A02", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
