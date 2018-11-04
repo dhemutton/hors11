@@ -30,8 +30,7 @@ public class Reservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
     private Boolean checkInEarly = false;
-    private Boolean checkOutLate = false
-            ;
+    private Boolean checkOutLate = false;
     private Boolean isCheckedIn = false;
     private Boolean isCheckedOut = false;
     @Column(nullable = false)

@@ -19,7 +19,7 @@ public interface RoomRateControllerRemote {
     
     public void persist(Object object);
 
-    public RoomRate createRoomRate(RoomRate roomRate) throws RoomRateExistException;
+    public RoomRate createRoomRate(RoomRate roomRate, Long roomTypeIds) throws RoomRateExistException;
     
     public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException;
 
