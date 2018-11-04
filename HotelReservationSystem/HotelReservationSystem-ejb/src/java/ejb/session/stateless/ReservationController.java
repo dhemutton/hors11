@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Reservation;
 import exceptions.ReservationNotFoundException;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -52,5 +53,24 @@ public class ReservationController implements ReservationControllerRemote, Reser
          query.setParameter("BookingId", bookingId);
 
         return query.getResultList();     
+    }
+    
+    @Override
+    public List<Reservation> retrieveAllReservationFromStartDate(Date date) {
+        Query query = em.createQuery("SELECT r FROM Reservation r JOIN r.booking b WHERE b.startDate=:startDate");
+        query.setParameter("startDate", date);
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<Reservation> retrieveAllReservationFromEndDate(Date date) {
+        Query query = em.createQuery("SELECT r FROM Reservation r JOIN r.booking b WHERE b.endDate:endDate");
+        query.setParameter("endDate", date);
+        return query.getResultList();
+    }
+    
+    @Override
+    public void updateReservation(Reservation reservation) {
+        em.merge(reservation);
     }
 }

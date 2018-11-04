@@ -53,13 +53,13 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     
     @Override
     public List<RoomType> retrieveAllRoomtype() {
-        Query query  = em.createQuery("SELECT rt FROM RoomType rt");
+        Query query  = em.createQuery("SELECT rt FROM RoomType rt ORDER BY rt.rank");
         return query.getResultList();
     }
     
     @Override
     public List<RoomType> retrieveAllEnabledRoomType() {
-        Query query = em.createQuery("SELECT r FROM RoomType WHERE r.isEnabled=true");
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.isEnabled=true");
         return query.getResultList();
     }
     

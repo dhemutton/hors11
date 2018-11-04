@@ -57,7 +57,7 @@ public class BookingController implements BookingControllerRemote, BookingContro
     
     @Override
     public List<Booking> retrieveAllBookingsOnEndDate(Date endDate) {
-        Query query = em.createQuery("SELECT b FROM Booking b WHERE r.endDate=:endDate");
+        Query query = em.createQuery("SELECT b FROM Booking b WHERE b.endDate=:endDate");
         query.setParameter("endDate", endDate);
         return query.getResultList();   
     }

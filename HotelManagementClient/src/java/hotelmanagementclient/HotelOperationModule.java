@@ -27,12 +27,9 @@ import exceptions.RoomTypeNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Schedule;
 
 /**
@@ -830,11 +827,11 @@ class HotelOperationModule {
         } else {
             System.out.println("Room rate is used, unable to delete room rate record.");
             System.out.println("Do you want to disable room rate now? (Enter 'Y' to disable)");
-                if (scanner.nextLine().trim().equals("Y")) {
-                    System.out.println("Disabled room rate " + roomRate.getName()+ " !");
-                    roomRate.setIsEnabled(Boolean.FALSE);
-                    roomRateControllerRemote.mergeRoomRate(roomRate);
-                }
+            if (scanner.nextLine().trim().equals("Y")) {
+                System.out.println("Disabled room rate " + roomRate.getName() + " !");
+                roomRate.setIsEnabled(Boolean.FALSE);
+                roomRateControllerRemote.mergeRoomRate(roomRate);
+            }
         }
     }
 
@@ -844,21 +841,62 @@ class HotelOperationModule {
         Date day1 = new Date();
         Date day2 = new Date();
         day2.setDate(day2.getDate() - 1);
-        List<Booking> day1BookingList = bookingControllerRemote.retrieveAllBookingsOnEndDate(day1);
-        List<Booking> day2BookingList = bookingControllerRemote.retrieveAllBookingsOnStartDate(day2);
-        List<Reservation> day1ReservationList = new ArrayList<>();
-        List<Reservation> day2ReservationList = new ArrayList<>();
 
         //Obtain a list of all ending reservations(checking out)
-        for (Booking booking : day1BookingList) {
-            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
-            day1ReservationList.addAll(temp);
-        }
+        List<Reservation> day1ReservationList = reservationControllerRemote.retrieveAllReservationFromEndDate(day1);
+
         //Obtain a list of all starting reservations(checking in)
-        for (Booking booking : day2BookingList) {
-            List<Reservation> temp = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
-            day2ReservationList.addAll(temp);
+        List<Reservation> day2ReservationList = reservationControllerRemote.retrieveAllReservationFromStartDate(day2);
+
+        //Declare all rooms from ending reservations to be vacant
+        for (Reservation reservation : day1ReservationList) {
+            Room room = reservation.getRoom();
+            room.setIsVacant(Boolean.TRUE);
+            roomControllerRemote.mergeRoom(room);
         }
 
+        //Obtain all vacant rooms to assign rooms for day 2
+        List<Room> vacantRoomList = roomControllerRemote.retrieveAllVacantRooms();
+
+        //Assign rooms to reservations for day 2
+        List<RoomType> roomRanking = roomTypeControllerRemote.retrieveAllRoomtype();
+        
+        //Room allocation(no upgrade)
+        for (RoomType roomType : roomRanking) {
+            //Get quantity of vacant rooms for specific room type
+            List<Room> vacantRoomsByType = new ArrayList<>();
+            for (Room room : vacantRoomList) {
+                if (room.getRoomType().equals(roomType)) {
+                    vacantRoomsByType.add(room);
+                }
+            }
+            //Assign reservation to vacant room by room type
+            for (Reservation reservation : day2ReservationList) {
+                if (reservation.getRoomType().equals(roomType)) {
+                    Room room = vacantRoomsByType.get(0);
+                    reservation.setRoom(room);
+                    room.setIsVacant(Boolean.FALSE);
+                    reservationControllerRemote.updateReservation(reservation);
+                    roomControllerRemote.mergeRoom(room);
+                    if (vacantRoomsByType.size() == 0) {
+                        break;
+                    }
+                }
+            }           
+        }
+        
+        //Room allocation upgrade
+        for(RoomType roomType : roomRanking) {
+            //Get quantity of vacant rooms by specific room type
+            List<Room> vacantRoomsByType = new ArrayList<>();
+            for (Room room : vacantRoomList) {
+                if (room.getRoomType().equals(roomType)) {
+                    vacantRoomsByType.add(room);
+                }
+            }
+            for(int i=0; i<vacantRoomsByType.size(); i++) {
+                
+            }
+        }
     }
 }

@@ -39,6 +39,8 @@ public class RoomType implements Serializable {
     private String capacity;
     @Column(length = 128, nullable = false)
     private String amenities;
+    @Column(nullable = false, unique = true)
+    private int rank;
     private Boolean isUsed = false; //since not enabled, cannot be used
     private Boolean isEnabled = false; //never attach room rates upon creation
 
@@ -54,13 +56,14 @@ public class RoomType implements Serializable {
         roomRates = new ArrayList<>();
     }
 
-    public RoomType(String name, String description, int size, String bed, String capacity, String amenities, Boolean isUsed, Boolean isEnabled) {
+    public RoomType(String name, String description, int size, String bed, String capacity, String amenities, int rank, Boolean isUsed, Boolean isEnabled) {
         this.name = name;
         this.description = description;
         this.size = size;
         this.bed = bed;
         this.capacity = capacity;
         this.amenities = amenities;
+        this.rank = rank;
         this.isUsed = isUsed;
         this.isEnabled = isEnabled;
     }
@@ -176,6 +179,20 @@ public class RoomType implements Serializable {
     @Override
     public String toString() {
         return "entity.RoomType[ id=" + roomTypeId + " ]";
+    }
+
+    /**
+     * @return the rank
+     */
+    public int getRank() {
+        return rank;
+    }
+
+    /**
+     * @param rank the rank to set
+     */
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
 }

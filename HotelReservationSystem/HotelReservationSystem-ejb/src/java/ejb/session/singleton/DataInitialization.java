@@ -113,10 +113,10 @@ public class DataInitialization {
         partnerController.createNewPartner(new Partner("Matthea", "password"));
         partnerController.createNewPartner(new Partner("Jonathan", "password"));
         
-        roomTypeController.createRoomType(new RoomType("Type A", "Best room with everything", 8, "1 king-size bed", "8-10 people", "Toilet, balcony, kitchen, living room", false, true));
-        roomTypeController.createRoomType(new RoomType("Type B", "Luxurious room", 6, "1 queen-size bed", "6-8 people", "Toilet, balcony, kitchen", false, true));
-        roomTypeController.createRoomType(new RoomType("Type C", "Standard room", 4, "1 super single bed", "4-6 people", "Toilet, balcony", false, true));
-        roomTypeController.createRoomType(new RoomType("Type D", "Budget room", 2, "1 single bed", "2-4 people", "Toilet", false, true));
+        roomTypeController.createRoomType(new RoomType("Type A", "Best room with everything", 8, "1 king-size bed", "8-10 people", "Toilet, balcony, kitchen, living room", 1, false, true));
+        roomTypeController.createRoomType(new RoomType("Type B", "Luxurious room", 6, "1 queen-size bed", "6-8 people", "Toilet, balcony, kitchen", 2, false, true));
+        roomTypeController.createRoomType(new RoomType("Type C", "Standard room", 4, "1 super single bed", "4-6 people", "Toilet, balcony", 3, false, true));
+        roomTypeController.createRoomType(new RoomType("Type D", "Budget room", 2, "1 single bed", "2-4 people", "Toilet", 4, false, true));
         
         roomRateController.createRoomRate(new RoomRate("Peak promo for type A", PEAK, new BigDecimal(160.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
         roomRateController.createRoomRate(new RoomRate("Published promo for type A", PUBLISHED, new BigDecimal(150.50), new Date(), new Date(), roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
