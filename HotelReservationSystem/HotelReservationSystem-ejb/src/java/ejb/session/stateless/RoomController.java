@@ -111,6 +111,12 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     }
 
     @Override
+    public void mergeRoom(Room room) {
+        
+        em.merge(room);
+    }
+    
+    @Override
     public void updateRoom(Long roomId, Long oldroomTypeId, Long newRoomTypeId) throws RoomTypeNotFoundException {
         
         try {

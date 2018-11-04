@@ -118,8 +118,16 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     }
 
     @Override
-    public void updateRoomRate(RoomRate roomRate) {
+    public void updateRoomRate(RoomRate roomRate, Long roomTypeId) {
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+        RoomType oldRoomType = roomRate.getRoomType();
+        oldRoomType.getRoomRates().remove(roomRate); //remove room rate from list of room rates attached to a room type
+        
+        roomRate.setRoomType(roomType); //set new roomtype for room rate
         em.merge(roomRate);
+
+        roomType.getRoomRates().add(roomRate);
+
     }
 
     @Override
@@ -127,5 +135,11 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         RoomRate roomRate = em.find(RoomRate.class, roomRateId);
         roomRate.setIsEnabled(Boolean.FALSE);
         em.remove(roomRate);
+    }
+    
+    @Override
+    public void mergeRoomRate(RoomRate roomRate) {
+        
+        em.merge(roomRate);
     }
 }

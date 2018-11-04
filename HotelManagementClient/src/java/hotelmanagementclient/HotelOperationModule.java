@@ -523,6 +523,12 @@ class HotelOperationModule {
                 }
             } else {
                 System.out.println("Room is occupied, unable to delete room record.");
+                System.out.println("Do you want to disable room now? (Enter 'Y' to disable)");
+                if (scanner.nextLine().trim().equals("Y")) {
+                    System.out.println("Disabled room " + room.getRoomNumber() + " !");
+                    room.setIsEnabled(Boolean.FALSE);
+                    roomControllerRemote.mergeRoom(room);
+                }
             }
 
         } catch (RoomNotFoundException ex) {
@@ -614,18 +620,19 @@ class HotelOperationModule {
 
             System.out.print("Select room type to apply this room rate for: (Enter 'Y' to add) ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
-            Boolean added = false;
-            while(!added) {
-            for (RoomType roomType : roomTypes) {
-                System.out.println("Add rate to" + roomType.getName() + " ?");
-                if (scanner.nextLine().trim().equals("Y")) {
-                    roomTypeId = roomType.getRoomTypeId();
-                    added = true;
+            for (int i = 0; i < roomTypes.size(); i++) {
+                System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
+            }
+            while (true) {
+                int choice = scanner.nextInt();
+                choice--;
+                if (choice >= 0 && choice < roomTypes.size()) {
+                    roomTypeId = roomTypes.get(choice).getRoomTypeId();
+                    break;
+                } else {
+                    System.out.println("Incorrect input, please try again.");
                 }
             }
-            System.out.println("Need to add this room rate to a room type. Displaying available room types again...");
-            }
-
             System.out.println("Enable room rate? (Enter 'Y' to enable)");
             if (scanner.nextLine().trim().equals("Y")) {
                 roomRate.setIsEnabled(Boolean.TRUE);
@@ -635,8 +642,7 @@ class HotelOperationModule {
 
             roomRate = roomRateControllerRemote.createRoomRate(roomRate, roomTypeId);
 
-            System.out.println(
-                    "New room rate:  " + roomRate.getName() + " created successfully!" + "\n");
+            System.out.println("New room rate:  " + roomRate.getName() + " created successfully!" + "\n");
 
         } catch (RoomRateExistException ex) {
             System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "!\n");
@@ -699,6 +705,7 @@ class HotelOperationModule {
     }
 
     private void doUpdateRoomRateDetails(RoomRate roomRate) {
+        Long roomTypeId = null;
         Scanner scanner = new Scanner(System.in);
         System.out.println("*** HoRS ::Hotel Operations :: Edit Room Rate Details ***\n");
 
@@ -776,6 +783,25 @@ class HotelOperationModule {
             }
         }
 
+        System.out.println("Change room type for this room rate?  (Enter 'Y' to change) ");
+        if (scanner.nextLine().trim().equals("Y")) {
+            System.out.print("Select room type to apply this room rate for: (Enter 'Y' to add) ");
+            List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
+            for (int i = 0; i < roomTypes.size(); i++) {
+                System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
+            }
+            while (true) {
+                int choice = scanner.nextInt();
+                choice--;
+                if (choice >= 0 && choice < roomTypes.size()) {
+                    roomTypeId = roomTypes.get(choice).getRoomTypeId();
+                    break;
+                } else {
+                    System.out.println("Incorrect input, please try again.");
+                }
+            }
+        }
+
         System.out.println("Enable room rate? (Enter 'Y' to enable)");
         if (scanner.nextLine().trim().equals("Y")) {
             roomRate.setIsEnabled(Boolean.TRUE);
@@ -783,6 +809,8 @@ class HotelOperationModule {
             roomRate.setIsEnabled(Boolean.FALSE);
         }
 
+        roomRateControllerRemote.updateRoomRate(roomRate, roomTypeId);
+        System.out.println("Room rate updated successfully!: \n");
     }
 
     private void doDeleteRoomRate(RoomRate roomRate) {
@@ -801,6 +829,12 @@ class HotelOperationModule {
             }
         } else {
             System.out.println("Room rate is used, unable to delete room rate record.");
+            System.out.println("Do you want to disable room rate now? (Enter 'Y' to disable)");
+                if (scanner.nextLine().trim().equals("Y")) {
+                    System.out.println("Disabled room rate " + roomRate.getName()+ " !");
+                    roomRate.setIsEnabled(Boolean.FALSE);
+                    roomRateControllerRemote.mergeRoomRate(roomRate);
+                }
         }
     }
 

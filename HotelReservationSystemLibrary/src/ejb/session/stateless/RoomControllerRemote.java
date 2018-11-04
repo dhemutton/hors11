@@ -18,6 +18,9 @@ import java.util.List;
  */
 public interface RoomControllerRemote {
     
+        public void mergeRoom(Room room);
+
+    
     public List<Room> retrieveAllRooms();
 
     public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType);

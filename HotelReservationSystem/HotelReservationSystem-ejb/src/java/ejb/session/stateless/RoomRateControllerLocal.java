@@ -35,10 +35,13 @@ public interface RoomRateControllerLocal {
 
     public List<RoomRate> retrieveAllRoomRatesForNonPartners();
 
-    public void updateRoomRate(RoomRate roomRate);
+    public void updateRoomRate(RoomRate roomRate, Long roomTypeId);
 
     public void deleteRoomRate(Long roomRateId);
 
     public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException;
+    
+            public void mergeRoomRate(RoomRate roomRate);
+
 
 }

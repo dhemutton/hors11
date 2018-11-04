@@ -18,6 +18,8 @@ import java.util.List;
  */
 public interface RoomControllerLocal {
 
+    public void mergeRoom(Room room);
+
     public List<Room> retrieveAllRooms();
 
     public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType);
@@ -25,8 +27,8 @@ public interface RoomControllerLocal {
     public List<Room> retrieveAllVacantRooms();
 
     public List<Room> retrieveAllOccupiedRooms();
-    
-       public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException;
+
+    public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException;
 
     public void updateRoom(Long roomId, Long oldroomTypeId, Long newroomTypeId) throws RoomTypeNotFoundException;
 
@@ -37,5 +39,5 @@ public interface RoomControllerLocal {
     public Room createRoom(Room room, Long roomTypeId) throws RoomExistException, RoomTypeNotFoundException;
 
     public Room retrieveRoomById(Long RoomId) throws RoomNotFoundException;
-    
+
 }
