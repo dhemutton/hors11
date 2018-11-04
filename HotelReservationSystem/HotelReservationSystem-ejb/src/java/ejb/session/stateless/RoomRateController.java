@@ -45,13 +45,13 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             roomRate.setIsUsed(Boolean.TRUE);
             roomRate.setRoomType(roomType);
             em.persist(roomRate);
-            em.flush();
             
             roomType.getRoomRates().size();
             roomType.getRoomRates().add(roomRate);
             roomType.setIsEnabled(Boolean.TRUE);
             em.merge(roomType);
-            
+             em.flush();
+
             return roomRate;
         } catch (PersistenceException ex) {
 
