@@ -151,5 +151,33 @@ public class Reservation implements Serializable {
     public String toString() {
         return "entity.Reservation[ id=" + reservationId + " ]";
     }
+
+    /**
+     * @return the isCheckedIn
+     */
+    public Boolean getIsCheckedIn() {
+        return isCheckedIn;
+    }
+
+    /**
+     * @param isCheckedIn the isCheckedIn to set
+     */
+    public void setIsCheckedIn(Boolean isCheckedIn) {
+        this.isCheckedIn = isCheckedIn;
+    }
+
+    /**
+     * @return the isCheckedOut
+     */
+    public Boolean getIsCheckedOut() {
+        return isCheckedOut;
+    }
+
+    /**
+     * @param isCheckedOut the isCheckedOut to set
+     */
+    public void setIsCheckedOut(Boolean isCheckedOut) {
+        this.isCheckedOut = isCheckedOut;
+    }
     
 }

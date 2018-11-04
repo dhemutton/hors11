@@ -37,6 +37,8 @@ import exceptions.RoomRateExistException;
 import exceptions.RoomTypeExistException;
 import exceptions.RoomTypeNotFoundException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,13 +92,15 @@ public class DataInitialization {
             try {
                 System.out.println("Initializing data");
                 initializeData();
-            } catch (EmployeeExistException | GuestExistException | RoomTypeExistException | RoomRateExistException | RoomTypeNotFoundException | RoomExistException | PartnerExistException | GuestNotFoundException ex1) {
+            } catch (EmployeeExistException | GuestExistException | RoomTypeExistException | RoomRateExistException | RoomTypeNotFoundException | RoomExistException | PartnerExistException | GuestNotFoundException | ParseException ex1) {
                 Logger.getLogger(DataInitialization.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
     }
 
-    private void initializeData() throws EmployeeExistException, GuestExistException, RoomTypeExistException, RoomRateExistException, RoomTypeNotFoundException, RoomExistException, PartnerExistException, GuestNotFoundException {
+    private void initializeData() throws EmployeeExistException, GuestExistException, RoomTypeExistException, RoomRateExistException, RoomTypeNotFoundException, RoomExistException, PartnerExistException, GuestNotFoundException, ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        
         employeeController.createNewEmployee(new Employee("Jonathan", "Soh", "111", "111", SYSTEMADMIN));
         employeeController.createNewEmployee(new Employee("Stephanie", "Soh", "222", "222", OPERATIONSMANAGER));
         employeeController.createNewEmployee(new Employee("Alison", "Soh", "333", "333", SALESMANAGER));
@@ -185,61 +189,61 @@ public class DataInitialization {
         roomController.createRoom(new Room("D10", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
         
         Booking booking;
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("05/11/2018"), formatter.parse("10/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("1@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("05/11/2018"), formatter.parse("10/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("2@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("05/11/2018"), formatter.parse("10/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("3@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("05/11/2018"), formatter.parse("10/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("4@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("05/11/2018"), formatter.parse("10/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("5@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("10/11/2018"), formatter.parse("20/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("6@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("10/11/2018"), formatter.parse("20/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("7@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("10/11/2018"), formatter.parse("20/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("8@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, new Date(), new Date()));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("10/11/2018"), formatter.parse("20/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("9@gmail.com"));
         bookingController.updateBooking(booking);
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
         
-        bookingController.createNewBooking(new Booking(WALKIN, PENDING, new Date(), new Date()));
+        bookingController.createNewBooking(new Booking(WALKIN, PENDING, formatter.parse("10/11/2018"), formatter.parse("20/11/2018")));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         

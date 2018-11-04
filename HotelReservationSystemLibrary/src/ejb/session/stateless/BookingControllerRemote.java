@@ -24,4 +24,6 @@ public interface BookingControllerRemote {
     public void updateBooking(Booking booking);
 
     public List<Booking> retrieveAllBookingsOnEndDate(Date endDate);
+    
+    public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate);
 }

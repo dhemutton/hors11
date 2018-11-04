@@ -10,7 +10,17 @@ import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
+import entity.Booking;
 import entity.Employee;
+import entity.Reservation;
+import entity.Room;
+import exceptions.ReservationNotFoundException;
+import exceptions.RoomNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -60,15 +70,59 @@ class FrontOfficeModule {
     }
 
     private void doWalkInReservation() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner sc = new Scanner(System.in);
+        Date startDate = null, endDate = null;
+        List<Reservation> reservationList = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        int maxRooms = roomControllerRemote.retrieveAllRooms().size();
+        System.out.println("Please enter start date (dd/mm/yyyy");
+        try {
+            startDate = formatter.parse(sc.nextLine().trim());
+        } catch (ParseException ex) {
+            System.out.println("Incorrect date format.");
+        }
+        System.out.println("Please enter start date (dd/mm/yyyy");
+        try {
+            endDate = formatter.parse(sc.nextLine().trim());
+        } catch (ParseException ex) {
+            System.out.println("Incorrect date format.");
+        }
+        List<Booking> bookingList = bookingControllerRemote.retrieveAllBookingsWithinDates(startDate, endDate);
+        for(Booking booking : bookingList) {
+            reservationList.addAll(reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId()));
+        }
+        int roomsLeft = maxRooms-reservationList.size();
+        if(roomsLeft>0) {           
+            System.out.println(roomsLeft+" rooms available");
+            doSearchRoom();
+        }
+        else {
+            System.out.println("No more rooms are available during this period");
+        }
+        
     }
 
     private void doCheckInGuest() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void doCheckOutGuest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void doCheckOutGuest() throws RoomNotFoundException, ReservationNotFoundException {
+        Scanner sc = new Scanner(System.in);
+        Date inputDate=null;
+        System.out.println("Please enter room number");
+        String number = sc.nextLine().trim();
+        Room room = roomControllerRemote.retrieveRoomByRoomNum(number);
+        room.setIsVacant(Boolean.TRUE);
+        roomControllerRemote.mergeRoom(room);
+        System.out.println("Please enter your reservation ID");
+        Long reservationID = sc.nextLong();
+        Reservation reservation = reservationControllerRemote.retrieveReservationById(reservationID);
+        reservation.setIsCheckedOut(Boolean.TRUE);
+        reservationControllerRemote.updateReservation(reservation);
+      
     }
 
+    private void doSearchRoom() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
