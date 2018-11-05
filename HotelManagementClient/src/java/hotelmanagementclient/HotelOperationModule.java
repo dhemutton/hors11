@@ -616,7 +616,7 @@ class HotelOperationModule {
                 System.out.println("Incorrect date format.");
             }
 
-            System.out.print("Select room type to apply this room rate for: (Enter 'Y' to add) ");
+            System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
             for (int i = 0; i < roomTypes.size(); i++) {
                 System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
@@ -716,7 +716,7 @@ class HotelOperationModule {
 
         System.out.println("Change rate type?  (Enter 'Y' to change) ");
         if (scanner.nextLine().trim().equals("Y")) {
-            System.out.print("Select rate type: ");
+            System.out.println("Select rate type: ");
             System.out.println("1. Published");
             System.out.println("2. Normal");
             System.out.println("3. Peak");

@@ -26,4 +26,7 @@ public interface BookingControllerRemote {
     public List<Booking> retrieveAllBookingsOnEndDate(Date endDate);
     
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate);
+    
+    public List<Booking> retrieveAllBookingsForGuest(Long guestId);
+
 }

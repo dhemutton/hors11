@@ -40,19 +40,21 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     @Override
     public RoomRate createRoomRate(RoomRate roomRate, Long roomTypeId) throws RoomRateExistException {
         try {
+            em.persist(roomRate);
 
             RoomType roomType = em.find(RoomType.class, roomTypeId);
             roomRate.setIsUsed(Boolean.TRUE);
             roomRate.setRoomType(roomType);
-            em.persist(roomRate);
-            em.flush();
+            em.merge(roomRate);
+            
             roomType.getRoomRates().size();
             roomType.getRoomRates().add(roomRate);
             roomType.setIsEnabled(Boolean.TRUE);
             em.merge(roomType);
+            em.flush();
+
             return roomRate;
         } catch (PersistenceException ex) {
-
             throw new RoomRateExistException("Room Rate already exists");
         }
     }

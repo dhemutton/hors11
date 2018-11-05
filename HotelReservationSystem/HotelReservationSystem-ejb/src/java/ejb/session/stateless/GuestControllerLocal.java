@@ -16,6 +16,10 @@ import java.util.List;
  */
 public interface GuestControllerLocal {
 
+    public void updateGuestLogin(Guest guest, boolean loggedIn);
+
+    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
+
     public void persist(Object object);
 
     public Guest createGuest(Guest guest) throws GuestExistException;
@@ -29,5 +33,5 @@ public interface GuestControllerLocal {
     public void updateGuest(Guest guest);
 
     public void deleteGuest(Guest guest);
-    
+
 }

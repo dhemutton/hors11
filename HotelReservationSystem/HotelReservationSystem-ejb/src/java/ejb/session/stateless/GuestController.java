@@ -43,7 +43,7 @@ public class GuestController implements GuestControllerRemote, GuestControllerLo
             return guest;
         } catch (PersistenceException ex) {
              
-                throw new GuestExistException("Room already exists");
+                throw new GuestExistException("Guest already exists");
             }
     }
     
@@ -59,6 +59,7 @@ public class GuestController implements GuestControllerRemote, GuestControllerLo
         query.setParameter("email", email);
         Guest guest = (Guest)query.getSingleResult();
         if(guest!=null) {
+            guest.getBookings().size();
             return guest;
         }
         else {
@@ -67,6 +68,16 @@ public class GuestController implements GuestControllerRemote, GuestControllerLo
     }
     
     @Override
+    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException {
+        Guest guest = em.find(Guest.class, guestId);
+
+        if (guest != null) {
+            return guest;
+        } else {
+            throw new GuestNotFoundException("Guest ID " + guestId + " does not exist");
+        }
+    }
+    @Override
     public List<Guest> retrieveAllLoginGuest(String email) throws GuestNotFoundException {
         Query query = em.createQuery("SELECT g FROM Guest g WHERE g.isLogin=true");
         return query.getResultList();
@@ -74,6 +85,13 @@ public class GuestController implements GuestControllerRemote, GuestControllerLo
     
     @Override
     public void updateGuest(Guest guest) {
+        em.merge(guest);
+    }
+    
+    @Override
+    public void updateGuestLogin(Guest guest, boolean loggedIn) {
+     
+            guest.setIsLogin(loggedIn);
         em.merge(guest);
     }
     

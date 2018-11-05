@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Booking;
+import entity.Guest;
 import exceptions.BookingNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,5 +91,10 @@ public class BookingController implements BookingControllerRemote, BookingContro
         em.merge(booking);
     }
 
-    
+     @Override
+    public List<Booking> retrieveAllBookingsForGuest(Long guestId) {
+                Guest guest = em.find(Guest.class, guestId);
+                guest.getBookings().size();
+        return guest.getBookings();   
+    }
 }

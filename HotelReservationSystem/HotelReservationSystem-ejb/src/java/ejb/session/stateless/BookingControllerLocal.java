@@ -28,4 +28,6 @@ public interface BookingControllerLocal {
 
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate);
 
+    public List<Booking> retrieveAllBookingsForGuest(Long guestId);
+
 }

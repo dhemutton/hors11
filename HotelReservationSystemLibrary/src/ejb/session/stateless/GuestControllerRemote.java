@@ -15,7 +15,14 @@ import java.util.List;
  * @author sleep
  */
 public interface GuestControllerRemote {
+
+    public Guest retrieveGuestById(Long guestId) throws GuestNotFoundException;
+
+    public void updateGuestLogin(Guest guest, boolean loggedIn);
+
     
+    
+
     public void persist(Object object);
 
     public Guest createGuest(Guest guest) throws GuestExistException;
