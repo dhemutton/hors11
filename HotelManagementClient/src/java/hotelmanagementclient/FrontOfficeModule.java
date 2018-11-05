@@ -14,6 +14,10 @@ import entity.Booking;
 import entity.Employee;
 import entity.Reservation;
 import entity.Room;
+import entity.RoomType;
+import static enums.BookingStatusEnum.PENDING;
+import static enums.BookingTypeEnum.WALKIN;
+import static enums.ExceptionTypeEnum.UNASSIGNED;
 import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
 import java.text.ParseException;
@@ -47,7 +51,7 @@ class FrontOfficeModule {
         this.roomTypeControllerRemote = roomTypeControllerRemote;
     }
 
-    public void runFrontOfficeModule(Employee loginEmployee) {
+    public void runFrontOfficeModule(Employee loginEmployee) throws RoomNotFoundException, ReservationNotFoundException {
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("1. Make walk in reservation");
@@ -56,7 +60,7 @@ class FrontOfficeModule {
             System.out.println("4. Exit");
             int choice = sc.nextInt();
             if (choice == 1) {
-                doWalkInReservation();
+                doWalkInSearchRoom();
             } else if (choice == 2) {
                 doCheckInGuest();
             } else if (choice == 3) {
@@ -69,7 +73,7 @@ class FrontOfficeModule {
         }
     }
 
-    private void doWalkInReservation() {
+    private void doWalkInSearchRoom() {
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
@@ -88,27 +92,35 @@ class FrontOfficeModule {
             System.out.println("Incorrect date format.");
         }
         List<Booking> bookingList = bookingControllerRemote.retrieveAllBookingsWithinDates(startDate, endDate);
-        for(Booking booking : bookingList) {
+        for (Booking booking : bookingList) {
             reservationList.addAll(reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId()));
         }
-        int roomsLeft = maxRooms-reservationList.size();
-        if(roomsLeft>0) {           
-            System.out.println(roomsLeft+" rooms available");
-            doSearchRoom();
-        }
-        else {
+        int roomsLeft = maxRooms - reservationList.size();
+        if (roomsLeft > 0) {
+            System.out.println(roomsLeft + " rooms available");
+            doReserveRoom(roomsLeft, startDate, endDate);
+        } else {
             System.out.println("No more rooms are available during this period");
         }
-        
+
     }
 
     private void doCheckInGuest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please enter booking ID");
+        Long bookingID = sc.nextLong();
+        List<Reservation> reservationList = reservationControllerRemote.retrieveAllReservationFromBooking(bookingID);
+        System.out.println("Your allocated rooms are:");
+        for (Reservation reservation : reservationList) {
+            reservation.setIsCheckedIn(Boolean.TRUE);
+            System.out.println("Room number: " + reservation.getRoom().getRoomNumber());
+        }
+
     }
 
     private void doCheckOutGuest() throws RoomNotFoundException, ReservationNotFoundException {
         Scanner sc = new Scanner(System.in);
-        Date inputDate=null;
+        Date inputDate = null;
         System.out.println("Please enter room number");
         String number = sc.nextLine().trim();
         Room room = roomControllerRemote.retrieveRoomByRoomNum(number);
@@ -119,10 +131,40 @@ class FrontOfficeModule {
         Reservation reservation = reservationControllerRemote.retrieveReservationById(reservationID);
         reservation.setIsCheckedOut(Boolean.TRUE);
         reservationControllerRemote.updateReservation(reservation);
-      
+
     }
 
-    private void doSearchRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
+        Scanner sc = new Scanner(System.in);
+        int quantity = 0;
+        Booking booking = bookingControllerRemote.createNewBooking(new Booking(WALKIN, PENDING, startDate, endDate));
+        while (true) {
+            System.out.println("How many rooms do you want to reserve? (Maximum: " + roomsLeft + ")");
+            quantity = sc.nextInt();
+            if (quantity <= 0 || quantity > roomsLeft) {
+                System.out.println("Invalid entry. Please try again");
+            } else {
+                break;
+            }
+        }
+
+        sc.nextLine();
+        for (int i = 0; i < quantity; i++) {
+            int choice;
+            System.out.println("Select room type");
+            List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllRoomtype();
+            while (true) {
+                for (int j = 1; j <= roomTypeList.size(); j++) {
+                    System.out.println(j + ". " + roomTypeList.get(j - 1).getName());
+                }
+                choice = sc.nextInt();
+                if (choice < 1 || choice > roomTypeList.size()) {
+                    System.out.println("Invalid entry. Please try again");
+                } else {
+                    break;
+                }
+            }
+            reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice-1), booking, UNASSIGNED));
+        }
     }
 }
