@@ -600,20 +600,32 @@ class HotelOperationModule {
             scanner.nextLine();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             System.out.println("Enter start date (format: dd/mm/yyyy) >");
-            String startDate = scanner.nextLine().trim();
-            try {
-                formatter.parse(startDate);
-            } catch (ParseException ex) {
-                System.out.println("Incorrect date format.");
+            Boolean again = true;
+
+            while (again) {
+                String startDate = scanner.nextLine().trim();
+
+                try {
+                    formatter.parse(startDate);
+                    again = false;
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
             }
 
             System.out.println("Enter end date (format: dd/mm/yyyy) >");
+            again = true;
+            while (again) {
             String endDate = scanner.nextLine().trim();
 
-            try {
-                formatter.parse(endDate);
-            } catch (ParseException ex) {
-                System.out.println("Incorrect date format.");
+                try {
+                    formatter.parse(endDate);
+                    again = false;
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
             }
 
             System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
@@ -913,13 +925,13 @@ class HotelOperationModule {
                     }
                 }
                 //Assign upgrades to all reservations for a specific room type
-                for(Reservation reservation : reservationsByType) {
+                for (Reservation reservation : reservationsByType) {
                     //Assign room rank of upgade
-                    for(int i=upgradeLevel; upgradeLevel>0; i--) {
+                    for (int i = upgradeLevel; upgradeLevel > 0; i--) {
                         //Assign room upgrade
-                        for(Room room : vacantRoomList) {
+                        for (Room room : vacantRoomList) {
                             //Check if there is a vacant room upgrade available
-                            if(room.getRoomType().getRanking()==i) {
+                            if (room.getRoomType().getRanking() == i) {
                                 room.setIsVacant(Boolean.FALSE);
                                 reservation.setExceptionType(ExceptionTypeEnum.TYPE1);
                                 reservation.setRoom(room);
@@ -934,22 +946,22 @@ class HotelOperationModule {
             }
         }
         //After completing all upgrades, assign remainder of reservation to type 2 error
-        if(day2ReservationUpgrade.size()>0) {
-            for(Reservation reservation : day2ReservationUpgrade) {
+        if (day2ReservationUpgrade.size() > 0) {
+            for (Reservation reservation : day2ReservationUpgrade) {
                 reservation.setExceptionType(ExceptionTypeEnum.TYPE2);
                 reservationControllerRemote.updateReservation(reservation);
             }
-        }      
+        }
         //Check for early check in
-        for(Reservation reservation : day1ReservationList) {
-            if(!day2ReservationList.contains(reservation)) {
+        for (Reservation reservation : day1ReservationList) {
+            if (!day2ReservationList.contains(reservation)) {
                 reservation.setCheckInEarly(Boolean.TRUE);
                 reservationControllerRemote.updateReservation(reservation);
             }
         }
         //Check for late check out
-        for(Reservation reservation : day2ReservationList) {
-            if(!day1ReservationList.contains(reservation)) {
+        for (Reservation reservation : day2ReservationList) {
+            if (!day1ReservationList.contains(reservation)) {
                 reservation.setCheckOutLate(Boolean.TRUE);
                 reservationControllerRemote.updateReservation(reservation);
             }

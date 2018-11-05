@@ -67,22 +67,32 @@ public class BookingController implements BookingControllerRemote, BookingContro
     @Override
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate) {
         List<Booking> finalList = new ArrayList<>();
-        Query query1 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN :startDate AND :endDate");
-        Query query2 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.endDate BETWEEN :startDate AND :endDate");
-        Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE :startDate BETWEEN b.startDate AND b.endDate AND :endDate BETWEEN b.startDate AND b.endDate");
-        Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN :startDate AND :endDate AND b.endDate BETWEEN :startDate AND :endDate");
+        Query query1 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN :startDate AND :endDate"); //list1
+        Query query2 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.endDate BETWEEN :startDate AND :endDate"); //list2
+        Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE :startDate BETWEEN (b.startDate AND b.endDate) AND :endDate BETWEEN (b.startDate AND b.endDate)"); //list3
+       // Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN (:startDate AND :endDate) AND b.endDate BETWEEN (:startDate AND :endDate)");
         query1.setParameter("startDate", startDate);
         query1.setParameter("endDate", endDate);
         query2.setParameter("startDate", startDate);
         query2.setParameter("endDate", endDate);
         query3.setParameter("startDate", startDate);
         query3.setParameter("endDate", endDate);
-        query4.setParameter("startDate", startDate);
-        query4.setParameter("endDate", endDate);
+//        query4.setParameter("startDate", startDate);
+//        query4.setParameter("endDate", endDate);
         finalList.addAll(query1.getResultList());
-        finalList.addAll(query2.getResultList());
-        finalList.addAll(query3.getResultList());
-        finalList.addAll(query4.getResultList());
+        List<Booking> list2 = query2.getResultList();
+        for (Booking booking : list2 ) {
+            if (!finalList.contains(booking)) {
+                finalList.add(booking);
+            }
+        }
+        List<Booking> list3 = query3.getResultList();
+        for (Booking booking : list3 ) {
+            if (!finalList.contains(booking)) {
+                finalList.add(booking);
+            }
+        }
+//        finalList.addAll(query4.getResultList());
         return finalList;   
     }
 
