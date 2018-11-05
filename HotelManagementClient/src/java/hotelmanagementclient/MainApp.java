@@ -17,6 +17,7 @@ import entity.Employee;
 import static enums.EmployeeTypeEnum.GUESTRELATIONS;
 import static enums.EmployeeTypeEnum.SYSTEMADMIN;
 import exceptions.EmployeeExistException;
+import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
@@ -53,7 +54,7 @@ class MainApp {
     public MainApp() {
     }
 
-    public void runApp() throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException {
+    public void runApp() throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException {
         System.out.println("*** Welcome to HoRS Management Client  ***\n");
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your NRIC");

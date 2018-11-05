@@ -14,6 +14,7 @@ import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
 import exceptions.EmployeeExistException;
+import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
@@ -50,7 +51,7 @@ public class Main {
     @EJB(name = "EmployeeControllerRemote")
     private static EmployeeControllerRemote employeeControllerRemote;
     
-    public static void main(String[] args) throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException {
+    public static void main(String[] args) throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException {
         MainApp mainApp = new MainApp(guestControllerRemote, reservationControllerRemote, bookingControllerRemote, roomControllerRemote, 
                                       roomRateControllerRemote, roomTypeControllerRemote, partnerControllerRemote, employeeControllerRemote);
         mainApp.runApp();
