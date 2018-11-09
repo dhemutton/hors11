@@ -17,11 +17,14 @@ import entity.Employee;
 import static enums.EmployeeTypeEnum.GUESTRELATIONS;
 import static enums.EmployeeTypeEnum.SYSTEMADMIN;
 import exceptions.EmployeeExistException;
+import exceptions.InvalidLoginCredentials;
 import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.exception.EmployeeNotFoundException;
 
 /**
@@ -38,6 +41,8 @@ class MainApp {
     private RoomTypeControllerRemote roomTypeControllerRemote;
     private PartnerControllerRemote partnerControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
+
+    private Employee loginEmployee;
 
     public MainApp(GuestControllerRemote guestControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
             RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, PartnerControllerRemote partnerControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
@@ -57,41 +62,45 @@ class MainApp {
     public void runApp() throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException {
         System.out.println("*** Welcome to HoRS Management Client  ***\n");
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter your NRIC");
-        String nric = sc.nextLine().trim();
-        
-        try {
-        Employee loginEmployee = employeeControllerRemote.retrieveEmployeeByNric(nric);
-        
+
         while (true) {
+
+            System.out.println("Please enter your NRIC");
+            String nric = sc.nextLine().trim();
             System.out.println("Please enter password");
             String password = sc.nextLine().trim();
-            if (password.equals(loginEmployee.getPassword())) {
-                loginEmployee.setIsLogin(true);
-                if(loginEmployee.getEmployeeType().equals(SYSTEMADMIN)) {
-                    SystemAdministratorModule systemAdmin = new SystemAdministratorModule(partnerControllerRemote, employeeControllerRemote);
-                    systemAdmin.runSystemAdminModule();
-                    break;
-                }
-                else if(loginEmployee.getEmployeeType().equals(GUESTRELATIONS)) {
-                    FrontOfficeModule frontOffice = new FrontOfficeModule(reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote);
-                    frontOffice.runFrontOfficeModule(loginEmployee);
-                    break;
-                }
-                else {
-                    HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, reservationControllerRemote, bookingControllerRemote);
-                    hotelOperations.runHotelOperationsModule(loginEmployee);
-                    break;
-                }
-            }
-            else {
+
+            try {
+
+                if (nric.length() > 0 && password.length() > 0) {
+                    loginEmployee = employeeControllerRemote.employeeLogin(nric, password);
+
+                    if (loginEmployee.getIsLogin() == false) {
+                        loginEmployee.setIsLogin(true);
+                         System.out.println("Login successful! Redirecting...");
+                        if (loginEmployee.getEmployeeType().equals(SYSTEMADMIN)) {
+                            SystemAdministratorModule systemAdmin = new SystemAdministratorModule(partnerControllerRemote, employeeControllerRemote);
+                            systemAdmin.runSystemAdminModule();
+                            break;
+                        } else if (loginEmployee.getEmployeeType().equals(GUESTRELATIONS)) {
+                            FrontOfficeModule frontOffice = new FrontOfficeModule(reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote);
+                            frontOffice.runFrontOfficeModule(loginEmployee);
+                            break;
+                        } else {
+                            HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, reservationControllerRemote, bookingControllerRemote);
+                            hotelOperations.runHotelOperationsModule(loginEmployee);
+                            break;
+                        }
+                    } else {
+                        System.out.println("Employee is already logged in.");
+                    }
+                } 
+            } catch (InvalidLoginCredentials ex) {
                 System.out.println("Invalid password entered. Please try again");
+
+            } catch (EmployeeNotFoundException ex) {
+                System.out.println("Employee does not exist. Please try again");
             }
-        }
-        loginEmployee.setIsLogin(false);
-    }
-        catch(EmployeeNotFoundException ex) {
-            System.out.println("An error has occurred while retrieving customer: " + ex.getMessage() + "\n");
         }
     }
 

@@ -7,7 +7,10 @@ package ejb.session.stateless;
 
 import entity.Employee;
 import exceptions.EmployeeExistException;
+import exceptions.InvalidLoginCredentials;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -32,7 +35,6 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
-
     @Override
     public Employee createNewEmployee(Employee employee) throws EmployeeExistException {
         try {
@@ -41,31 +43,27 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
 
             return employee;
         } catch (PersistenceException ex) {
-             
-                throw new EmployeeExistException("Employee with same NRIC already exists");
-            }
-        }
 
+            throw new EmployeeExistException("Employee with same NRIC already exists");
+        }
+    }
 
     @Override
     public Employee retrieveEmployeeByNric(String nric) throws EmployeeNotFoundException {
         Query query = em.createQuery("SELECT e FROM Employee e WHERE e.nric = :innric");
         query.setParameter("innric", nric);
-        
-        try
-        {
-            return (Employee)query.getSingleResult();
-        }
-        catch(NoResultException | NonUniqueResultException ex)
-        {
+
+        try {
+            return (Employee) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
             throw new EmployeeNotFoundException("Employee " + nric + " does not exist!");
-        }    
+        }
     }
 
     @Override
     public Employee retrieveEmployeeById(Long employeeId) throws EmployeeNotFoundException {
         Employee employee = em.find(Employee.class, employeeId);
-        
+
         if (employee != null) {
             return employee;
         } else {
@@ -75,10 +73,25 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
 
     @Override
     public List<Employee> retrieveAllEmployee() {
-    Query query = em.createQuery("SELECT e FROM Employee e ORDER BY e.employeeId ASC");
-        
-        return query.getResultList();   
+        Query query = em.createQuery("SELECT e FROM Employee e ORDER BY e.employeeId ASC");
+
+        return query.getResultList();
     }
 
-    
+    @Override
+    public Employee employeeLogin(String nric, String password) throws InvalidLoginCredentials, EmployeeNotFoundException {
+
+        Employee employeeEntity;
+        try {
+            employeeEntity = retrieveEmployeeByNric(nric);
+        } catch (EmployeeNotFoundException ex) {
+
+            throw new EmployeeNotFoundException("Employee NRIC " + nric + " does not exist");
+        }
+            if (employeeEntity.getPassword().equals(password)) {
+                return employeeEntity;
+            }
+            throw new InvalidLoginCredentials("Invalid password!");
+     }
+
 }
