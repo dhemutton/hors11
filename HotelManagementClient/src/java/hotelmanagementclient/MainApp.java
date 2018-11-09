@@ -23,8 +23,6 @@ import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.exception.EmployeeNotFoundException;
 
 /**
@@ -59,7 +57,7 @@ class MainApp {
     public MainApp() {
     }
 
-    public void runApp() throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException {
+    public void runApp()  {
         System.out.println("*** Welcome to HoRS Management Client  ***\n");
         Scanner sc = new Scanner(System.in);
 

@@ -51,7 +51,7 @@ class FrontOfficeModule {
         this.roomTypeControllerRemote = roomTypeControllerRemote;
     }
 
-    public void runFrontOfficeModule(Employee loginEmployee) throws RoomNotFoundException, ReservationNotFoundException {
+    public void runFrontOfficeModule(Employee loginEmployee) {
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("1. Make walk in reservation");
@@ -118,7 +118,9 @@ class FrontOfficeModule {
 
     }
 
-    private void doCheckOutGuest() throws RoomNotFoundException, ReservationNotFoundException {
+    private void doCheckOutGuest() {
+        
+        try {
         Scanner sc = new Scanner(System.in);
         Date inputDate = null;
         System.out.println("Please enter room number");
@@ -131,7 +133,11 @@ class FrontOfficeModule {
         Reservation reservation = reservationControllerRemote.retrieveReservationById(reservationID);
         reservation.setIsCheckedOut(Boolean.TRUE);
         reservationControllerRemote.updateReservation(reservation);
-
+        } catch(ReservationNotFoundException ex) {
+            System.out.println("Reservation not found!");
+        } catch(RoomNotFoundException ex) {
+                        System.out.println("Room not found!");
+        }
     }
 
     private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {

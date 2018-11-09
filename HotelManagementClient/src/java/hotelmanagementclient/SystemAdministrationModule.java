@@ -32,7 +32,7 @@ class SystemAdministratorModule {
         this.employeeControllerRemote = employeeControllerRemote;
     }
     
-    public void runSystemAdminModule() throws EmployeeExistException {
+    public void runSystemAdminModule() {
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("*** HoRS :: System Administration ***\n");
@@ -59,7 +59,7 @@ class SystemAdministratorModule {
         }
     }
     
-    private void doCreateEmployee() throws EmployeeExistException {
+    private void doCreateEmployee()  {
         
         try {
             Scanner scanner = new Scanner(System.in);

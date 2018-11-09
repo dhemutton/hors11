@@ -58,7 +58,7 @@ class HotelOperationModule {
 
     }
 
-    public void runHotelOperationsModule(Employee employee) throws RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException {
+    public void runHotelOperationsModule(Employee employee)  {
        // dailyReservationRoomAssignment();
         Scanner sc = new Scanner(System.in);
         if (employee.getEmployeeType().equals(OPERATIONSMANAGER)) { //Operations Manager
@@ -126,7 +126,7 @@ class HotelOperationModule {
                 } else if (choice == 2) {
                     doViewAllRoomRate();
                 } else if (choice == 3) {
-                    doViewRoomRateDetails(Long.MIN_VALUE);
+                    doViewRoomRateDetails();
                 } else if (choice == 4) {
                     break;
                 } else {
@@ -167,7 +167,7 @@ class HotelOperationModule {
         }
     }
 
-    private void doViewRoomTypeDetails() throws RoomTypeNotFoundException {
+    private void doViewRoomTypeDetails()  {
         System.out.println("*** HoRS ::Hotel Operations :: View Room Type Details ***\n");
         System.out.println("Enter the room type name: \n");
 
@@ -387,7 +387,7 @@ class HotelOperationModule {
         }
     }
 
-    private void doViewAllRoomTypes() throws RoomTypeNotFoundException {
+    private void doViewAllRoomTypes()  {
         System.out.println("*** HoRS :: Hotel Operations :: View All Room Types ***\n");
 
         List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
@@ -534,7 +534,7 @@ class HotelOperationModule {
         }
     }
 
-    private void doViewAllRoom() throws RoomNotFoundException {
+    private void doViewAllRoom()  {
         System.out.println("*** HoRS ::Hotel Operations :: View All Rooms ***\n");
         List<Room> list = roomControllerRemote.retrieveAllRooms();
 
@@ -660,7 +660,7 @@ class HotelOperationModule {
 
     }
 
-    private void doViewAllRoomRate() throws RoomRateNotFoundException {
+    private void doViewAllRoomRate()  {
         System.out.println("*** HoRS ::Hotel Operations :: View All Room Rates ***\n");
         List<RoomRate> list = roomRateControllerRemote.retrieveAllRoomRates();
 
@@ -676,7 +676,7 @@ class HotelOperationModule {
         }
     }
 
-    private void doViewRoomRateDetails(Long option) throws RoomRateNotFoundException {
+    private void doViewRoomRateDetails() {
         Scanner sc = new Scanner(System.in);
         System.out.println("*** HoRS ::Hotel Operations :: View Room Rate Details ***\n");
         String input;
