@@ -94,4 +94,10 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
             throw new InvalidLoginCredentials("Invalid password!");
      }
 
+    @Override
+    public void updateEmployeeLogin(Employee employee, boolean loggedIn) {
+     
+            employee.setIsLogin(loggedIn);
+        em.merge(employee);
+    }
 }

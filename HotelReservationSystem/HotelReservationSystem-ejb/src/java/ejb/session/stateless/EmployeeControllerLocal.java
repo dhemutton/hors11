@@ -27,4 +27,6 @@ public interface EmployeeControllerLocal {
 
     public Employee employeeLogin(String nric, String password) throws InvalidLoginCredentials, EmployeeNotFoundException;
 
+               public void updateEmployeeLogin(Employee employee, boolean loggedIn);
+
 }

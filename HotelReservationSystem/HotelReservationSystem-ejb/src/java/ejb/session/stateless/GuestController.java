@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Guest;
 import exceptions.GuestExistException;
 import exceptions.GuestNotFoundException;
+import exceptions.InvalidLoginCredentials;
 import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -99,4 +100,21 @@ public class GuestController implements GuestControllerRemote, GuestControllerLo
     public void deleteGuest(Guest guest) {
         em.remove(guest);
     }
+    
+    
+    @Override
+    public Guest guestLogin(String email, String password) throws InvalidLoginCredentials, GuestNotFoundException {
+
+        Guest guestEntity;
+        try {
+            guestEntity = retrieveGuestByEmail(email);
+        } catch (GuestNotFoundException ex) {
+
+            throw new GuestNotFoundException("Guest email " + email + " does not exist");
+        }
+            if (guestEntity.getPassword().equals(password)) {
+                return guestEntity;
+            }
+            throw new InvalidLoginCredentials("Invalid password!");
+     }
 }

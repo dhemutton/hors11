@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Guest;
 import exceptions.GuestExistException;
 import exceptions.GuestNotFoundException;
+import exceptions.InvalidLoginCredentials;
 import java.util.List;
 
 /**
@@ -21,7 +22,8 @@ public interface GuestControllerRemote {
     public void updateGuestLogin(Guest guest, boolean loggedIn);
 
     
-    
+        public Guest guestLogin(String email, String password) throws InvalidLoginCredentials, GuestNotFoundException;
+
 
     public void persist(Object object);
 

@@ -41,7 +41,7 @@ class MainApp {
     private RoomTypeControllerRemote roomTypeControllerRemote;
     private PartnerControllerRemote partnerControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
-
+    
     private Employee loginEmployee;
 
     public MainApp(GuestControllerRemote guestControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
@@ -76,8 +76,8 @@ class MainApp {
                     loginEmployee = employeeControllerRemote.employeeLogin(nric, password);
 
                     if (loginEmployee.getIsLogin() == false) {
-                        loginEmployee.setIsLogin(true);
-                         System.out.println("Login successful! Redirecting...");
+                        employeeControllerRemote.updateEmployeeLogin(loginEmployee, true);
+                        System.out.println("Login successful! Redirecting...");
                         if (loginEmployee.getEmployeeType().equals(SYSTEMADMIN)) {
                             SystemAdministratorModule systemAdmin = new SystemAdministratorModule(partnerControllerRemote, employeeControllerRemote);
                             systemAdmin.runSystemAdminModule();
@@ -94,7 +94,9 @@ class MainApp {
                     } else {
                         System.out.println("Employee is already logged in.");
                     }
-                } 
+                } else {
+                    System.out.println("Invalid inputs. Please try again.");
+                }
             } catch (InvalidLoginCredentials ex) {
                 System.out.println("Invalid password entered. Please try again");
 

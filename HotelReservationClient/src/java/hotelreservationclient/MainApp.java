@@ -32,6 +32,7 @@ import exceptions.BookingNotFoundException;
 import exceptions.EmployeeExistException;
 import exceptions.GuestExistException;
 import exceptions.GuestNotFoundException;
+import exceptions.InvalidLoginCredentials;
 import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
@@ -61,7 +62,7 @@ class MainApp {
     private PartnerControllerRemote partnerControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
     private Boolean loggedIn = false;
-    private Long guestId;
+    private Guest guest;
 
     public MainApp(GuestControllerRemote guestControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
             RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, PartnerControllerRemote partnerControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
@@ -91,7 +92,7 @@ class MainApp {
                 sc.nextLine();
 
                 if (choice == 1) {
-                    guestId = doGuestLogin();
+                    doGuestLogin();
                 } else if (choice == 2) {
                     doRegisterAsGuest();
                 } else if (choice == 3) {
@@ -116,7 +117,7 @@ class MainApp {
                 } else if (choice == 2) {
                     doViewMyReservation();
                 } else if (choice == 3) {
-                    doViewAllMyReservation(guestId);
+                    doViewAllMyReservation(guest.getGuestId());
                 } else if (choice == 4) {
                     loggedIn = false;
                     break;
@@ -127,36 +128,26 @@ class MainApp {
         }
     }
 
-    private Long doGuestLogin() {
+    private void doGuestLogin() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your email address: ");
         String email = sc.nextLine().trim();
-        Long dummyVal = null;
-        int count = 0;
+        System.out.println("Please enter password");
+            String password = sc.nextLine().trim();
+ 
         try {
-            Guest guest = guestControllerRemote.retrieveGuestByEmail(email);
+            guest = guestControllerRemote.guestLogin(email, password);
             if (!guest.getIsLogin()) {
-                while (count < 4) {
-                    System.out.println("Please enter password");
-                    String password = sc.nextLine().trim();
-                    if (password.equals(guest.getPassword())) {
-                        guest.setIsLogin(true);
                         loggedIn = true;
-                        guestControllerRemote.updateGuestLogin(guest, loggedIn);
-                        return guest.getGuestId();
-                    } else {
-                        System.out.println("Invalid password entered. Please try again");
-                        count++;
-                    }
-                }
+                        guestControllerRemote.updateGuestLogin(guest, true);
             } else {
-                System.out.println("Guest is already logged in. Please try again later.");
+                System.out.println("Guest is already logged in.");
             }
-
+        } catch (InvalidLoginCredentials ex) {
+                        System.out.println("Invalid password entered. Please try again");      
         } catch (GuestNotFoundException ex) {
             System.out.println("An error has occurred while retrieving guest: " + ex.getMessage() + "\n");
         }
-        return dummyVal;
     }
 
     private void doRegisterAsGuest() {
