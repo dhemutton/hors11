@@ -39,7 +39,7 @@ public class RoomRate implements Serializable {
     private Date startDate;
     @Column(nullable = false)
     private Date endDate;
-    private Boolean isUsed;
+    private Boolean isValid;
     private Boolean isEnabled;
     private Boolean forPartner;
 
@@ -99,12 +99,12 @@ public class RoomRate implements Serializable {
         this.endDate = endDate;
     }
 
-    public Boolean getIsUsed() {
-        return isUsed;
+    public Boolean getIsValid() {
+        return isValid;
     }
 
-    public void setIsUsed(Boolean isUsed) {
-        this.isUsed = isUsed;
+    public void setIsValid(Boolean isValid) {
+        this.isValid = isValid;
     }
 
     public Boolean getIsEnabled() {
