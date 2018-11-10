@@ -7,8 +7,11 @@ package ejb.session.stateless;
 
 import entity.RoomRate;
 import entity.RoomType;
+import static enums.RateTypeEnum.NORMAL;
+import static enums.RateTypeEnum.PUBLISHED;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
+import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import exceptions.RoomTypeNotFoundException;
 import java.util.Date;
 import java.util.List;
@@ -40,26 +43,32 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     }
 
     @Override
-    public RoomRate createRoomRate(RoomRate roomRate, Long roomTypeId) throws RoomRateExistException {
+    public RoomRate createRoomRate(RoomRate roomRate, Long roomTypeId) throws RoomRateExistException, RoomTypeCannotHaveDuplicatePublishedOrNormalException {
+
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+
+        for (RoomRate roomRateExisting : roomType.getRoomRates()) {
+            if (roomRateExisting.getRateType().equals(PUBLISHED) && roomRate.getRateType().equals(PUBLISHED) || roomRateExisting.getRateType().equals(NORMAL) && roomRate.getRateType().equals(NORMAL)) {
+                throw new RoomTypeCannotHaveDuplicatePublishedOrNormalException("Room rate already has a published or a normal rate. Unable to create duplicates.");
+            }
+        }
+
         try {
             em.persist(roomRate);
             em.flush();
         } catch (PersistenceException ex) {
             throw new RoomRateExistException("Room Rate already exists");
         }
-
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
         Date date = new Date();
+
         if (date.before(roomRate.getStartDate())) {
             roomRate.setIsValid(Boolean.FALSE);
         } else {
             roomRate.setIsValid(Boolean.TRUE);
         }
-        roomRate.setRoomType(roomType);
 
-        roomType.getRoomRates().size();
+        roomRate.setRoomType(roomType);        
         roomType.getRoomRates().add(roomRate);
-        roomType.setIsEnabled(Boolean.TRUE);
 
         return roomRate;
     }

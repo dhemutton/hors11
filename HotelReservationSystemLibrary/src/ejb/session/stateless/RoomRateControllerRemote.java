@@ -9,6 +9,7 @@ import entity.RoomRate;
 import entity.RoomType;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
+import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import exceptions.RoomTypeNotFoundException;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface RoomRateControllerRemote {
     
     public void persist(Object object);
 
-    public RoomRate createRoomRate(RoomRate roomRate, Long roomTypeIds) throws RoomRateExistException;
+    public RoomRate createRoomRate(RoomRate roomRate, Long roomTypeIds) throws RoomRateExistException, RoomTypeCannotHaveDuplicatePublishedOrNormalException;
     
     public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException;
 

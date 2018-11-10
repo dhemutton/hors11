@@ -35,9 +35,9 @@ public class RoomRate implements Serializable {
     private RateTypeEnum rateType;
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal ratePerNight;
-    @Column(nullable = false)
+    @Column(nullable = true) //only period for peak and promo
     private Date startDate;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date endDate;
     private Boolean isValid;
     private Boolean isEnabled;
@@ -58,6 +58,18 @@ public class RoomRate implements Serializable {
         this.endDate = endDate;
         this.roomType = roomType;
     }
+
+    public RoomRate(String name, RateTypeEnum rateType, BigDecimal ratePerNight, Date startDate, Date endDate, Boolean isEnabled, RoomType roomType) {
+        this.name = name;
+        this.rateType = rateType;
+        this.ratePerNight = ratePerNight;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isEnabled = isEnabled;
+        this.roomType = roomType;
+    }
+    
+    
 
     public String getName() {
         return name;

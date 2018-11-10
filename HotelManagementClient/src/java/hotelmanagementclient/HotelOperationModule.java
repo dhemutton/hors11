@@ -26,6 +26,7 @@ import exceptions.RoomExistException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
+import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import exceptions.RoomTypeExistException;
 import exceptions.RoomTypeNotFoundException;
 import java.text.ParseException;
@@ -132,6 +133,8 @@ class HotelOperationModule {
                 } else if (choice == 3) {
                     doViewRoomRateDetails();
                 } else if (choice == 4) {
+                    employeeControllerRemote.updateEmployeeLogin(employee, false);
+
                     break;
                 } else {
                     System.out.println("Invalid entry. Please try again");
@@ -600,7 +603,7 @@ class HotelOperationModule {
         RoomRate roomRate = new RoomRate();
         Scanner scanner = new Scanner(System.in);
         Long roomTypeId = null;
-
+        int choice = 0;
         try {
             System.out.println("*** HoRS ::Hotel Operations :: Create New Room Rate ***\n");
             System.out.print("Enter name of room rate: ");
@@ -612,16 +615,19 @@ class HotelOperationModule {
             System.out.println("4. Promo");
 
             while (true) {
-                int choice = scanner.nextInt();
+                choice = scanner.nextInt();
 
                 if (choice == 1) {
                     roomRate.setRateType(RateTypeEnum.PUBLISHED);
                     roomRate.setForPartner(Boolean.FALSE);
+                    roomRate.setEndDate(null);
+                    roomRate.setStartDate(null);
                     break;
                 } else if (choice == 2) {
                     roomRate.setRateType(RateTypeEnum.NORMAL);
                     roomRate.setForPartner(Boolean.TRUE);
-
+                    roomRate.setEndDate(null);
+                    roomRate.setStartDate(null);
                     break;
 
                 } else if (choice == 3) {
@@ -646,49 +652,58 @@ class HotelOperationModule {
             roomRate.setRatePerNight(scanner.nextBigDecimal());
             scanner.nextLine();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            System.out.println("Enter start date (format: dd/mm/yyyy) >");
-            Boolean again = true;
+            if (choice == 3 || choice == 4) {
+                System.out.println("Enter start date (format: dd/mm/yyyy) >");
+                Boolean again = true;
 
-            while (again) {
-                String start = scanner.nextLine().trim();
-
-                try {
-                    startDate = formatter.parse(start);
-                    roomRate.setStartDate(startDate);
-                    again = false;
-                } catch (ParseException ex) {
-                    again = true;
-                    System.out.println("Incorrect date format.");
-                }
-            }
-
-            System.out.println("Enter end date (format: dd/mm/yyyy) >");
-            again = true;
-            while (again) {
-                String end = scanner.nextLine().trim();
-
-                try {
-                  endDate =  formatter.parse(end);
-                    if (startDate.before(endDate)) {
-                         again = false;
-                         roomRate.setEndDate(endDate);
+                while (again) {
+                    String start = scanner.nextLine().trim();
+                    if (start.length() == 10) {
+                        try {
+                            startDate = formatter.parse(start);
+                            roomRate.setStartDate(startDate);
+                            again = false;
+                        } catch (ParseException ex) {
+                            again = true;
+                            System.out.println("Incorrect date format.");
+                        }
                     } else {
                         again = true;
-                        System.out.println("End date is before start date! Please re-enter end date.");
+                        System.out.println("Incorrect date format.");
                     }
-                } catch (ParseException ex) {
-                    again = true;
-                    System.out.println("Incorrect date format.");
+                }
+
+                System.out.println("Enter end date (format: dd/mm/yyyy) >");
+                again = true;
+                while (again) {
+                    String end = scanner.nextLine().trim();
+                    if (end.length() == 10) {
+                        try {
+                            endDate = formatter.parse(end);
+                            if (startDate.before(endDate) || startDate.equals(endDate)) {
+                                again = false;
+                                roomRate.setEndDate(endDate);
+                            } else {
+                                again = true;
+                                System.out.println("End date is before start date! Please re-enter end date.");
+                            }
+                        } catch (ParseException ex) {
+                            again = true;
+                            System.out.println("Incorrect date format.");
+                        }
+                    } else {
+                        again = true;
+                        System.out.println("Incorrect date format.");
+                    }
                 }
             }
-
             System.out.println("Select room type to apply this room rate for: ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
             for (int i = 0; i < roomTypes.size(); i++) {
                 System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
             }
             while (true) {
-                int choice = scanner.nextInt();
+                choice = scanner.nextInt();
                 choice--;
                 if (choice >= 0 && choice < roomTypes.size()) {
                     roomTypeId = roomTypes.get(choice).getRoomTypeId();
@@ -711,6 +726,8 @@ class HotelOperationModule {
 
         } catch (RoomRateExistException ex) {
             System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "!\n");
+        } catch (RoomTypeCannotHaveDuplicatePublishedOrNormalException ex) {
+            System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "\n");
         }
 
     }
