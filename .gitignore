@@ -9,7 +9,7 @@
 
 
 # Package Files #
-.jar
+*.jar
 *.war
 *.ear
 *.zip
@@ -30,9 +30,14 @@ HotelManagementClient/nbproject/private/
 HotelManagementClient/build/
 HotelManagementClient/dist/
 
+HotelReservationClient/nbproject/private/
+HotelReservationClient/build/
+HotelReservationClient/dist/
+
 HotelReservationSystemLibrary/nbproject/private/
 HotelReservationSystemLibrary/build/
 HotelReservationSystemLibrary/dist/
 
 HotelReservationSystem/HotelReservationSystem-ejb/build/
 HotelReservationSystem/HotelReservationSystem-ejb/dist/
+/HolidayReservationClient/nbproject/private/

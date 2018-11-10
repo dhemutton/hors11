@@ -37,13 +37,14 @@ public class Reservation implements Serializable {
     @Enumerated(EnumType.STRING)
     private ExceptionTypeEnum exceptionType;
     
-
+    @ManyToOne(optional = true)
+    private RoomType finalRoomType;
     
-    @ManyToOne
+    @ManyToOne(optional = true)
     private Room room;
     
     @ManyToOne(optional = false)
-    private RoomType roomType;
+    private RoomType initialRoomType;
     
     @ManyToOne(optional = false)
     private Booking booking;
@@ -52,8 +53,8 @@ public class Reservation implements Serializable {
         
     }
 
-    public Reservation(RoomType roomType, Booking booking, ExceptionTypeEnum exceptionType) {
-        this.roomType = roomType;
+    public Reservation(RoomType initialRoomType, Booking booking, ExceptionTypeEnum exceptionType) {
+        this.initialRoomType = initialRoomType;
         this.booking = booking;
         this.exceptionType = exceptionType;
     }
@@ -98,12 +99,12 @@ public class Reservation implements Serializable {
         this.room = room;
     }
 
-    public RoomType getRoomType() {
-        return roomType;
+    public RoomType getInitialRoomType() {
+        return initialRoomType;
     }
 
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
+    public void setInitialRoomType(RoomType roomType) {
+        this.initialRoomType = roomType;
     }
 
     public Booking getBooking() {
@@ -113,10 +114,14 @@ public class Reservation implements Serializable {
     public void setBooking(Booking booking) {
         this.booking = booking;
     }
-    
 
-    
-    
+    public RoomType getFinalRoomType() {
+        return finalRoomType;
+    }
+
+    public void setFinalRoomType(RoomType finalRoomType) {
+        this.finalRoomType = finalRoomType;
+    }
     
     
     public Long getId() {
