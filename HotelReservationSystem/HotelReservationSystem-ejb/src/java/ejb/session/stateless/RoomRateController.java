@@ -9,6 +9,7 @@ import entity.RoomRate;
 import entity.RoomType;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
+import exceptions.RoomTypeNotFoundException;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -43,24 +44,24 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         try {
             em.persist(roomRate);
             em.flush();
-
-            RoomType roomType = em.find(RoomType.class, roomTypeId);
-            Date date = new Date();
-            if (date.before(roomRate.getStartDate())) {
-                roomRate.setIsValid(Boolean.FALSE);
-            } else {
-                roomRate.setIsValid(Boolean.TRUE);
-            }
-            roomRate.setRoomType(roomType);
-
-            roomType.getRoomRates().size();
-            roomType.getRoomRates().add(roomRate);
-            roomType.setIsEnabled(Boolean.TRUE);
-
-            return roomRate;
         } catch (PersistenceException ex) {
             throw new RoomRateExistException("Room Rate already exists");
         }
+
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+        Date date = new Date();
+        if (date.before(roomRate.getStartDate())) {
+            roomRate.setIsValid(Boolean.FALSE);
+        } else {
+            roomRate.setIsValid(Boolean.TRUE);
+        }
+        roomRate.setRoomType(roomType);
+
+        roomType.getRoomRates().size();
+        roomType.getRoomRates().add(roomRate);
+        roomType.setIsEnabled(Boolean.TRUE);
+
+        return roomRate;
     }
 
     @Override
@@ -101,13 +102,15 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     }
 
     @Override
-    public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException {
-        RoomRate roomRate = em.find(RoomRate.class, RoomRateId);
+    public RoomRate
+            retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException {
+        RoomRate roomRate = em.find(RoomRate.class,
+                 RoomRateId);
 
         if (roomRate != null) {
             return roomRate;
         } else {
-            throw new RoomRateNotFoundException("Employee ID " + RoomRateId + " does not exist");
+            throw new RoomRateNotFoundException("Room rate ID " + RoomRateId + " does not exist");
         }
     }
 
@@ -125,7 +128,8 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
 
     @Override
     public void updateRoomRate(RoomRate roomRate, Long roomTypeId) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
+        RoomType roomType = em.find(RoomType.class,
+                 roomTypeId);
         RoomType oldRoomType = roomRate.getRoomType();
         oldRoomType.getRoomRates().remove(roomRate); //remove room rate from list of room rates attached to a room type
 
@@ -138,7 +142,8 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
 
     @Override
     public void deleteRoomRate(Long roomRateId) {
-        RoomRate roomRate = em.find(RoomRate.class, roomRateId);
+        RoomRate roomRate = em.find(RoomRate.class,
+                 roomRateId);
         roomRate.setIsEnabled(Boolean.FALSE);
         em.remove(roomRate);
     }

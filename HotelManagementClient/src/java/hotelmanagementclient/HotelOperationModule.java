@@ -6,6 +6,7 @@
 package hotelmanagementclient;
 
 import ejb.session.stateless.BookingControllerRemote;
+import ejb.session.stateless.EmployeeControllerRemote;
 import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
@@ -46,18 +47,19 @@ class HotelOperationModule {
     private RoomTypeControllerRemote roomTypeControllerRemote;
     private ReservationControllerRemote reservationControllerRemote;
     private BookingControllerRemote bookingControllerRemote;
+    private EmployeeControllerRemote employeeControllerRemote;
 
     public HotelOperationModule() {
     }
 
     public HotelOperationModule(RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote,
-            RoomTypeControllerRemote roomTypeControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote) {
+            RoomTypeControllerRemote roomTypeControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
         this.reservationControllerRemote = reservationControllerRemote;
         this.bookingControllerRemote = bookingControllerRemote;
-
+        this.employeeControllerRemote = employeeControllerRemote;
     }
 
     public void runHotelOperationsModule(Employee employee) {
@@ -86,7 +88,7 @@ class HotelOperationModule {
                 System.out.println();
 
                 System.out.println("8. View room allocation Exception Report"); //show type 1 and type 2
-                System.out.println("9. Exit");
+                System.out.println("9. Logout");
 
                 int choice = sc.nextInt();
                 if (choice == 1) {
@@ -107,6 +109,7 @@ class HotelOperationModule {
                 } else if (choice == 8) {
                     doRoomAllocationExceptionReport();
                 } else if (choice == 9) {
+                    employeeControllerRemote.updateEmployeeLogin(employee, false);
                     break;
                 } else {
                     System.out.println("Invalid entry. Please try again");
@@ -571,7 +574,9 @@ class HotelOperationModule {
             }
         }
         System.out.println("Type 1: ");
-
+        if (type1.size() == 0) {
+            System.out.println("No type 1 exceptions today.");
+        }
         for (Reservation reservation : type1) {
             System.out.println("Reservation Id: " + reservation.getId());
             System.out.println("Initial Room Type: " + reservation.getInitialRoomType().getName());
@@ -581,11 +586,13 @@ class HotelOperationModule {
 
         System.out.println();
         System.out.println("Type 2: ");
-
+        if (type1.size() == 0) {
+            System.out.println("No type 2 exceptions today.");
+        }
         for (Reservation reservation : type2) {
             System.out.println("Reservation Id: " + reservation.getId());
         }
-        
+
         System.out.println("*****************************************************");
     }
 
@@ -633,7 +640,8 @@ class HotelOperationModule {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
-
+            Date startDate = new Date();
+            Date endDate;
             System.out.println("Enter Rate Per Night: ");
             roomRate.setRatePerNight(scanner.nextBigDecimal());
             scanner.nextLine();
@@ -642,10 +650,11 @@ class HotelOperationModule {
             Boolean again = true;
 
             while (again) {
-                String startDate = scanner.nextLine().trim();
+                String start = scanner.nextLine().trim();
 
                 try {
-                    formatter.parse(startDate);
+                    startDate = formatter.parse(start);
+                    roomRate.setStartDate(startDate);
                     again = false;
                 } catch (ParseException ex) {
                     again = true;
@@ -656,18 +665,24 @@ class HotelOperationModule {
             System.out.println("Enter end date (format: dd/mm/yyyy) >");
             again = true;
             while (again) {
-                String endDate = scanner.nextLine().trim();
+                String end = scanner.nextLine().trim();
 
                 try {
-                    formatter.parse(endDate);
-                    again = false;
+                  endDate =  formatter.parse(end);
+                    if (startDate.before(endDate)) {
+                         again = false;
+                         roomRate.setEndDate(endDate);
+                    } else {
+                        again = true;
+                        System.out.println("End date is before start date! Please re-enter end date.");
+                    }
                 } catch (ParseException ex) {
                     again = true;
                     System.out.println("Incorrect date format.");
                 }
             }
 
-            System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
+            System.out.println("Select room type to apply this room rate for: ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
             for (int i = 0; i < roomTypes.size(); i++) {
                 System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
@@ -682,6 +697,7 @@ class HotelOperationModule {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
+            scanner.nextLine();
             System.out.println("Enable room rate? (Enter 'Y' to enable)");
             if (scanner.nextLine().trim().equals("Y")) {
                 roomRate.setIsEnabled(Boolean.TRUE);

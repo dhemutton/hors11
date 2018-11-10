@@ -9,6 +9,7 @@ import entity.RoomRate;
 import entity.RoomType;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
+import exceptions.RoomTypeNotFoundException;
 import java.util.List;
 
 /**

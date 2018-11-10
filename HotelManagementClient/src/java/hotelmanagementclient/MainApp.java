@@ -81,11 +81,11 @@ class MainApp {
                             systemAdmin.runSystemAdminModule();
                             break;
                         } else if (loginEmployee.getEmployeeType().equals(GUESTRELATIONS)) {
-                            FrontOfficeModule frontOffice = new FrontOfficeModule(reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote);
+                            FrontOfficeModule frontOffice = new FrontOfficeModule(reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote,employeeControllerRemote);
                             frontOffice.runFrontOfficeModule(loginEmployee);
                             break;
                         } else {
-                            HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, reservationControllerRemote, bookingControllerRemote);
+                            HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, reservationControllerRemote, bookingControllerRemote,employeeControllerRemote);
                             hotelOperations.runHotelOperationsModule(loginEmployee);
                             break;
                         }

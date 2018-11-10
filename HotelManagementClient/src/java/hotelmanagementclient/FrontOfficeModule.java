@@ -6,6 +6,7 @@
 package hotelmanagementclient;
 
 import ejb.session.stateless.BookingControllerRemote;
+import ejb.session.stateless.EmployeeControllerRemote;
 import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
@@ -38,17 +39,20 @@ class FrontOfficeModule {
     private RoomControllerRemote roomControllerRemote;
     private RoomRateControllerRemote roomRateControllerRemote;
     private RoomTypeControllerRemote roomTypeControllerRemote;
+    private EmployeeControllerRemote employeeControllerRemote;
 
     public FrontOfficeModule() {
     }
 
     public FrontOfficeModule(ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
-            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote) {
+            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
         this.reservationControllerRemote = reservationControllerRemote;
         this.bookingControllerRemote = bookingControllerRemote;
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
+        this.employeeControllerRemote = employeeControllerRemote;
+
     }
 
     public void runFrontOfficeModule(Employee loginEmployee) {
@@ -57,7 +61,7 @@ class FrontOfficeModule {
             System.out.println("1. Make walk in reservation");
             System.out.println("2. Check in guest");
             System.out.println("3. Check out guest");
-            System.out.println("4. Exit");
+            System.out.println("4. Logout");
             int choice = sc.nextInt();
             if (choice == 1) {
                 doWalkInSearchRoom();
@@ -66,6 +70,8 @@ class FrontOfficeModule {
             } else if (choice == 3) {
                 doCheckOutGuest();
             } else if (choice == 4) {
+                employeeControllerRemote.updateEmployeeLogin(loginEmployee, false);
+
                 break;
             } else {
                 System.out.println("Invalid entry. Please try again");
@@ -119,24 +125,24 @@ class FrontOfficeModule {
     }
 
     private void doCheckOutGuest() {
-        
+
         try {
-        Scanner sc = new Scanner(System.in);
-        Date inputDate = null;
-        System.out.println("Please enter room number");
-        String number = sc.nextLine().trim();
-        Room room = roomControllerRemote.retrieveRoomByRoomNum(number);
-        room.setIsVacant(Boolean.TRUE);
-        roomControllerRemote.mergeRoom(room);
-        System.out.println("Please enter your reservation ID");
-        Long reservationID = sc.nextLong();
-        Reservation reservation = reservationControllerRemote.retrieveReservationById(reservationID);
-        reservation.setIsCheckedOut(Boolean.TRUE);
-        reservationControllerRemote.updateReservation(reservation);
-        } catch(ReservationNotFoundException ex) {
+            Scanner sc = new Scanner(System.in);
+            Date inputDate = null;
+            System.out.println("Please enter room number");
+            String number = sc.nextLine().trim();
+            Room room = roomControllerRemote.retrieveRoomByRoomNum(number);
+            room.setIsVacant(Boolean.TRUE);
+            roomControllerRemote.mergeRoom(room);
+            System.out.println("Please enter your reservation ID");
+            Long reservationID = sc.nextLong();
+            Reservation reservation = reservationControllerRemote.retrieveReservationById(reservationID);
+            reservation.setIsCheckedOut(Boolean.TRUE);
+            reservationControllerRemote.updateReservation(reservation);
+        } catch (ReservationNotFoundException ex) {
             System.out.println("Reservation not found!");
-        } catch(RoomNotFoundException ex) {
-                        System.out.println("Room not found!");
+        } catch (RoomNotFoundException ex) {
+            System.out.println("Room not found!");
         }
     }
 
@@ -170,7 +176,7 @@ class FrontOfficeModule {
                     break;
                 }
             }
-            reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice-1), booking, UNASSIGNED));
+            reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
         }
     }
 }
