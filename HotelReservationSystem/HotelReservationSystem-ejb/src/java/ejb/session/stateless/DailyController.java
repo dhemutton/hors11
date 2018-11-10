@@ -5,14 +5,14 @@ import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import enums.ExceptionTypeEnum;
-import static enums.RateTypeEnum.NORMAL;
+import static enums.RateTypeEnum.PEAK;
+import static enums.RateTypeEnum.PROMO;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Remote;
-import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,7 +43,6 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
         em.persist(object);
     }
 
-    @Schedule(hour = "2")
     @Override
     public void dailyReservationRoomAssignment() {
         //SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -164,61 +163,61 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
             }
         }
     }
-    @Schedule(hour="0")
+
     @Override
     public void deleteAllRoomRates() {
         //Delete all room rates with no room types(assumed that room type was deleted)
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=null");
         List<RoomRate> roomRates = query.getResultList();
-        for(RoomRate roomRate : roomRates) {
+        for (RoomRate roomRate : roomRates) {
             roomRateController.deleteRoomRate(roomRate.getRoomRateId());
         }
-        
+
         Date date = new Date();
         //allow isUsed for all valid rate periods
         query = em.createQuery("SELECT rr FROM RoomRate rr WHERE :date BETWEEN rr.startDate AND rr.endDate");
         query.setParameter("date", date);
         roomRates = query.getResultList();
-        for(RoomRate roomRate : roomRates) {
+        for (RoomRate roomRate : roomRates) {
             roomRate.setIsValid(Boolean.TRUE);
             roomRateController.mergeRoomRate(roomRate);
         }
-        
+
         //disallow isUsed for all invalid rate periods
         query = em.createQuery("SELECT rr FROM RoomRate rr WHERE :date NOT BETWEEN rr.startDate AND rr.endDate");
         query.setParameter("date", date);
         roomRates = query.getResultList();
-        for(RoomRate roomRate : roomRates) {
-            roomRate.setIsValid(Boolean.FALSE);
-            roomRateController.mergeRoomRate(roomRate);
+        for (RoomRate roomRate : roomRates) {
+            if (roomRate.getRateType() == PROMO || roomRate.getRateType() == PEAK) {
+                roomRate.setIsValid(Boolean.FALSE);
+                roomRateController.mergeRoomRate(roomRate);
+            }
         }
-        
+
         //Check for any room rates to be deleted
         query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.isUsed=false AND rr.isEnabled=false");
         roomRates = query.getResultList();
-        for(RoomRate roomRate : roomRates) {
+        for (RoomRate roomRate : roomRates) {
             roomRateController.deleteRoomRate(roomRate.getRoomRateId());
         }
     }
-    
-    @Schedule(hour="0")
+
     @Override
     public void deleteAllRooms() {
         //Check for any room rates to be deleted
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.isVacant=true AND rr.isEnabled=false");
         List<Room> rooms = query.getResultList();
-        for(Room room : rooms) {
+        for (Room room : rooms) {
             roomController.deleteRoom(room.getRoomId());
         }
     }
-    
-    @Schedule(hour="0")
+
     @Override
     public void deleteAllRoomTypes() {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.isEnabled=false");
         List<RoomType> roomTypes = query.getResultList();
-        for(RoomType roomType : roomTypes) {
-            if(roomType.getRooms().isEmpty()) {
+        for (RoomType roomType : roomTypes) {
+            if (roomType.getRooms().isEmpty()) {
                 roomTypeController.deleteRoomType(roomType);
             }
         }
