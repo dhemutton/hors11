@@ -9,6 +9,7 @@ import entity.RoomRate;
 import entity.RoomType;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -41,17 +42,20 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     public RoomRate createRoomRate(RoomRate roomRate, Long roomTypeId) throws RoomRateExistException {
         try {
             em.persist(roomRate);
+            em.flush();
 
             RoomType roomType = em.find(RoomType.class, roomTypeId);
-            roomRate.setIsUsed(Boolean.TRUE);
+            Date date = new Date();
+            if (date.before(roomRate.getStartDate())) {
+                roomRate.setIsValid(Boolean.FALSE);
+            } else {
+                roomRate.setIsValid(Boolean.TRUE);
+            }
             roomRate.setRoomType(roomType);
-            em.merge(roomRate);
-            
+
             roomType.getRoomRates().size();
             roomType.getRoomRates().add(roomRate);
             roomType.setIsEnabled(Boolean.TRUE);
-            em.merge(roomType);
-            em.flush();
 
             return roomRate;
         } catch (PersistenceException ex) {
@@ -124,7 +128,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         RoomType roomType = em.find(RoomType.class, roomTypeId);
         RoomType oldRoomType = roomRate.getRoomType();
         oldRoomType.getRoomRates().remove(roomRate); //remove room rate from list of room rates attached to a room type
-        
+
         roomRate.setRoomType(roomType); //set new roomtype for room rate
         em.merge(roomRate);
 
@@ -138,10 +142,10 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         roomRate.setIsEnabled(Boolean.FALSE);
         em.remove(roomRate);
     }
-    
+
     @Override
     public void mergeRoomRate(RoomRate roomRate) {
-        
+
         em.merge(roomRate);
     }
 }

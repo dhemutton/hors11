@@ -268,7 +268,7 @@ class MainApp {
             System.out.println("Total Cost: " + booking.getCost());
             List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
             System.out.println("Number of rooms reserved: " + reservations.size());
-            System.out.println("Room Type: " + reservations.get(0).getRoomType().getName());
+            System.out.println("Room Type: " + reservations.get(0).getInitialRoomType().getName());
             System.out.println("*********************************************************************");
             System.out.println();
 
@@ -293,7 +293,7 @@ class MainApp {
                 System.out.println("Total Cost: " + list.get(i).getCost());
                 List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
                 System.out.println("Number of rooms reserved: " + reservations.size());
-                System.out.println("Room Type: " + reservations.get(0).getRoomType().getName());
+                System.out.println("Room Type: " + reservations.get(0).getInitialRoomType().getName());
                 System.out.println("*********************************************************************");
                 System.out.println();
             }
