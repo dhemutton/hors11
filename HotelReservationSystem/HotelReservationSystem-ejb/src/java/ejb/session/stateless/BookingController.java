@@ -79,6 +79,7 @@ public class BookingController implements BookingControllerRemote, BookingContro
         query3.setParameter("endDate", endDate);
 //        query4.setParameter("startDate", startDate);
 //        query4.setParameter("endDate", endDate);
+        
         finalList.addAll(query1.getResultList());
         List<Booking> list2 = query2.getResultList();
         for (Booking booking : list2 ) {
@@ -93,6 +94,10 @@ public class BookingController implements BookingControllerRemote, BookingContro
             }
         }
 //        finalList.addAll(query4.getResultList());
+        for (Booking booking: finalList) {
+            booking.getReservation().size();
+        }
+
         return finalList;   
     }
 
