@@ -164,6 +164,7 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
             }
         }
     }
+    @Schedule(hour="0")
     @Override
     public void deleteAllRoomRates() {
         //Delete all room rates with no room types(assumed that room type was deleted)
@@ -179,7 +180,7 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
         query.setParameter("date", date);
         roomRates = query.getResultList();
         for(RoomRate roomRate : roomRates) {
-            roomRate.setIsUsed(Boolean.TRUE);
+            roomRate.setIsValid(Boolean.TRUE);
             roomRateController.mergeRoomRate(roomRate);
         }
         
@@ -188,7 +189,7 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
         query.setParameter("date", date);
         roomRates = query.getResultList();
         for(RoomRate roomRate : roomRates) {
-            roomRate.setIsUsed(Boolean.FALSE);
+            roomRate.setIsValid(Boolean.FALSE);
             roomRateController.mergeRoomRate(roomRate);
         }
         
@@ -199,6 +200,8 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
             roomRateController.deleteRoomRate(roomRate.getRoomRateId());
         }
     }
+    
+    @Schedule(hour="0")
     @Override
     public void deleteAllRooms() {
         //Check for any room rates to be deleted
@@ -209,6 +212,7 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
         }
     }
     
+    @Schedule(hour="0")
     @Override
     public void deleteAllRoomTypes() {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.isEnabled=false");
