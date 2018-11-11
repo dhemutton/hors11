@@ -3,8 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/EmployeeController.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/singleton/DataInitialization.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomRateControllerLocal.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomRateController.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/PartnerController.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/PartnerControllerLocal.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/ws/HolidayWebService.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/ReservationController.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/BookingController.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomController.java</file>
             <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/GuestController.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomTypeController.java</file>
         </group>
     </open-files>
 </project-private>

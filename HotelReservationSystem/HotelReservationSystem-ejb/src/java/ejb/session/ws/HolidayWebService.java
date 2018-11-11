@@ -64,7 +64,9 @@ public class HolidayWebService {
 
     //Search room
     public List<Room> retrieveAllEnabledRooms() {
-        return roomControllerLocal.retrieveAllEnabledRooms();
+        
+        List<Room> rooms = roomControllerLocal.retrieveAllEnabledRooms();
+        return rooms;
     }
 
     //Search room

@@ -31,6 +31,8 @@ public class Partner implements Serializable {
     @Column(length = 32, nullable = false)
     private String password;
     private Boolean isLogin = false;
+     @Column(nullable = false)
+    private Boolean isManager;
     
     @OneToMany(mappedBy = "partner")
     private List<Booking> bookings;
@@ -44,12 +46,13 @@ public class Partner implements Serializable {
 
     }
 
-    public Partner(String username, String password) {
-        this();
+    public Partner(String username, String password, Boolean isManager) {
         this.username = username;
         this.password = password;
+        this.isManager = isManager;
     }
 
+   
     public List<PartnerCustomer> getPartnerCustomers() {
         return partnerCustomers;
     }

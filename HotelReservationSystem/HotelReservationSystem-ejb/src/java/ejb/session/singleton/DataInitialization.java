@@ -117,8 +117,8 @@ public class DataInitialization {
         guestController.createGuest(new Guest("8@gmail.com", "guest8", "GUEST8", "8", "guest8"));
         guestController.createGuest(new Guest("9@gmail.com", "guest9", "GUEST9", "9", "guest9"));
         
-        partnerController.createNewPartner(new Partner("Matthea", "password"));
-        partnerController.createNewPartner(new Partner("Jonathan", "password"));
+        partnerController.createNewPartner(new Partner("Matthea", "password", true));
+        partnerController.createNewPartner(new Partner("Jonathan", "password", true));
         
         roomTypeController.createRoomType(new RoomType("Type A", "Best room with everything", 8, "1 king-size bed", "8-10 people", "Toilet, balcony, kitchen, living room", 1, false, true));
         roomTypeController.createRoomType(new RoomType("Type B", "Luxurious room", 6, "1 queen-size bed", "6-8 people", "Toilet, balcony, kitchen", 2, false, true));
