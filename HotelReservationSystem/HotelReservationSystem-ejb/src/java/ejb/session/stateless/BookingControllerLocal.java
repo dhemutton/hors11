@@ -29,5 +29,12 @@ public interface BookingControllerLocal {
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate);
 
     public List<Booking> retrieveAllBookingsForGuest(Long guestId);
+    
+            public List<Booking> retrieveAllBookingsForPartner(Long partnerId);
+
+    
+     public Booking retrieveBookingByIdForGuest(Long bookingId, Long guestId) throws BookingNotFoundException;
+    public Booking retrieveBookingByIdForPartner(Long bookingId, Long partnerId) throws BookingNotFoundException;
+
 
 }

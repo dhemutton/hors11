@@ -20,7 +20,7 @@ public interface RoomControllerLocal {
 
     public void mergeRoom(Room room);
 
-    public List<Room> retrieveAllRooms();
+    public List<Room> retrieveAllEnabledRooms();
 
     public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType);
 
@@ -39,5 +39,8 @@ public interface RoomControllerLocal {
     public Room createRoom(Room room, Long roomTypeId) throws RoomExistException, RoomTypeNotFoundException;
 
     public Room retrieveRoomById(Long RoomId) throws RoomNotFoundException;
+    
+            public List<Room> retrieveAllRooms();
+
 
 }

@@ -34,6 +34,7 @@ import exceptions.GuestNotFoundException;
 import exceptions.PartnerExistException;
 import exceptions.RoomExistException;
 import exceptions.RoomRateExistException;
+import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import exceptions.RoomTypeExistException;
 import exceptions.RoomTypeNotFoundException;
 import java.math.BigDecimal;
@@ -92,13 +93,13 @@ public class DataInitialization {
             try {
                 System.out.println("Initializing data");
                 initializeData();
-            } catch (EmployeeExistException | GuestExistException | RoomTypeExistException | RoomRateExistException | RoomTypeNotFoundException | RoomExistException | PartnerExistException | GuestNotFoundException | ParseException ex1) {
+            } catch (EmployeeExistException | GuestExistException | RoomTypeExistException | RoomRateExistException | RoomTypeNotFoundException | RoomExistException | PartnerExistException | GuestNotFoundException | ParseException | RoomTypeCannotHaveDuplicatePublishedOrNormalException ex1) {
                 Logger.getLogger(DataInitialization.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
     }
 
-    private void initializeData() throws EmployeeExistException, GuestExistException, RoomTypeExistException, RoomRateExistException, RoomTypeNotFoundException, RoomExistException, PartnerExistException, GuestNotFoundException, ParseException {
+    private void initializeData() throws EmployeeExistException, GuestExistException, RoomTypeExistException, RoomRateExistException, RoomTypeNotFoundException, RoomExistException, PartnerExistException, GuestNotFoundException, ParseException, RoomTypeCannotHaveDuplicatePublishedOrNormalException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         
         employeeController.createNewEmployee(new Employee("Jonathan", "Soh", "111", "111", SYSTEMADMIN));

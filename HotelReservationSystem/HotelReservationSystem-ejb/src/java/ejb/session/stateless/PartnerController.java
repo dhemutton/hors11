@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Employee;
 import entity.Partner;
+import exceptions.InvalidLoginCredentials;
 import exceptions.PartnerExistException;
 import exceptions.PartnerNotFoundException;
 import java.util.List;
@@ -83,5 +84,22 @@ public class PartnerController implements PartnerControllerRemote, PartnerContro
         return query.getResultList();      
     }
 
+    
+    
+    @Override
+    public Partner partnerLogin(String username, String password) throws InvalidLoginCredentials, PartnerNotFoundException {
+
+        Partner partnerEntity;
+        try {
+            partnerEntity = retrievePartnerByUsername(username);
+        } catch (PartnerNotFoundException ex) {
+
+            throw new PartnerNotFoundException("Partner username " + username + " does not exist");
+        }
+            if (partnerEntity.getPassword().equals(password)) {
+                return partnerEntity;
+            }
+            throw new InvalidLoginCredentials("Invalid password!");
+     }
    
 }

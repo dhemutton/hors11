@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Booking;
 import entity.Guest;
+import entity.Partner;
 import exceptions.BookingNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +50,31 @@ public class BookingController implements BookingControllerRemote, BookingContro
             throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist");
         }  
     }
+    
+    @Override
+    public Booking retrieveBookingByIdForGuest(Long bookingId, Long guestId) throws BookingNotFoundException {
+            Booking booking = em.find(Booking.class, bookingId);
+        
+        if (booking != null && booking.getGuest().getGuestId().equals(guestId)) {
+            return booking;
+        } else {
+            throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist");
+        }  
+    }
+
+    
+    @Override
+    public Booking retrieveBookingByIdForPartner(Long bookingId, Long partnerId) throws BookingNotFoundException {
+            Booking booking = em.find(Booking.class, bookingId);
+        
+        if (booking != null  && booking.getPartner().getPartnerId().equals(partnerId)) {
+            return booking;
+        } else {
+            throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist");
+        }  
+    }
+
+    
     
     @Override
     public List<Booking> retrieveAllBookingsOnStartDate(Date startDate) {
@@ -111,5 +137,12 @@ public class BookingController implements BookingControllerRemote, BookingContro
                 Guest guest = em.find(Guest.class, guestId);
                 guest.getBookings().size();
         return guest.getBookings();   
+    }
+    
+    @Override
+    public List<Booking> retrieveAllBookingsForPartner(Long partnerId) {
+                Partner partner = em.find(Partner.class, partnerId);
+                partner.getBookings().size();
+        return partner.getBookings();   
     }
 }

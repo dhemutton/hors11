@@ -20,8 +20,9 @@ public interface RoomControllerRemote {
     
         public void mergeRoom(Room room);
 
-    
-    public List<Room> retrieveAllRooms();
+        public List<Room> retrieveAllRooms();
+
+    public List<Room> retrieveAllEnabledRooms();
 
     public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType);
 

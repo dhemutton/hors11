@@ -63,11 +63,18 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     }
 
     @Override
-    public List<Room> retrieveAllRooms() {
-        Query query = em.createQuery("SELECT r FROM Room r");
+    public List<Room> retrieveAllEnabledRooms() {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.isEnabled = true ");
         return query.getResultList();
     }
 
+    @Override
+    public List<Room> retrieveAllRooms() {
+        Query query = em.createQuery("SELECT r FROM Room r  ");
+        return query.getResultList();
+    }
+
+    
     @Override
     public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType) {
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType=:roomType");

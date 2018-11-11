@@ -115,7 +115,7 @@ class MainApp {
                 if (choice == 1) {
                     doSearchRoom();
                 } else if (choice == 2) {
-                    doViewMyReservation();
+                    doViewMyReservation(guest.getGuestId());
                 } else if (choice == 3) {
                     doViewAllMyReservation(guest.getGuestId());
                 } else if (choice == 4) {
@@ -174,7 +174,7 @@ class MainApp {
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        int maxRooms = roomControllerRemote.retrieveAllRooms().size();
+        int maxRooms = roomControllerRemote.retrieveAllEnabledRooms().size();
         System.out.println("Please enter start date (dd/mm/yyyy");
         Boolean again = true;
 
@@ -253,13 +253,13 @@ class MainApp {
         }
     }
 
-    private void doViewMyReservation() {
+    private void doViewMyReservation(Long guestId) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("*** HoRS :: Reservation Client :: View My Reservation ***\n");
         System.out.println("Which reservation would you like to view?  (Enter reservation id) ");
         Long bookingId = scanner.nextLong();
         try {
-            Booking booking = bookingControllerRemote.retrieveBookingById(bookingId);
+            Booking booking = bookingControllerRemote.retrieveBookingByIdForGuest(bookingId, guestId);
             System.out.println("Booking ID: " + bookingId);
             System.out.println("Start Date: " + booking.getStartDate());
             System.out.println("End Date: " + booking.getEndDate());

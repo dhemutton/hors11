@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Partner;
+import exceptions.InvalidLoginCredentials;
 import exceptions.PartnerExistException;
 import exceptions.PartnerNotFoundException;
 import java.util.List;
@@ -22,4 +23,7 @@ public interface PartnerControllerRemote {
     public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException;
 
     public List<Partner> retrieveAllPartner();
+    
+        public Partner partnerLogin(String username, String password) throws InvalidLoginCredentials, PartnerNotFoundException;
+
 }
