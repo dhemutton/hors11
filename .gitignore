@@ -39,6 +39,15 @@ HotelReservationSystemLibrary/nbproject/private/
 HotelReservationSystemLibrary/build/
 HotelReservationSystemLibrary/dist/
 
+HolidayReservationSystem-ejb/nbproject/private/
+HolidayReservationSystem-ejb/build/
+HolidayReservationSystem-ejb/dist/
+
+HolidayReservationClient/nbproject/private/
 HolidayReservationClient/build/
 HolidayReservationClient/dist/
-HolidayReservationClient/nbproject/private/
+
+HolidayReservationSystemLibrary/nbproject/private/
+HolidayReservationSystemLibrary/build/
+HolidayReservationSystemLibrary/dist/
+

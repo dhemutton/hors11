@@ -66,6 +66,11 @@ public class HolidayWebService {
     public List<Room> retrieveAllEnabledRooms() {
         
         List<Room> rooms = roomControllerLocal.retrieveAllEnabledRooms();
+        
+        for (Room room: rooms) {
+            room.setRoomType(null);
+        }
+        
         return rooms;
     }
 
@@ -86,7 +91,14 @@ public class HolidayWebService {
 
     //reserve room
     public List<RoomType> retrieveAllEnabledRoomType() {
-        return roomTypeControllerLocal.retrieveAllEnabledRoomType();
+        
+        List<RoomType> list = roomTypeControllerLocal.retrieveAllEnabledRoomType();
+        
+        for (RoomType rt : list) {
+            rt.setRoomRates(null);
+            rt.setRooms(null);
+        }
+        return list;
     }
 
     //reserve room

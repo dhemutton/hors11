@@ -32,17 +32,17 @@ public class Partner implements Serializable {
     private String password;
     private Boolean isLogin = false;
      @Column(nullable = false)
-    private Boolean isManager;
+    private Boolean isManager = false;
     
     @OneToMany(mappedBy = "partner")
     private List<Booking> bookings;
     
-    @OneToMany(mappedBy = "partner")
-    private List<PartnerCustomer> partnerCustomers;
+//    @OneToMany(mappedBy = "partner")
+//    private List<PartnerCustomer> partnerCustomers;
 
     public Partner() {
          bookings = new ArrayList<>();
-         partnerCustomers = new ArrayList<>();
+//         partnerCustomers = new ArrayList<>();
 
     }
 
@@ -53,15 +53,21 @@ public class Partner implements Serializable {
     }
 
    
-    public List<PartnerCustomer> getPartnerCustomers() {
-        return partnerCustomers;
+    public Boolean getIsManager() {
+        return isManager;
     }
 
-    public void setPartnerCustomers(List<PartnerCustomer> partnerCustomers) {
-        this.partnerCustomers = partnerCustomers;
+//    public List<PartnerCustomer> getPartnerCustomers() {
+//        return partnerCustomers;
+//    }
+//
+//    public void setPartnerCustomers(List<PartnerCustomer> partnerCustomers) {
+//        this.partnerCustomers = partnerCustomers;
+//    }
+    public void setIsManager(Boolean isManager) {
+        this.isManager = isManager;
     }
 
-    
     public Long getPartnerId() {
         return partnerId;
     }
