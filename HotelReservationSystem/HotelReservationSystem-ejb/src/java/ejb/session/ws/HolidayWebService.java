@@ -76,12 +76,30 @@ public class HolidayWebService {
 
     //Search room
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate) {
-        return bookingControllerLocal.retrieveAllBookingsWithinDates(startDate, endDate);
+        List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsWithinDates(startDate, endDate);
+        
+        for (Booking b: bookings) {
+            b.setPartner(null);
+            b.setReservation(null);
+            b.setGuest(null);
+        }
+        return bookings;
     }
 
     //Search room & view my reservation
     public List<Reservation> retrieveAllReservationFromBooking(Long bookingId) {
-        return reservationControllerLocal.retrieveAllReservationFromBooking(bookingId);
+        
+       List<Reservation> list = reservationControllerLocal.retrieveAllReservationFromBooking(bookingId);
+        
+        for (Reservation r: list) {
+            r.setBooking(null);
+            r.setRoom(null);
+            r.setInitialRoomType(null);
+            r.setFinalRoomType(null);
+                    
+        }
+        
+        return list;
     }
 
     //reserve room
@@ -108,12 +126,26 @@ public class HolidayWebService {
 
     //view my reservation
     public Booking retrieveBookingByIdForPartner(Long bookingId, Long partnerId) throws BookingNotFoundException {
-        return bookingControllerLocal.retrieveBookingByIdForPartner(bookingId, partnerId);
+        
+        Booking booking = bookingControllerLocal.retrieveBookingByIdForPartner(bookingId, partnerId);
+         booking.setPartner(null);
+            booking.setReservation(null);
+            booking.setGuest(null);
+    
+        return booking;
     }
 
     //view all my reservation
     public List<Booking> retrieveAllBookingsForPartner(Long partnerId) {
-        return bookingControllerLocal.retrieveAllBookingsForPartner(partnerId);
+        
+         List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsForPartner(partnerId);
+        
+        for (Booking b: bookings) {
+            b.setPartner(null);
+            b.setReservation(null);
+            b.setGuest(null);
+        }
+        return bookings;
     }
     
     

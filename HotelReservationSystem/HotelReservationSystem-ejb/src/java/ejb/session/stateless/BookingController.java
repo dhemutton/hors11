@@ -95,7 +95,7 @@ public class BookingController implements BookingControllerRemote, BookingContro
         List<Booking> finalList = new ArrayList<>();
         Query query1 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN :startDate AND :endDate"); //list1
         Query query2 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.endDate BETWEEN :startDate AND :endDate"); //list2
-        Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE :startDate BETWEEN (b.startDate AND b.endDate) AND :endDate BETWEEN (b.startDate AND b.endDate)"); //list3
+        Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE :startDate BETWEEN b.startDate AND b.endDate AND :endDate BETWEEN b.startDate AND b.endDate"); //list3
        // Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN (:startDate AND :endDate) AND b.endDate BETWEEN (:startDate AND :endDate)");
         query1.setParameter("startDate", startDate);
         query1.setParameter("endDate", endDate);
