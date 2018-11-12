@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelmanagementclient;
 
 import ejb.session.stateless.BookingControllerRemote;
@@ -16,19 +11,10 @@ import ejb.session.stateless.RoomTypeControllerRemote;
 import entity.Employee;
 import static enums.EmployeeTypeEnum.GUESTRELATIONS;
 import static enums.EmployeeTypeEnum.SYSTEMADMIN;
-import exceptions.EmployeeExistException;
 import exceptions.InvalidLoginCredentials;
-import exceptions.ReservationNotFoundException;
-import exceptions.RoomNotFoundException;
-import exceptions.RoomRateNotFoundException;
-import exceptions.RoomTypeNotFoundException;
 import java.util.Scanner;
 import util.exception.EmployeeNotFoundException;
 
-/**
- *
- * @author matthealoo
- */
 class MainApp {
 
     private GuestControllerRemote guestControllerRemote;

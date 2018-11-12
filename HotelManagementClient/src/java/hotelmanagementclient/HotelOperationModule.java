@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelmanagementclient;
 
 import ejb.session.stateless.BookingControllerRemote;
@@ -11,14 +6,12 @@ import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
-import entity.Booking;
 import entity.Employee;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import static enums.EmployeeTypeEnum.OPERATIONSMANAGER;
-import enums.ExceptionTypeEnum;
 import static enums.ExceptionTypeEnum.TYPE1;
 import static enums.ExceptionTypeEnum.TYPE2;
 import enums.RateTypeEnum;
@@ -37,10 +30,6 @@ import java.util.List;
 import java.util.Scanner;
 import javax.ejb.Schedule;
 
-/**
- *
- * @author matthealoo
- */
 class HotelOperationModule {
 
     private RoomControllerRemote roomControllerRemote;
@@ -49,12 +38,12 @@ class HotelOperationModule {
     private ReservationControllerRemote reservationControllerRemote;
     private BookingControllerRemote bookingControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
-
+    
     public HotelOperationModule() {
     }
 
-    public HotelOperationModule(RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote,
-            RoomTypeControllerRemote roomTypeControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
+    public HotelOperationModule(RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote,
+            ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
@@ -64,6 +53,7 @@ class HotelOperationModule {
     }
 
     public void runHotelOperationsModule(Employee employee) {
+        //dailyControllerRemote.initialiseTimer();
         Scanner sc = new Scanner(System.in);
         if (employee.getEmployeeType().equals(OPERATIONSMANAGER)) { //Operations Manager
             while (true) {

@@ -11,17 +11,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Remote;
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
-@Local(DailyControllerLocal.class)
-@Remote(DailyControllerRemote.class)
-public class DailyController implements DailyControllerRemote, DailyControllerLocal {
+public class DailyController {
 
     @EJB
     private RoomRateControllerLocal roomRateController;
@@ -38,23 +35,33 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
-    @Override
     public void persist(Object object) {
         em.persist(object);
     }
 
-    @Override
+    @Schedule(minute = "*")
     public void dailyReservationRoomAssignment() {
+        System.out.println("2am function activated");
         //SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date day1 = new Date();
         Date day2 = new Date();
         day1.setDate(day2.getDate() - 1);
+        day1.setHours(0);
+        day1.setMinutes(0);
+        day1.setSeconds(0);
+        day2.setHours(0);
+        day2.setMinutes(0);
+        day2.setSeconds(0);
+        System.out.println("Day 1: " + day1);
+        System.out.println("Day 2: " + day2);
 
         //Obtain a list of all ending reservations(checking out)
         List<Reservation> day1ReservationList = reservationController.retrieveAllReservationFromEndDate(day1);
+        System.out.println("Day 1 reservation list size: " + day1ReservationList.size());
 
         //Obtain a list of all starting reservations(checking in)
         List<Reservation> day2ReservationList = reservationController.retrieveAllReservationFromStartDate(day2);
+        System.out.println("Day 2 reservation list size: " + day2ReservationList.size());
         //Obtain a list of all reservation that requires upgrades (deduct all assigned check in rooms from following method)
         List<Reservation> day2ReservationUpgrade = day2ReservationList;
 
@@ -67,6 +74,7 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
 
         //Obtain all vacant rooms to assign rooms for day 2
         List<Room> vacantRoomList = roomController.retrieveAllVacantRooms();
+        System.out.println("Vacant room list size: " + vacantRoomList.size());
 
         //Assign rooms to reservations for day 2
         List<RoomType> roomRanking = roomTypeController.retrieveAllRoomtype();
@@ -164,7 +172,6 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
         }
     }
 
-    @Override
     public void deleteAllRoomRates() {
         //Delete all room rates with no room types(assumed that room type was deleted)
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=null");
@@ -202,7 +209,6 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
         }
     }
 
-    @Override
     public void deleteAllRooms() {
         //Check for any room rates to be deleted
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.isVacant=true AND rr.isEnabled=false");
@@ -212,7 +218,6 @@ public class DailyController implements DailyControllerRemote, DailyControllerLo
         }
     }
 
-    @Override
     public void deleteAllRoomTypes() {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.isEnabled=false");
         List<RoomType> roomTypes = query.getResultList();
