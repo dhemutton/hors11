@@ -8,6 +8,7 @@ import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
+import ejb.session.stateless.SelfInvokeDailyControllerRemote;
 import entity.Employee;
 import static enums.EmployeeTypeEnum.GUESTRELATIONS;
 import static enums.EmployeeTypeEnum.SYSTEMADMIN;
@@ -25,11 +26,12 @@ class MainApp {
     private RoomTypeControllerRemote roomTypeControllerRemote;
     private PartnerControllerRemote partnerControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
+    private SelfInvokeDailyControllerRemote selfInvokeDailyControllerRemote;
     
     private Employee loginEmployee;
 
     public MainApp(GuestControllerRemote guestControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
-            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, PartnerControllerRemote partnerControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
+            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, PartnerControllerRemote partnerControllerRemote, EmployeeControllerRemote employeeControllerRemote, SelfInvokeDailyControllerRemote selfInvokeDailyControllerRemote) {
         this.guestControllerRemote = guestControllerRemote;
         this.reservationControllerRemote = reservationControllerRemote;
         this.bookingControllerRemote = bookingControllerRemote;
@@ -38,6 +40,7 @@ class MainApp {
         this.roomTypeControllerRemote = roomTypeControllerRemote;
         this.partnerControllerRemote = partnerControllerRemote;
         this.employeeControllerRemote = employeeControllerRemote;
+        this.selfInvokeDailyControllerRemote = selfInvokeDailyControllerRemote;
     }
 
     public MainApp() {
@@ -67,7 +70,7 @@ class MainApp {
                             systemAdmin.runSystemAdminModule();
                             break;
                         } else if (loginEmployee.getEmployeeType().equals(GUESTRELATIONS)) {
-                            FrontOfficeModule frontOffice = new FrontOfficeModule(reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote,employeeControllerRemote);
+                            FrontOfficeModule frontOffice = new FrontOfficeModule(reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote,employeeControllerRemote,selfInvokeDailyControllerRemote);
                             frontOffice.runFrontOfficeModule(loginEmployee);
                             break;
                         } else {

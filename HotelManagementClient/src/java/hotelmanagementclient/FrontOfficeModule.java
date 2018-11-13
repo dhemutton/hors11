@@ -11,6 +11,7 @@ import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
+import ejb.session.stateless.SelfInvokeDailyControllerRemote;
 import entity.Booking;
 import entity.Employee;
 import entity.Reservation;
@@ -41,28 +42,33 @@ class FrontOfficeModule {
     private RoomRateControllerRemote roomRateControllerRemote;
     private RoomTypeControllerRemote roomTypeControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
+    private SelfInvokeDailyControllerRemote selfInvokeDailyControllerRemote;
 
     public FrontOfficeModule() {
     }
 
     public FrontOfficeModule(ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
-            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
+            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, EmployeeControllerRemote employeeControllerRemote,SelfInvokeDailyControllerRemote selfInvokeDailyControllerRemote) {
         this.reservationControllerRemote = reservationControllerRemote;
         this.bookingControllerRemote = bookingControllerRemote;
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
         this.employeeControllerRemote = employeeControllerRemote;
+        this.selfInvokeDailyControllerRemote = selfInvokeDailyControllerRemote;
 
     }
 
     public void runFrontOfficeModule(Employee loginEmployee) {
+        System.out.println("*** HoRS :: Front Office ::  Guest Relations Officer ***\n");
+
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("1. Make walk in reservation");
             System.out.println("2. Check in guest");
             System.out.println("3. Check out guest");
-            System.out.println("4. Logout");
+            System.out.println("4. *SECRET METHOD* Self-invoke room allocation");
+            System.out.println("5. Logout");
             int choice = sc.nextInt();
             if (choice == 1) {
                 doWalkInSearchRoom();
@@ -71,6 +77,8 @@ class FrontOfficeModule {
             } else if (choice == 3) {
                 doCheckOutGuest();
             } else if (choice == 4) {
+                doSecretMethod();
+            } else if (choice == 5) {
                 employeeControllerRemote.updateEmployeeLogin(loginEmployee, false);
 
                 break;
@@ -126,19 +134,19 @@ class FrontOfficeModule {
                 int choice = sc.nextInt();
                 if (choice == 1) {
                     System.out.println("Please enter booking ID");
-                     bookingId = sc.nextLong();
+                    bookingId = sc.nextLong();
                     System.out.println("Please enter guest ID");
                     Long guestId = sc.nextLong();
                     Booking booking = bookingControllerRemote.retrieveBookingByIdForGuest(bookingId, guestId);
                     break;
                 } else if (choice == 2) {
                     System.out.println("Please enter booking ID");
-                     bookingId = sc.nextLong();
+                    bookingId = sc.nextLong();
                     Booking booking = bookingControllerRemote.retrieveBookingById(bookingId);
                     break;
                 } else if (choice == 3) {
                     System.out.println("Please enter booking ID");
-                     bookingId = sc.nextLong();
+                    bookingId = sc.nextLong();
                     System.out.println("Please enter partner ID");
                     Long partnerId = sc.nextLong();
                     Booking booking = bookingControllerRemote.retrieveBookingByIdForPartner(bookingId, partnerId);
@@ -215,4 +223,13 @@ class FrontOfficeModule {
             reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
         }
     }
+
+    private void doSecretMethod() {
+        selfInvokeDailyControllerRemote.dailyReservationRoomAssignment();
+//        selfInvokeDailyControllerRemote.deleteAllRoomRates();
+//        selfInvokeDailyControllerRemote.deleteAllRoomTypes();
+//        selfInvokeDailyControllerRemote.deleteAllRooms();
+        System.out.println("Secret Method done hehe!");
+    }
+
 }
