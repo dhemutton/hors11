@@ -145,7 +145,10 @@ class HotelOperationModule {
             while (true) {
                 System.out.print("Enter Rank (blank if no change)> ");
                 int option = scanner.nextInt();
-                if (option <= ranking.size() && option > 0) {
+                if (option == ranking.size() + 1) {
+                    roomType.setRanking(option);
+                    break;
+                } else if (option <= ranking.size() && option > 0) {
                     roomTypeControllerRemote.updateRankings(option);
                     roomType.setRanking(option);
                     break;

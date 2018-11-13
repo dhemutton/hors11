@@ -127,6 +127,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
             change++;
             roomTypes.get(i).setRanking(change);
             em.merge(roomTypes.get(i));
+            em.flush();
         }
     }
 }
