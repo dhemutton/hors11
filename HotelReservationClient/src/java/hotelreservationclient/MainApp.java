@@ -37,6 +37,7 @@ import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -253,7 +254,7 @@ class MainApp {
     }
 
     private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
-        List<Reservation> rlist = new ArrayList<>();
+        BigDecimal totalCost = new BigDecimal(0);
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
         Booking booking = new Booking(ONLINE, PENDING, startDate, endDate);
@@ -286,7 +287,10 @@ class MainApp {
                 }
             }
            Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
+           totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
         }
+        booking.setCost(totalCost);
+        bookingControllerRemote.updateBooking(booking);
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
 

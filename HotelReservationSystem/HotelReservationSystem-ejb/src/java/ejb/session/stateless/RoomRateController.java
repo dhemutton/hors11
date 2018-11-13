@@ -5,14 +5,17 @@
  */
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.RoomRate;
 import entity.RoomType;
 import static enums.RateTypeEnum.NORMAL;
+import static enums.RateTypeEnum.PEAK;
+import static enums.RateTypeEnum.PROMO;
 import static enums.RateTypeEnum.PUBLISHED;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
-import exceptions.RoomTypeNotFoundException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -67,7 +70,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             roomRate.setIsValid(Boolean.TRUE);
         }
 
-        roomRate.setRoomType(roomType);        
+        roomRate.setRoomType(roomType);
         roomType.getRoomRates().add(roomRate);
 
         return roomRate;
@@ -114,7 +117,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     public RoomRate
             retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException {
         RoomRate roomRate = em.find(RoomRate.class,
-                 RoomRateId);
+                RoomRateId);
 
         if (roomRate != null) {
             return roomRate;
@@ -138,7 +141,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     @Override
     public void updateRoomRate(RoomRate roomRate, Long roomTypeId) {
         RoomType roomType = em.find(RoomType.class,
-                 roomTypeId);
+                roomTypeId);
         RoomType oldRoomType = roomRate.getRoomType();
         oldRoomType.getRoomRates().remove(roomRate); //remove room rate from list of room rates attached to a room type
 
@@ -152,7 +155,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     @Override
     public void deleteRoomRate(Long roomRateId) {
         RoomRate roomRate = em.find(RoomRate.class,
-                 roomRateId);
+                roomRateId);
         roomRate.setIsEnabled(Boolean.FALSE);
         em.remove(roomRate);
     }
@@ -161,5 +164,57 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     public void mergeRoomRate(RoomRate roomRate) {
 
         em.merge(roomRate);
+    }
+
+    public BigDecimal calculateReservationCost(Booking booking, RoomType roomType) {
+        BigDecimal total = new BigDecimal(0);
+        Date startDate = booking.getStartDate();
+        Date endDate = booking.getEndDate();
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=:roomType");
+        query.setParameter("roomType", roomType);
+        List<RoomRate> roomRates = query.getResultList();
+        Date checkDate = startDate;
+        BigDecimal promoRate = new BigDecimal(0);
+        BigDecimal peakRate = new BigDecimal(0);
+        BigDecimal normalRate = new BigDecimal(0);
+        for (RoomRate roomRate : roomRates) {
+            if (roomRate.getRateType().equals(PROMO)) {
+                promoRate = roomRate.getRatePerNight();
+            }
+            if (roomRate.getRateType().equals(PEAK)) {
+                peakRate = roomRate.getRatePerNight();
+            }
+            if (roomRate.getRateType().equals(NORMAL)) {
+                normalRate = roomRate.getRatePerNight();
+            }
+        }
+        while (checkDate.before(endDate)) {
+            boolean promo = false;
+            boolean peak = false;
+            for (RoomRate roomRate : roomRates) {
+                if (roomRate.getRateType().equals(PROMO)) {
+                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) {
+                        promo = true;
+                    }
+                }
+                if (roomRate.getRateType().equals(PEAK)) {
+                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) {
+                        peak = true;
+                    }
+                }
+            }
+            if (peak == true && promo == true) {
+                total.add(promoRate);
+            } else if (peak == true && promo == false) {
+                total.add(peakRate);
+            } else if(peak==false&&promo==true) {
+                    total.add(promoRate);
+                } else {
+                total.add(normalRate);
+            }
+            Date temp = checkDate;
+            checkDate.setDate(temp.getDate() + 1);
+        }
+        return total;
     }
 }

@@ -1,22 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.RoomRate;
 import entity.RoomType;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
-import exceptions.RoomTypeNotFoundException;
+import java.math.BigDecimal;
 import java.util.List;
 
-/**
- *
- * @author sleep
- */
 public interface RoomRateControllerLocal {
 
     public void persist(Object object);
@@ -42,8 +34,9 @@ public interface RoomRateControllerLocal {
     public void deleteRoomRate(Long roomRateId);
 
     public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException;
-    
-            public void mergeRoomRate(RoomRate roomRate);
 
+    public void mergeRoomRate(RoomRate roomRate);
+
+    public BigDecimal calculateReservationCost(Booking booking, RoomType roomType);
 
 }
