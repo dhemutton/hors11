@@ -48,7 +48,7 @@ class FrontOfficeModule {
     }
 
     public FrontOfficeModule(ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
-            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, EmployeeControllerRemote employeeControllerRemote,SelfInvokeDailyControllerRemote selfInvokeDailyControllerRemote) {
+            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, EmployeeControllerRemote employeeControllerRemote, SelfInvokeDailyControllerRemote selfInvokeDailyControllerRemote) {
         this.reservationControllerRemote = reservationControllerRemote;
         this.bookingControllerRemote = bookingControllerRemote;
         this.roomControllerRemote = roomControllerRemote;
@@ -96,18 +96,48 @@ class FrontOfficeModule {
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         int maxRooms = roomControllerRemote.retrieveAllRooms().size();
-        System.out.println("Please enter start date (dd/mm/yyyy");
-        try {
-            startDate = formatter.parse(sc.nextLine().trim());
-        } catch (ParseException ex) {
-            System.out.println("Incorrect date format.");
+        System.out.println("Please enter start date (dd/mm/yyyy)");
+        Boolean again = true;
+
+        while (again) {
+            String start = sc.nextLine().trim();
+            if (start.length() == 10) {
+                try {
+                    startDate = formatter.parse(start);
+                    again = false;
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
+            } else {
+                again = true;
+                System.out.println("Incorrect date format.");
+            }
         }
-        System.out.println("Please enter start date (dd/mm/yyyy");
-        try {
-            endDate = formatter.parse(sc.nextLine().trim());
-        } catch (ParseException ex) {
-            System.out.println("Incorrect date format.");
+
+        System.out.println("Enter end date (format: dd/mm/yyyy) >");
+        again = true;
+        while (again) {
+            String end = sc.nextLine().trim();
+            if (end.length() == 10) {
+                try {
+                    endDate = formatter.parse(end);
+                    if (startDate.before(endDate) || startDate.equals(endDate)) {
+                        again = false;
+                    } else {
+                        again = true;
+                        System.out.println("End date is before start date! Please re-enter end date.");
+                    }
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
+            } else {
+                again = true;
+                System.out.println("Incorrect date format.");
+            }
         }
+
         List<Booking> bookingList = bookingControllerRemote.retrieveAllBookingsWithinDates(startDate, endDate);
         for (Booking booking : bookingList) {
             reservationList.addAll(reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId()));
@@ -163,6 +193,7 @@ class FrontOfficeModule {
                 reservationControllerRemote.updateReservation(reservation);
                 System.out.println("Room number: " + reservation.getRoom().getRoomNumber());
             }
+            System.out.println("Checked in guest successfully!");
         } catch (BookingNotFoundException ex) {
             System.out.println("An error has occurred while retrieving the reservation " + ex.getMessage() + "!\n");
         }
@@ -170,6 +201,7 @@ class FrontOfficeModule {
     }
 
     private void doCheckOutGuest() {
+        System.out.println("*** HoRS :: Front Office Module:: Check Out Guest ***\n");
 
         try {
             Scanner sc = new Scanner(System.in);
@@ -185,6 +217,8 @@ class FrontOfficeModule {
             reservation.setIsCheckedOut(Boolean.TRUE);
             reservation.setIsCheckedIn(Boolean.FALSE);
             reservationControllerRemote.updateReservation(reservation);
+            System.out.println("Checked out guest successfully!");
+
         } catch (ReservationNotFoundException ex) {
             System.out.println("Reservation not found!");
         } catch (RoomNotFoundException ex) {
