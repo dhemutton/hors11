@@ -160,6 +160,7 @@ class FrontOfficeModule {
             System.out.println("Your allocated rooms are:");
             for (Reservation reservation : reservationList) {
                 reservation.setIsCheckedIn(Boolean.TRUE);
+                reservationControllerRemote.updateReservation(reservation);
                 System.out.println("Room number: " + reservation.getRoom().getRoomNumber());
             }
         } catch (BookingNotFoundException ex) {
@@ -182,6 +183,7 @@ class FrontOfficeModule {
             Long reservationID = sc.nextLong();
             Reservation reservation = reservationControllerRemote.retrieveReservationById(reservationID);
             reservation.setIsCheckedOut(Boolean.TRUE);
+            reservation.setIsCheckedIn(Boolean.FALSE);
             reservationControllerRemote.updateReservation(reservation);
         } catch (ReservationNotFoundException ex) {
             System.out.println("Reservation not found!");

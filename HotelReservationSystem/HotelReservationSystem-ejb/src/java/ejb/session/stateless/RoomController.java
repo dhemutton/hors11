@@ -107,7 +107,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
 
     @Override
     public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException {
-        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNum = :arg");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :arg");
         query.setParameter("arg", roomNum);
 
         try {
