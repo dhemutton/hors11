@@ -43,7 +43,7 @@ public class ReservationController implements ReservationControllerRemote, Reser
     @Override
     public List<Reservation> retrieveAllReservationFromBooking(Long bookingId) {
         Query query = em.createQuery("SELECT r FROM Reservation r JOIN r.booking b WHERE b.bookingId = :inBookingId");
-         query.setParameter("BookingId", bookingId);
+         query.setParameter("inBookingId", bookingId);
 
         return query.getResultList();     
     }
