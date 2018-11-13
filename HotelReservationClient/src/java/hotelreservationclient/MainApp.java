@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -83,47 +84,52 @@ class MainApp {
         System.out.println("*** Welcome to HoRS Reservation Client  ***\n");
         Scanner sc = new Scanner(System.in);
         while (true) {
-            while (!loggedIn) {
-                System.out.println("1. Guest Login");
-                System.out.println("2. Register as Guest");
-                System.out.println("3. Search Hotel Room");
-                System.out.println("4. Exit");
-                int choice = sc.nextInt();
-                sc.nextLine();
+            try {
+                while (!loggedIn) {
+                    System.out.println("1. Guest Login");
+                    System.out.println("2. Register as Guest");
+                    System.out.println("3. Search Hotel Room");
+                    System.out.println("4. Exit");
+                    int choice = sc.nextInt();
+                    sc.nextLine();
 
-                if (choice == 1) {
-                    doGuestLogin();
-                } else if (choice == 2) {
-                    doRegisterAsGuest();
-                } else if (choice == 3) {
-                    doSearchRoom();
-                } else if (choice == 4) {
-                    break;
-                } else {
-                    System.out.println("Invalid entry. Please try again");
+                    if (choice == 1) {
+                        doGuestLogin();
+                    } else if (choice == 2) {
+                        doRegisterAsGuest();
+                    } else if (choice == 3) {
+                        doSearchRoom();
+                    } else if (choice == 4) {
+                        break;
+                    } else {
+                        System.out.println("Invalid entry. Please try again");
+                    }
                 }
-            }
 
-            while (loggedIn) {
+                while (loggedIn) {
 
-                System.out.println("1. Search Hotel Room");
-                System.out.println("2. View My Reservation Details");
-                System.out.println("3. View All My Reservations");
-                System.out.println("4. Logout");
-                int choice = sc.nextInt();
-                sc.nextLine();
-                if (choice == 1) {
-                    doSearchRoom();
-                } else if (choice == 2) {
-                    doViewMyReservation(guest.getGuestId());
-                } else if (choice == 3) {
-                    doViewAllMyReservation(guest.getGuestId());
-                } else if (choice == 4) {
-                    loggedIn = false;
-                    break;
-                } else {
-                    System.out.println("Invalid entry. Please try again");
+                    System.out.println("1. Search Hotel Room");
+                    System.out.println("2. View My Reservation Details");
+                    System.out.println("3. View All My Reservations");
+                    System.out.println("4. Logout");
+                    int choice = sc.nextInt();
+                    sc.nextLine();
+                    if (choice == 1) {
+                        doSearchRoom();
+                    } else if (choice == 2) {
+                        doViewMyReservation(guest.getGuestId());
+                    } else if (choice == 3) {
+                        doViewAllMyReservation(guest.getGuestId());
+                    } else if (choice == 4) {
+                        loggedIn = false;
+                        guestControllerRemote.updateGuestLogin(guest, false);
+                        break;
+                    } else {
+                        System.out.println("Invalid entry. Please try again");
+                    }
                 }
+            } catch (InputMismatchException ex) {
+                System.out.println("Input mismatch. Please try again.");
             }
         }
     }
@@ -133,18 +139,18 @@ class MainApp {
         System.out.println("Please enter your email address: ");
         String email = sc.nextLine().trim();
         System.out.println("Please enter password");
-            String password = sc.nextLine().trim();
- 
+        String password = sc.nextLine().trim();
+
         try {
             guest = guestControllerRemote.guestLogin(email, password);
             if (!guest.getIsLogin()) {
-                        loggedIn = true;
-                        guestControllerRemote.updateGuestLogin(guest, true);
+                loggedIn = true;
+                guestControllerRemote.updateGuestLogin(guest, true);
             } else {
                 System.out.println("Guest is already logged in.");
             }
         } catch (InvalidLoginCredentials ex) {
-                        System.out.println("Invalid password entered. Please try again");      
+            System.out.println("Invalid password entered. Please try again");
         } catch (GuestNotFoundException ex) {
             System.out.println("An error has occurred while retrieving guest: " + ex.getMessage() + "\n");
         }
@@ -157,10 +163,17 @@ class MainApp {
 
             System.out.println("*** HoRS :: Reservation Client :: Register As Guest ***\n");
             //maybe modify guest to have first, last name next time
-            System.out.print("Enter Email Address> ");
+            System.out.println("Enter Email Address> ");
             newGuest.setEmail(scanner.nextLine().trim());
-            System.out.print("Enter password> ");
+            System.out.println("Enter password> ");
             newGuest.setPassword(scanner.nextLine().trim());
+            System.out.println("Enter First Name> ");
+            newGuest.setFirstName(scanner.nextLine().trim());
+            System.out.println("Enter Last Name> ");
+            newGuest.setLastName(scanner.nextLine().trim());
+            System.out.println("Enter Contact Number> ");
+            newGuest.setContactNumber(scanner.nextLine().trim());
+
             newGuest.setIsLogin(Boolean.FALSE);
             newGuest = guestControllerRemote.createGuest(newGuest);
             System.out.println("New guest was created successfully!" + "\n");
@@ -175,25 +188,43 @@ class MainApp {
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         int maxRooms = roomControllerRemote.retrieveAllEnabledRooms().size();
-        System.out.println("Please enter start date (dd/mm/yyyy");
+        System.out.println("Please enter start date (dd/mm/yyyy)");
         Boolean again = true;
 
         while (again) {
-            try {
-                startDate = formatter.parse(sc.nextLine().trim());
-                again = false;
-            } catch (ParseException ex) {
+            String start = sc.nextLine().trim();
+            if (start.length() == 10) {
+                try {
+                    startDate = formatter.parse(start);
+                    again = false;
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
+            } else {
                 again = true;
                 System.out.println("Incorrect date format.");
             }
         }
-        System.out.println("Please enter end date (dd/mm/yyyy");
+
+        System.out.println("Enter end date (format: dd/mm/yyyy) >");
         again = true;
         while (again) {
-            try {
-                endDate = formatter.parse(sc.nextLine().trim());
-                again = false;
-            } catch (ParseException ex) {
+            String end = sc.nextLine().trim();
+            if (end.length() == 10) {
+                try {
+                    endDate = formatter.parse(end);
+                    if (startDate.before(endDate) || startDate.equals(endDate)) {
+                        again = false;
+                    } else {
+                        again = true;
+                        System.out.println("End date is before start date! Please re-enter end date.");
+                    }
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
+            } else {
                 again = true;
                 System.out.println("Incorrect date format.");
             }
