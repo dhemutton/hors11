@@ -170,7 +170,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         BigDecimal total = new BigDecimal(0);
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
-        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=:roomType");
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=:roomType AND rr.isEnabled = true");
         query.setParameter("roomType", roomType);
         List<RoomRate> roomRates = query.getResultList();
         Date checkDate = startDate;
@@ -193,12 +193,12 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             boolean peak = false;
             for (RoomRate roomRate : roomRates) {
                 if (roomRate.getRateType().equals(PROMO)) {
-                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) {
+                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) { //checking isValid
                         promo = true;
                     }
                 }
                 if (roomRate.getRateType().equals(PEAK)) {
-                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) {
+                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) { //checking isValid
                         peak = true;
                     }
                 }
