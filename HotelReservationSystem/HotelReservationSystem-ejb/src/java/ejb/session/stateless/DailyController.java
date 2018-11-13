@@ -46,8 +46,6 @@ public class DailyController {
         Date day1 = new Date();
         Date day2 = new Date();
         day1.setDate(day2.getDate() - 1);
-        System.out.println("Day 1: " + day1);
-        System.out.println("Day 2: " + day2);
 
         //Obtain a list of all ending reservations(checking out)
         List<Reservation> day1ReservationList = reservationController.retrieveAllReservationFromEndDate(day1);
@@ -68,7 +66,6 @@ public class DailyController {
 
         //Obtain all vacant rooms to assign rooms for day 2
         List<Room> vacantRoomList = roomController.retrieveAllVacantRooms();
-        System.out.println("Vacant room list size: " + vacantRoomList.size());
 
         //Assign rooms to reservations for day 2
         List<RoomType> roomRanking = roomTypeController.retrieveAllRoomtype();
@@ -131,7 +128,6 @@ public class DailyController {
                     for (Reservation reservation : day2ReservationUpgrade) {
                         if (reservation.getInitialRoomType() == roomType) {
                             temp = reservation;
-                            System.out.println("Reservation "+temp.getReservationId()+" requires an upgrade");
                             break;
                         }
                     }

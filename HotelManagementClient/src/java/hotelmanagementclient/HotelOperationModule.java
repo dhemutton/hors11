@@ -38,7 +38,7 @@ class HotelOperationModule {
     private ReservationControllerRemote reservationControllerRemote;
     private BookingControllerRemote bookingControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
-    
+
     public HotelOperationModule() {
     }
 
@@ -238,6 +238,19 @@ class HotelOperationModule {
         input = scanner.nextLine().trim();
         if (input.length() > 0) {
             roomType.setName(input);
+        }
+
+        List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
+        while (true) {
+            System.out.print("Enter Rank (blank if no change)> ");
+            int option = scanner.nextInt();
+            if (option > ranking.size() || option < 0) {
+                System.out.println("Invalid entry. please try again");
+            }
+            else {
+                roomTypeControllerRemote.updateRankings(option);
+                break;
+            }
         }
 
         System.out.print("Enter Description (blank if no change)> ");

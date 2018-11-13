@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ejb.session.stateless;
 
-import entity.Room;
 import entity.RoomRate;
 import exceptions.RoomTypeExistException;
 import entity.RoomType;
@@ -21,10 +15,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-/**
- *
- * @author sleep
- */
 @Stateless
 @Local(RoomTypeControllerLocal.class)
 @Remote(RoomTypeControllerRemote.class)
@@ -126,5 +116,16 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         em.merge(roomType);
         em.flush();
         return roomType;
+    }
+    
+    @Override
+    public void updateRankings(int option) {
+        List<RoomType> roomTypes = retrieveAllRoomtype();
+        for(int i=option-1; i<roomTypes.size(); i++) {
+            int temp = roomTypes.get(i).getRanking();
+            temp++;
+            roomTypes.get(i).setRanking(temp);
+            em.merge(roomTypes.get(i));
+        }
     }
 }

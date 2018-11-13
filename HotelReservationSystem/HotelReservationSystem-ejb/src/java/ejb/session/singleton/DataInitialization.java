@@ -244,7 +244,7 @@ public class DataInitialization {
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
         
-        bookingController.createNewBooking(new Booking(WALKIN, PENDING, formatter.parse("10/11/2018"), formatter.parse("20/11/2018")));
+        booking = bookingController.createNewBooking(new Booking(WALKIN, PENDING, formatter.parse("10/11/2018"), formatter.parse("20/11/2018")));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         
