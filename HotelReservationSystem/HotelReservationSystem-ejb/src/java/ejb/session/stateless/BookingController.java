@@ -1,4 +1,4 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -30,73 +30,74 @@ public class BookingController implements BookingControllerRemote, BookingContro
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
-    
-    
+
     @Override
     public Booking createNewBooking(Booking booking) {
-            em.persist(booking);
-            em.flush();
 
-            return booking;   
+        em.persist(booking);
+        em.flush();
+        Guest guest = booking.getGuest();
+        guest.getBookings().add(booking);
+        em.merge(guest);
+        em.flush();
+
+        return booking;
     }
 
     @Override
     public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException {
-            Booking booking = em.find(Booking.class, bookingId);
-        
+        Booking booking = em.find(Booking.class, bookingId);
+
         if (booking != null) {
             return booking;
         } else {
             throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist");
-        }  
+        }
     }
-    
+
     @Override
     public Booking retrieveBookingByIdForGuest(Long bookingId, Long guestId) throws BookingNotFoundException {
-            Booking booking = em.find(Booking.class, bookingId);
-        
+        Booking booking = em.find(Booking.class, bookingId);
+
         if (booking != null && booking.getGuest().getGuestId().equals(guestId)) {
             return booking;
         } else {
             throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist");
-        }  
+        }
     }
 
-    
     @Override
     public Booking retrieveBookingByIdForPartner(Long bookingId, Long partnerId) throws BookingNotFoundException {
-            Booking booking = em.find(Booking.class, bookingId);
-        
-        if (booking != null  && booking.getPartner().getPartnerId().equals(partnerId)) {
+        Booking booking = em.find(Booking.class, bookingId);
+
+        if (booking != null && booking.getPartner().getPartnerId().equals(partnerId)) {
             return booking;
         } else {
             throw new BookingNotFoundException("Booking ID " + bookingId + " does not exist");
-        }  
+        }
     }
 
-    
-    
     @Override
     public List<Booking> retrieveAllBookingsOnStartDate(Date startDate) {
         Query query = em.createQuery("SELECT b FROM Booking b WHERE b.startDate=:startDate");
         query.setParameter("startDate", startDate);
-        return query.getResultList();   
+        return query.getResultList();
     }
-    
+
     @Override
     public List<Booking> retrieveAllBookingsOnEndDate(Date endDate) {
         Query query = em.createQuery("SELECT b FROM Booking b WHERE b.endDate=:endDate");
         query.setParameter("endDate", endDate);
-        return query.getResultList();   
+        return query.getResultList();
     }
-    
+
     @Override
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate) {
         List<Booking> finalList = new ArrayList<>();
         Query query1 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN :startDate AND :endDate"); //list1
         Query query2 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.endDate BETWEEN :startDate AND :endDate"); //list2
         Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE :startDate BETWEEN b.startDate AND b.endDate AND :endDate BETWEEN b.startDate AND b.endDate"); //list3
-       // Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN (:startDate AND :endDate) AND b.endDate BETWEEN (:startDate AND :endDate)");
+        // Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN (:startDate AND :endDate) AND b.endDate BETWEEN (:startDate AND :endDate)");
         query1.setParameter("startDate", startDate);
         query1.setParameter("endDate", endDate);
         query2.setParameter("startDate", startDate);
@@ -105,45 +106,46 @@ public class BookingController implements BookingControllerRemote, BookingContro
         query3.setParameter("endDate", endDate);
 //        query4.setParameter("startDate", startDate);
 //        query4.setParameter("endDate", endDate);
-        
+
         finalList.addAll(query1.getResultList());
         List<Booking> list2 = query2.getResultList();
-        for (Booking booking : list2 ) {
+        for (Booking booking : list2) {
             if (!finalList.contains(booking)) {
                 finalList.add(booking);
             }
         }
         List<Booking> list3 = query3.getResultList();
-        for (Booking booking : list3 ) {
+        for (Booking booking : list3) {
             if (!finalList.contains(booking)) {
                 finalList.add(booking);
             }
         }
 //        finalList.addAll(query4.getResultList());
-        for (Booking booking: finalList) {
+        for (Booking booking : finalList) {
             booking.getReservation().size();
         }
 
-        return finalList;   
+        return finalList;
     }
 
     @Override
     public void updateBooking(Booking booking) {
+
         em.merge(booking);
         em.flush();
     }
 
-     @Override
+    @Override
     public List<Booking> retrieveAllBookingsForGuest(Long guestId) {
-                Guest guest = em.find(Guest.class, guestId);
-                guest.getBookings().size();
-        return guest.getBookings();   
+        Guest guest = em.find(Guest.class, guestId);
+        guest.getBookings().size();
+        return guest.getBookings();
     }
-    
+
     @Override
     public List<Booking> retrieveAllBookingsForPartner(Long partnerId) {
-                Partner partner = em.find(Partner.class, partnerId);
-                partner.getBookings().size();
-        return partner.getBookings();   
+        Partner partner = em.find(Partner.class, partnerId);
+        partner.getBookings().size();
+        return partner.getBookings();
     }
 }

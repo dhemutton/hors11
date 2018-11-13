@@ -241,6 +241,8 @@ class MainApp {
                 System.out.println("Would you like to make a reservation? (Enter 'Y' to reserve)");
                 if (sc.nextLine().trim().equals("Y")) {
                     doReserveRoom(roomsLeft, startDate, endDate);
+                } else {
+                    System.out.println();
                 }
             } else {
                 System.out.println("Login to make a reservation.");
@@ -284,10 +286,7 @@ class MainApp {
                 }
             }
            Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
-           rlist.add(reservation);
         }
-        booking.setReservation(rlist);
-        bookingControllerRemote.updateBooking(booking);
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
 
@@ -317,7 +316,7 @@ class MainApp {
 
     private void doViewAllMyReservation(Long guestId) {
         System.out.println("*** HoRS :: Reservation Client :: View All My Reservations ***\n");
-
+        
         List<Booking> list = bookingControllerRemote.retrieveAllBookingsForGuest(guestId);
         if (list.size() == 0) {
             System.out.println("No past reservations made.");
@@ -335,6 +334,7 @@ class MainApp {
                 for (int j = 0; j < reservations.size(); j++) {
                     System.out.println("Room Type: " + reservations.get(j).getInitialRoomType().getName());
                 }
+                
                 System.out.println("*********************************************************************");
                 System.out.println();
             }

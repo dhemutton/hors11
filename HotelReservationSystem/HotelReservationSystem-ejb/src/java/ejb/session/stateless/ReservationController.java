@@ -1,5 +1,6 @@
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.Reservation;
 import exceptions.ReservationNotFoundException;
 import java.util.Date;
@@ -24,6 +25,10 @@ public class ReservationController implements ReservationControllerRemote, Reser
     public Reservation createNewReservation(Reservation reservation) {
 
             em.persist(reservation);
+            em.flush();
+            Booking booking = reservation.getBooking();
+            booking.getReservation().add(reservation);
+            em.merge(booking);
             em.flush();
 
             return reservation;
