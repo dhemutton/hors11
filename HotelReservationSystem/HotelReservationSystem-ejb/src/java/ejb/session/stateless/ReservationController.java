@@ -1,24 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ejb.session.stateless;
 
 import entity.Reservation;
 import exceptions.ReservationNotFoundException;
 import java.util.Date;
 import java.util.List;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-/**
- *
- * @author matthealoo
- */
 @Stateless
+@Local(ReservationControllerLocal.class)
+@Remote(ReservationControllerRemote.class)
 public class ReservationController implements ReservationControllerRemote, ReservationControllerLocal {
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
@@ -33,9 +28,7 @@ public class ReservationController implements ReservationControllerRemote, Reser
 
             return reservation;
         } 
-    
 
-   
     @Override
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException {
         Reservation reservation = em.find(Reservation.class, reservationId);
@@ -74,3 +67,5 @@ public class ReservationController implements ReservationControllerRemote, Reser
         em.merge(reservation);
     }
 }
+
+

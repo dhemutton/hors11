@@ -46,12 +46,6 @@ public class DailyController {
         Date day1 = new Date();
         Date day2 = new Date();
         day1.setDate(day2.getDate() - 1);
-        day1.setHours(0);
-        day1.setMinutes(0);
-        day1.setSeconds(0);
-        day2.setHours(0);
-        day2.setMinutes(0);
-        day2.setSeconds(0);
         System.out.println("Day 1: " + day1);
         System.out.println("Day 2: " + day2);
 
@@ -79,6 +73,7 @@ public class DailyController {
         //Assign rooms to reservations for day 2
         List<RoomType> roomRanking = roomTypeController.retrieveAllRoomtype();
 
+        System.out.println("Vacant room list size: " + vacantRoomList.size());
         //Room allocation(no upgrade)
         for (RoomType roomType : roomRanking) {
             //Get quantity of vacant rooms for specific room type
@@ -89,31 +84,40 @@ public class DailyController {
                 }
             }
             //Assign reservation to vacant room by room type
-            List<Reservation> temp = day2ReservationList;
-            for (int i=0; i<day2ReservationList.size(); i++) {
-                if (day2ReservationList.get(i).getInitialRoomType().equals(roomType)) {
-                    Room room = vacantRoomsByType.get(0);
-                    day2ReservationList.get(i).setRoom(room);
-                    day2ReservationList.get(i).setExceptionType(ExceptionTypeEnum.NONE);
-                    room.setIsVacant(Boolean.FALSE);
-                    reservationController.updateReservation(day2ReservationList.get(i));
-                    roomController.mergeRoom(room);
-                    vacantRoomsByType.remove(room);
-                    vacantRoomList.remove(room);
-                    day2ReservationUpgrade.remove(day2ReservationList.get(i));
-                    if (vacantRoomsByType.isEmpty()) {
+            for (int i = 0; i < vacantRoomsByType.size(); i++) {
+                Reservation temp = null;
+                for (Reservation reservation : day2ReservationList) {
+                    if (reservation.getInitialRoomType() == roomType) {
+                        temp = reservation;
+                        
                         break;
                     }
                 }
+                if (null == temp) {
+                    break;
+                }
+                Room room = vacantRoomsByType.get(i);
+                temp.setRoom(room);
+                temp.setFinalRoomType(roomType);
+                temp.setExceptionType(ExceptionTypeEnum.NONE);
+                room.setIsVacant(Boolean.FALSE);
+                reservationController.updateReservation(temp);
+                roomController.mergeRoom(room);
+                vacantRoomList.remove(room);
+                day2ReservationUpgrade.remove(temp);
+                System.out.println("Room " + room.getRoomId() + " was assigned to reservation " + temp.getReservationId());
             }
         }
 
+        System.out.println("Vacant rooms after room assignment(no upgrade): " + vacantRoomList.size());
+        System.out.println("Number of rooms to be upgraded: " + day2ReservationUpgrade.size());
+        int roomUpgradesRequired = day2ReservationUpgrade.size();
         //Room allocation upgrade      
         for (RoomType roomType : roomRanking) {
             int upgradeLevel = roomType.getRanking() - 1;
             //If highest ranking level, auto-assign type 2 error
             if (roomType.getRanking() == 1) {
-                for (int i=0; i<day2ReservationUpgrade.size(); i++) {
+                for (int i = 0; i < day2ReservationUpgrade.size(); i++) {
                     if (day2ReservationUpgrade.get(i).getInitialRoomType().getRanking() == 1) {
                         day2ReservationUpgrade.get(i).setExceptionType(ExceptionTypeEnum.TYPE2);
                         reservationController.updateReservation(day2ReservationUpgrade.get(i));
@@ -121,40 +125,56 @@ public class DailyController {
                     }
                 }
             } else {
-                //Get quantity of reservation for specific room type
-                List<Reservation> reservationsByType = new ArrayList<>();
-                for (Reservation reservation : reservationsByType) {
-                    if (reservation.getInitialRoomType().equals(roomType)) {
-                        reservationsByType.add(reservation);
+                for (int i = 0; i < roomUpgradesRequired; i++) {
+                    Boolean upgraded = false;
+                    Reservation temp = null;               
+                    for (Reservation reservation : day2ReservationUpgrade) {
+                        if (reservation.getInitialRoomType() == roomType) {
+                            temp = reservation;
+                            System.out.println("Reservation "+temp.getReservationId()+" requires an upgrade");
+                            break;
+                        }
                     }
-                }
-                //Assign upgrades to all reservations for a specific room type
-                for (Reservation reservation : reservationsByType) {
-                    //Assign room rank of upgade
-                    for (int i = upgradeLevel; upgradeLevel > 0; i--) {
-                        //Assign room upgrade
-                        for (Room room : vacantRoomList) {
-                            //Check if there is a vacant room upgrade available
-                            if (room.getRoomType().getRanking() == i) {
+                    if (temp == null) {
+                        break;
+                    }
+                    
+                    for(int k=upgradeLevel; k>0; k--) {
+                        if(upgraded == true) {
+                                    break;
+                                }
+                        System.out.println("Checking room upgrade at rank "+k);
+                        System.out.println("Available rooms left: "+vacantRoomList.size());
+                        for (int j = 0; j < vacantRoomList.size(); j++) {
+                            if (vacantRoomList.get(j).getRoomType().getRanking() == k) {
+                                Room room = vacantRoomList.get(j);
+                                temp.setRoom(room);
+                                temp.setFinalRoomType(room.getRoomType());
+                                temp.setExceptionType(ExceptionTypeEnum.TYPE1);
                                 room.setIsVacant(Boolean.FALSE);
-                                reservation.setExceptionType(ExceptionTypeEnum.TYPE1);
-                                reservation.setFinalRoomType(room.getRoomType());
-                                reservation.setRoom(room);
+                                reservationController.updateReservation(temp);
                                 roomController.mergeRoom(room);
-                                reservationController.updateReservation(reservation);
-                                day2ReservationUpgrade.remove(reservation);
                                 vacantRoomList.remove(room);
+                                day2ReservationUpgrade.remove(temp);
+                                System.out.println("Reservation " + temp.getReservationId() + " had a room type upgrade from" + temp.getInitialRoomType().getName() + " to " + temp.getFinalRoomType().getName() + " with room " + room.getRoomId());
+                                System.out.println("Rooms left to upgrade: "+day2ReservationUpgrade.size());
+                                upgraded = true;
+                                if(upgraded == true) {
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
         }
+        
+        System.out.println("Vacant rooms after room assignment(with upgrade): " + vacantRoomList.size());
         //After completing all upgrades, assign remainder of reservation to type 2 error
-        if (day2ReservationUpgrade.size() > 0) {
-            for (Reservation reservation : day2ReservationUpgrade) {
-                reservation.setExceptionType(ExceptionTypeEnum.TYPE2);
-                reservationController.updateReservation(reservation);
+        for(int i=0; i<day2ReservationUpgrade.size(); i++) {
+            if(day2ReservationUpgrade.get(i).getFinalRoomType()==null) {
+                day2ReservationUpgrade.get(i).setExceptionType(ExceptionTypeEnum.TYPE2);
+                System.out.println("Reservation "+day2ReservationUpgrade.get(i).getId()+" has no room upgrade available");
             }
         }
         //Check for early check in
