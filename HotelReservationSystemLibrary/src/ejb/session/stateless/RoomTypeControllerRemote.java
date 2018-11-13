@@ -29,4 +29,6 @@ public interface RoomTypeControllerRemote {
 
     public void updateRankings(int option);
     
+    public void deleteRanking(int option);
+    
 }

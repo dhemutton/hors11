@@ -407,6 +407,7 @@ class HotelOperationModule {
     private void doDeleteRoomType(RoomType roomType) {
         Scanner sc = new Scanner(System.in);
         if (roomType.getIsUsed() == false) {
+            int rank = roomType.getRanking();
             roomType.setIsEnabled(Boolean.FALSE);
             roomTypeControllerRemote.deleteRoomType(roomType);
             System.out.println("Room type successfully deleted! ");

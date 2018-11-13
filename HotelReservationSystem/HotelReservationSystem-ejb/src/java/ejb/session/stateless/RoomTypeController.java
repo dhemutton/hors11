@@ -88,7 +88,9 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     @Override
     public void deleteRoomType(RoomType roomType) {
         RoomType rt = em.find(RoomType.class, roomType.getRoomTypeId());
+        int ranking = rt.getRanking();
         em.remove(rt);
+        deleteRanking(ranking);
     }
     
     @Override
@@ -120,18 +122,28 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     @Override
     public void updateRankings(int option) {
         List<RoomType> roomTypes = retrieveAllRoomtype();
-        System.out.println("Length of room types: "+roomTypes.size());
         int temp = option-1;
         int temp1 = roomTypes.size()-1;
-        int counter = 0;
         for(int i=temp1; i>=temp; i--) {
             int change = roomTypes.get(i).getRanking();
             change++;
             roomTypes.get(i).setRanking(change);
             em.merge(roomTypes.get(i));
             em.flush();
-            counter++;
         }
-        System.out.println("Iterations: "+counter);
+    }
+    
+    @Override
+    public void deleteRanking(int option) {
+        List<RoomType> roomTypes = retrieveAllRoomtype();
+        int temp = option-1;
+        int temp1 = roomTypes.size()-1;
+        for(int i=temp; i<roomTypes.size(); i++) {
+            int change = roomTypes.get(i).getRanking();
+            change--;
+            roomTypes.get(i).setRanking(change);
+            em.merge(roomTypes.get(i));
+            em.flush();
+        }
     }
 }
