@@ -233,8 +233,10 @@ class HotelOperationModule {
                 int choice = sc.nextInt();
                 if (choice == 1) {
                     doUpdateRoomTypeDetails(roomType);
+                    break;
                 } else if (choice == 2) {
                     doDeleteRoomType(roomType);
+                    break;
                 } else if (choice == 3) {
                     break;
                 } else {

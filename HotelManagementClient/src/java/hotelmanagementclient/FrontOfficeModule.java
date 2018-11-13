@@ -19,6 +19,7 @@ import entity.RoomType;
 import static enums.BookingStatusEnum.PENDING;
 import static enums.BookingTypeEnum.WALKIN;
 import static enums.ExceptionTypeEnum.UNASSIGNED;
+import exceptions.BookingNotFoundException;
 import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
 import java.text.ParseException;
@@ -80,6 +81,8 @@ class FrontOfficeModule {
     }
 
     private void doWalkInSearchRoom() {
+        System.out.println("*** HoRS :: Front Office Module:: Search Room ***\n");
+
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
@@ -112,14 +115,47 @@ class FrontOfficeModule {
     }
 
     private void doCheckInGuest() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Please enter booking ID");
-        Long bookingID = sc.nextLong();
-        List<Reservation> reservationList = reservationControllerRemote.retrieveAllReservationFromBooking(bookingID);
-        System.out.println("Your allocated rooms are:");
-        for (Reservation reservation : reservationList) {
-            reservation.setIsCheckedIn(Boolean.TRUE);
-            System.out.println("Room number: " + reservation.getRoom().getRoomNumber());
+        System.out.println("*** HoRS :: Front Office Module:: Check in Guest ***\n");
+        Long bookingId;
+        try {
+            Scanner sc = new Scanner(System.in);
+            while (true) {
+                System.out.println("1. Online Booking");
+                System.out.println("2. Walk-in Booking");
+                System.out.println("3. Partner Booking");
+                int choice = sc.nextInt();
+                if (choice == 1) {
+                    System.out.println("Please enter booking ID");
+                     bookingId = sc.nextLong();
+                    System.out.println("Please enter guest ID");
+                    Long guestId = sc.nextLong();
+                    Booking booking = bookingControllerRemote.retrieveBookingByIdForGuest(bookingId, guestId);
+                    break;
+                } else if (choice == 2) {
+                    System.out.println("Please enter booking ID");
+                     bookingId = sc.nextLong();
+                    Booking booking = bookingControllerRemote.retrieveBookingById(bookingId);
+                    break;
+                } else if (choice == 3) {
+                    System.out.println("Please enter booking ID");
+                     bookingId = sc.nextLong();
+                    System.out.println("Please enter partner ID");
+                    Long partnerId = sc.nextLong();
+                    Booking booking = bookingControllerRemote.retrieveBookingByIdForPartner(bookingId, partnerId);
+                    break;
+                } else {
+                    System.out.println("Invalid entry. Please try again");
+                }
+            }
+
+            List<Reservation> reservationList = reservationControllerRemote.retrieveAllReservationFromBooking(bookingId);
+            System.out.println("Your allocated rooms are:");
+            for (Reservation reservation : reservationList) {
+                reservation.setIsCheckedIn(Boolean.TRUE);
+                System.out.println("Room number: " + reservation.getRoom().getRoomNumber());
+            }
+        } catch (BookingNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the reservation " + ex.getMessage() + "!\n");
         }
 
     }
