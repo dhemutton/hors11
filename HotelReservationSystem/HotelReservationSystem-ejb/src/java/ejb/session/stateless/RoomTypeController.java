@@ -121,13 +121,18 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     @Override
     public void updateRankings(int option) {
         List<RoomType> roomTypes = retrieveAllRoomtype();
-        int temp = roomTypes.size()+1-option;
-        for(int i=roomTypes.size()-1; i>=temp; i--) {
+        System.out.println("Length of room types: "+roomTypes.size());
+        int temp = option-1;
+        int temp1 = roomTypes.size()-1;
+        int counter = 0;
+        for(int i=temp1; i>=temp; i--) {
             int change = roomTypes.get(i).getRanking();
             change++;
             roomTypes.get(i).setRanking(change);
             em.merge(roomTypes.get(i));
             em.flush();
+            counter++;
         }
+        System.out.println("Iterations: "+counter);
     }
 }
