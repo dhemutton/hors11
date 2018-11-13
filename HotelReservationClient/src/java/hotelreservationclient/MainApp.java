@@ -251,9 +251,12 @@ class MainApp {
     }
 
     private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
+        List<Reservation> rlist = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
-        Booking booking = bookingControllerRemote.createNewBooking(new Booking(ONLINE, PENDING, startDate, endDate));
+        Booking booking = new Booking(ONLINE, PENDING, startDate, endDate);
+        booking.setGuest(guest);
+        booking = bookingControllerRemote.createNewBooking(booking);
         while (true) {
             System.out.println("How many rooms do you want to reserve? (Maximum: " + roomsLeft + ")");
             quantity = sc.nextInt();
@@ -267,7 +270,7 @@ class MainApp {
         sc.nextLine();
         for (int i = 0; i < quantity; i++) {
             int choice;
-            System.out.println("Select room type to reserve : ");
+            System.out.println("Select room type to reserve for reservation " + (i + 1) + ": ");
             List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledRoomType();
             while (true) {
                 for (int j = 1; j <= roomTypeList.size(); j++) {
@@ -280,8 +283,12 @@ class MainApp {
                     break;
                 }
             }
-            reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
+           Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
+           rlist.add(reservation);
         }
+        booking.setReservation(rlist);
+        bookingControllerRemote.updateBooking(booking);
+        System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
 
     private void doViewMyReservation(Long guestId) {
@@ -315,7 +322,7 @@ class MainApp {
         if (list.size() == 0) {
             System.out.println("No past reservations made.");
         } else {
-            for (int i = 0; i <= list.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 System.out.println((i + 1) + ". Booking ID: " + list.get(i).getBookingId());
                 System.out.println("Start Date: " + list.get(i).getStartDate());
                 System.out.println("End Date: " + list.get(i).getEndDate());
@@ -324,7 +331,10 @@ class MainApp {
                 System.out.println("Total Cost: " + list.get(i).getCost());
                 List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
                 System.out.println("Number of rooms reserved: " + reservations.size());
-                System.out.println("Room Type: " + reservations.get(0).getInitialRoomType().getName());
+
+                for (int j = 0; j < reservations.size(); j++) {
+                    System.out.println("Room Type: " + reservations.get(j).getInitialRoomType().getName());
+                }
                 System.out.println("*********************************************************************");
                 System.out.println();
             }

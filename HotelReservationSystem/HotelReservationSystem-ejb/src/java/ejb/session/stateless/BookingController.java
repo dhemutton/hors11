@@ -130,6 +130,7 @@ public class BookingController implements BookingControllerRemote, BookingContro
     @Override
     public void updateBooking(Booking booking) {
         em.merge(booking);
+        em.flush();
     }
 
      @Override

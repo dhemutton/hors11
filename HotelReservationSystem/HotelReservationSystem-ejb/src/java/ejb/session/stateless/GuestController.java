@@ -14,6 +14,7 @@ import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -58,12 +59,16 @@ public class GuestController implements GuestControllerRemote, GuestControllerLo
     public Guest retrieveGuestByEmail(String email) throws GuestNotFoundException {
         Query query = em.createQuery("SELECT g FROM Guest g WHERE g.email=:email");
         query.setParameter("email", email);
+        try {
         Guest guest = (Guest)query.getSingleResult();
         if(guest!=null) {
             guest.getBookings().size();
             return guest;
         }
         else {
+            throw new GuestNotFoundException("Guest does not exist");
+        }
+        } catch (NoResultException ex) {
             throw new GuestNotFoundException("Guest does not exist");
         }
     }
