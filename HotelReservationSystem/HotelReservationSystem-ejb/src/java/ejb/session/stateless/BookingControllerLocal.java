@@ -17,6 +17,8 @@ import java.util.List;
 public interface BookingControllerLocal {
 
     public Booking createNewBooking(Booking booking);
+        public Booking createNewBookingForGuest(Booking booking);
+
 
     public Booking retrieveBookingById(Long bookingId) throws BookingNotFoundException;
 

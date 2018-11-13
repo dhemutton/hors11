@@ -258,7 +258,7 @@ class MainApp {
         int quantity = 0;
         Booking booking = new Booking(ONLINE, PENDING, startDate, endDate);
         booking.setGuest(guest);
-        booking = bookingControllerRemote.createNewBooking(booking);
+        booking = bookingControllerRemote.createNewBookingForGuest(booking);
         while (true) {
             System.out.println("How many rooms do you want to reserve? (Maximum: " + roomsLeft + ")");
             quantity = sc.nextInt();

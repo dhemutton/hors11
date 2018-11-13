@@ -36,6 +36,15 @@ public class BookingController implements BookingControllerRemote, BookingContro
 
         em.persist(booking);
         em.flush();
+       
+        return booking;
+    }
+    
+    @Override
+    public Booking createNewBookingForGuest(Booking booking) {
+
+        em.persist(booking);
+        em.flush();
         Guest guest = booking.getGuest();
         guest.getBookings().add(booking);
         em.merge(guest);
