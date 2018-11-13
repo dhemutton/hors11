@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import javax.ejb.Schedule;
 
 class HotelOperationModule {
 
@@ -142,10 +141,25 @@ class HotelOperationModule {
             System.out.println("*** HoRS ::Hotel Operations :: Create New Room Type ***\n");
             System.out.print("Enter room type name> ");
             roomType.setName(scanner.nextLine().trim());
+            List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
+            while (true) {
+                System.out.print("Enter Rank (blank if no change)> ");
+                int option = scanner.nextInt();
+                if (option <= ranking.size() && option > 0) {
+                    roomTypeControllerRemote.updateRankings(option);
+                    roomType.setRanking(option);
+                    break;
+                } else {
+                    System.out.println("Invalid entry. please try again");
+                }
+                scanner.nextLine();
+            }
+            scanner.nextLine();
             System.out.print("Enter description> ");
             roomType.setDescription(scanner.nextLine().trim());
             System.out.print("Enter size of room type> ");
             roomType.setSize(scanner.nextInt());
+            scanner.nextLine();
             System.out.print("Enter bed details> ");
             roomType.setBed(scanner.nextLine().trim());
             System.out.print("Enter capacity> ");
@@ -244,13 +258,14 @@ class HotelOperationModule {
         while (true) {
             System.out.print("Enter Rank (blank if no change)> ");
             int option = scanner.nextInt();
-            if (option > ranking.size() || option < 0) {
+            if (option <= ranking.size() && option > 0) {
+                roomTypeControllerRemote.updateRankings(option);
+                roomType.setRanking(option);
+                break;
+            } else {
                 System.out.println("Invalid entry. please try again");
             }
-            else {
-                roomTypeControllerRemote.updateRankings(option);
-                break;
-            }
+            scanner.nextLine();
         }
 
         System.out.print("Enter Description (blank if no change)> ");
