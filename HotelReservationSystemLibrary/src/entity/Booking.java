@@ -21,6 +21,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -42,8 +44,10 @@ public class Booking implements Serializable {
     @Enumerated(EnumType.STRING)
     private BookingStatusEnum bookingStatus;
     @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date startDate;
     @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date endDate;
 
     @ManyToOne(optional = true)
