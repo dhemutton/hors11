@@ -174,7 +174,15 @@ public class HolidayWebService {
             em.detach(b);
             b.setPartner(null);
             b.setReservation(null);
-//            b.setGuest(null);
+//            List<Reservation> rlist = b.getReservation();
+            
+//            for (Reservation r: rlist) {
+//                em.detach(r);
+//                r.setBooking(null);
+//                r.setInitialRoomType(null);
+//                r.setFinalRoomType(null);
+//                r.setRoom(null);
+//            }
         }
         return bookings;
     }

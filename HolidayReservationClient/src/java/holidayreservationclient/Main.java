@@ -267,7 +267,7 @@ public class Main {
                 reservation.setInitialRoomType(roomTypeList.get(choice - 1));
                 reservation.setBooking(booking);
                 reservation.setExceptionType(UNASSIGNED);
-                
+
                 reservation = createNewReservation(reservation);
                 booking.getReservation().add(reservation);
                 totalCost = totalCost.add(calculateReservationCost(booking.getBookingId(), reservation.getInitialRoomType().getRoomTypeId()));
@@ -325,17 +325,21 @@ public class Main {
         System.out.println("*** HoRS :: Holiday Reservation Client :: View All My Reservations ***\n");
 
         List<Booking> list = retrieveAllBookingsForPartner(partnerId);
+        List<Long> bookingIds = new ArrayList<>();
+        for (Booking b : list) {
+            bookingIds.add(b.getBookingId());
+        }
         if (list.size() == 0) {
             System.out.println("No past reservations made.");
         } else {
-            for (int i = 0; i <= list.size(); i++) {
+            for (int i = 0; i <= bookingIds.size(); i++) {
                 System.out.println((i + 1) + ". Booking ID: " + list.get(i).getBookingId());
                 System.out.println("Start Date: " + list.get(i).getStartDate());
                 System.out.println("End Date: " + list.get(i).getEndDate());
                 System.out.println("Booking Type: " + list.get(i).getBookingType());
                 System.out.println("Booking Status: " + list.get(i).getBookingStatus());
                 System.out.println("Total Cost: " + list.get(i).getCost());
-                List<Reservation> reservations = retrieveAllReservationFromBooking(list.get(i).getBookingId());
+                List<Reservation> reservations = retrieveAllReservationFromBooking(bookingIds.get(i));
                 System.out.println("Number of rooms reserved: " + reservations.size());
                 for (int j = 0; j < reservations.size(); j++) {
                     System.out.println("Room Type: " + reservations.get(j).getInitialRoomType().getName());
@@ -407,8 +411,6 @@ public class Main {
         ws.session.HolidayWebService port = service.getHolidayWebServicePort();
         port.updatePartnerLogin(arg0, arg1);
     }
-
-    
 
     private static void updateBooking(ws.session.Booking arg0) {
         ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
