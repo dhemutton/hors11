@@ -39,7 +39,7 @@ public class DailyController {
         em.persist(object);
     }
 
-    @Schedule(hour = "2")
+    @Schedule(hour = "16")
     public void dailyReservationRoomAssignment() {
         System.out.println("2am function activated");
         //SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");

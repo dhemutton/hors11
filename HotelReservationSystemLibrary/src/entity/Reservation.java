@@ -47,6 +47,14 @@ public class Reservation implements Serializable {
         this.booking = booking;
         this.exceptionType = exceptionType;
     }
+    
+    public Reservation(RoomType initialRoomType, RoomType finalRoomType, Room room, Booking booking, ExceptionTypeEnum exceptionType) {
+        this.initialRoomType = initialRoomType;
+        this.finalRoomType = finalRoomType;
+        this.room = room;
+        this.booking = booking;
+        this.exceptionType = exceptionType;
+    }
 
     public Long getReservationId() {
         return reservationId;

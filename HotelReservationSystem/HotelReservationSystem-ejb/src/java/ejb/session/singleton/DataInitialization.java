@@ -23,6 +23,7 @@ import static enums.EmployeeTypeEnum.GUESTRELATIONS;
 import static enums.EmployeeTypeEnum.OPERATIONSMANAGER;
 import static enums.EmployeeTypeEnum.SALESMANAGER;
 import static enums.EmployeeTypeEnum.SYSTEMADMIN;
+import static enums.ExceptionTypeEnum.NONE;
 import static enums.ExceptionTypeEnum.UNASSIGNED;
 import static enums.RateTypeEnum.NORMAL;
 import static enums.RateTypeEnum.PEAK;
@@ -33,6 +34,7 @@ import exceptions.GuestExistException;
 import exceptions.GuestNotFoundException;
 import exceptions.PartnerExistException;
 import exceptions.RoomExistException;
+import exceptions.RoomNotFoundException;
 import exceptions.RoomRateExistException;
 import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import exceptions.RoomTypeExistException;
@@ -91,14 +93,165 @@ public class DataInitialization {
         } catch (EmployeeNotFoundException ex) {
             try {
                 System.out.println("Initializing data");
-                initializeData();
-            } catch (EmployeeExistException | GuestExistException | RoomTypeExistException | RoomRateExistException | RoomTypeNotFoundException | RoomExistException | PartnerExistException | GuestNotFoundException | ParseException | RoomTypeCannotHaveDuplicatePublishedOrNormalException ex1) {
+                initializeTestData();
+                //initializeDataDump();
+            } catch (EmployeeExistException | GuestExistException | RoomTypeExistException | RoomRateExistException | RoomTypeNotFoundException | RoomExistException | PartnerExistException | GuestNotFoundException | ParseException | RoomTypeCannotHaveDuplicatePublishedOrNormalException | RoomNotFoundException ex1) {
                 Logger.getLogger(DataInitialization.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
     }
+    
+    private void initializeTestData() throws EmployeeExistException, GuestExistException, RoomTypeExistException, RoomRateExistException, RoomTypeNotFoundException, RoomExistException, PartnerExistException, GuestNotFoundException, ParseException, RoomTypeCannotHaveDuplicatePublishedOrNormalException, RoomNotFoundException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        employeeController.createNewEmployee(new Employee("Jonathan", "Soh", "111", "111", SYSTEMADMIN));
+        employeeController.createNewEmployee(new Employee("Stephanie", "Soh", "222", "222", OPERATIONSMANAGER));
+        employeeController.createNewEmployee(new Employee("Alison", "Soh", "333", "333", SALESMANAGER));
+        employeeController.createNewEmployee(new Employee("Star", "Soh", "444", "444", GUESTRELATIONS));
+        
+        guestController.createGuest(new Guest("1@gmail.com", "guest1", "GUEST1", "1", "guest1"));
+        guestController.createGuest(new Guest("2@gmail.com", "guest2", "GUEST2", "2", "guest2"));
+        guestController.createGuest(new Guest("3@gmail.com", "guest3", "GUEST3", "3", "guest3"));
+        
+        partnerController.createNewPartner(new Partner("Matthea", "password", true));
+        partnerController.createNewPartner(new Partner("Jonathan", "password", true));
+        
+        roomTypeController.createRoomType(new RoomType("Type A", "Best room with everything", 8, "1 king-size bed", "8-10 people", "Toilet, balcony, kitchen, living room", 1, false, true));
+        roomTypeController.createRoomType(new RoomType("Type B", "Luxurious room", 6, "1 queen-size bed", "6-8 people", "Toilet, balcony, kitchen", 2, false, true));
+        roomTypeController.createRoomType(new RoomType("Type C", "Standard room", 4, "1 super single bed", "4-6 people", "Toilet, balcony", 3, false, true));
+        roomTypeController.createRoomType(new RoomType("Type D", "Budget room", 2, "1 single bed", "2-4 people", "Toilet", 4, false, true));
 
-    private void initializeData() throws EmployeeExistException, GuestExistException, RoomTypeExistException, RoomRateExistException, RoomTypeNotFoundException, RoomExistException, PartnerExistException, GuestNotFoundException, ParseException, RoomTypeCannotHaveDuplicatePublishedOrNormalException {
+        String stringDate1 = "13/11/2018";
+        String stringDate2 = "15/11/2018";
+        String stringDate3 = "17/11/2018";
+        Date date1 = formatter.parse(stringDate1);
+        Date date2 = formatter.parse(stringDate2);
+        Date date3 = formatter.parse(stringDate3);
+
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type A", PEAK, new BigDecimal(160.50), date2, date3, true, roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type A", PUBLISHED, new BigDecimal(150.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type A", NORMAL, new BigDecimal(140.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type A", PROMO, new BigDecimal(130.50), date1, date2, true, roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type B", PEAK, new BigDecimal(120.50), date2, date3, true, roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type B", PUBLISHED, new BigDecimal(110.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type B", NORMAL, new BigDecimal(100.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type B", PROMO, new BigDecimal(90.50), date1, date2, true, roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type C", PEAK, new BigDecimal(80.50), date2, date3, true, roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type C", PUBLISHED, new BigDecimal(70.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type C", NORMAL, new BigDecimal(60.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type C", PROMO, new BigDecimal(50.50), date1, date2, true, roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+
+        roomRateController.createRoomRate(new RoomRate("Peak promo for type D", PEAK, new BigDecimal(40.50), date2, date3, true, roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Published promo for type D", PUBLISHED, new BigDecimal(30.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Normal promo for type D", NORMAL, new BigDecimal(20.50), new Date(), new Date(), true, roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomRateController.createRoomRate(new RoomRate("Promo promo for type D", PROMO, new BigDecimal(10.50), date1, date2, true, roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+
+        roomController.createRoom(new Room("1001", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1002", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1003", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1004", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1005", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1006", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1007", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1008", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1009", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+        roomController.createRoom(new Room("1010", roomTypeController.retrieveRoomTypeByName("Type A")), roomTypeController.retrieveRoomTypeByName("Type A").getRoomTypeId());
+
+        roomController.createRoom(new Room("2001", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2002", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2003", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2004", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2005", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2006", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2007", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2008", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2009", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+        roomController.createRoom(new Room("2010", roomTypeController.retrieveRoomTypeByName("Type B")), roomTypeController.retrieveRoomTypeByName("Type B").getRoomTypeId());
+
+        roomController.createRoom(new Room("3001", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3002", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3003", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3004", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3005", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3006", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3007", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3008", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3009", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+        roomController.createRoom(new Room("3010", roomTypeController.retrieveRoomTypeByName("Type C")), roomTypeController.retrieveRoomTypeByName("Type C").getRoomTypeId());
+
+        roomController.createRoom(new Room("4001", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4002", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4003", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4004", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4005", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4006", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4007", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4008", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4009", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        roomController.createRoom(new Room("4010", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
+        
+        Booking booking;
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("14/11/2018"), formatter.parse("15/11/2018")));
+        booking.setGuest(guestController.retrieveGuestByEmail("1@gmail.com"));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(1)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(2)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(3)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(4)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(5)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(6)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(7)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), roomTypeController.retrieveRoomTypeByName("Type C"), roomController.retrieveRoomById(new Long(21)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), roomTypeController.retrieveRoomTypeByName("Type C"), roomController.retrieveRoomById(new Long(22)), booking, NONE));
+        
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("14/11/2018"), formatter.parse("16/11/2018")));
+        booking.setGuest(guestController.retrieveGuestByEmail("2@gmail.com"));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(11)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(12)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(13)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(14)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(15)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(16)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(17)), booking, NONE));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(18)), booking, NONE));
+        
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("15/11/2018"), formatter.parse("16/11/2018")));
+        booking.setGuest(guestController.retrieveGuestByEmail("3@gmail.com"));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));      
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+    }
+
+    private void initializeDataDump() throws EmployeeExistException, GuestExistException, RoomTypeExistException, RoomRateExistException, RoomTypeNotFoundException, RoomExistException, PartnerExistException, GuestNotFoundException, ParseException, RoomTypeCannotHaveDuplicatePublishedOrNormalException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
         employeeController.createNewEmployee(new Employee("Jonathan", "Soh", "111", "111", SYSTEMADMIN));
@@ -251,7 +404,7 @@ public class DataInitialization {
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
 
         //Day 1 bookings (test 2am function)
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("14/11/2018"), formatter.parse("15/11/2018")));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("15/11/2018"), formatter.parse("15/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("9@gmail.com"));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
@@ -325,7 +478,7 @@ public class DataInitialization {
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
 
         //Day 2 bookings (test 2am function TYPE2 error)
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("24/11/2018"), formatter.parse("25/11/2018")));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("14/11/2018"), formatter.parse("25/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("8@gmail.com"));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
@@ -334,10 +487,15 @@ public class DataInitialization {
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
-
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
     }
 }

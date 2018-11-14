@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ejb.session.stateless;
 
 import entity.Booking;
@@ -28,10 +23,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-/**
- *
- * @author sleep
- */
 @Stateless
 @Local(RoomRateControllerLocal.class)
 @Remote(RoomRateControllerRemote.class)
@@ -199,12 +190,12 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             boolean peak = false;
             for (RoomRate roomRate : roomRates) {
                 if (roomRate.getRateType().equals(PROMO)) {
-                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) { //checking isValid
+                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)||roomRate.getStartDate().equals(checkDate)||roomRate.getEndDate().equals(checkDate)) { //checking isValid
                         promo = true;
                     }
                 }
                 if (roomRate.getRateType().equals(PEAK)) {
-                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)) { //checking isValid
+                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)||roomRate.getStartDate().equals(checkDate)||roomRate.getEndDate().equals(checkDate)) { //checking isValid
                         peak = true;
                     }
                 }
