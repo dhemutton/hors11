@@ -18,4 +18,5 @@ public interface ReservationControllerRemote {
     public List<Reservation> retrieveAllReservationFromEndDate(Date date);
     
     public void updateReservation(Reservation reservation);
+    
 }
