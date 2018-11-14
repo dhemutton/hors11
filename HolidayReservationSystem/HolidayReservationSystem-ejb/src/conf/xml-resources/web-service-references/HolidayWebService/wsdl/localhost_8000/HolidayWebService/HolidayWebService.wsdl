@@ -4,6 +4,12 @@
 <xsd:import namespace="http://ws.session.ejb/" schemaLocation="http://localhost:8000/HolidayWebService/HolidayWebService?xsd=1"/>
 </xsd:schema>
 </types>
+<message name="persist">
+<part name="parameters" element="tns:persist"/>
+</message>
+<message name="persistResponse">
+<part name="parameters" element="tns:persistResponse"/>
+</message>
 <message name="retrieveAllRoomtype">
 <part name="parameters" element="tns:retrieveAllRoomtype"/>
 </message>
@@ -98,6 +104,10 @@
 <part name="parameters" element="tns:updatePartnerResponse"/>
 </message>
 <portType name="HolidayWebService">
+<operation name="persist">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/persistRequest" message="tns:persist"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/persistResponse" message="tns:persistResponse"/>
+</operation>
 <operation name="retrieveAllRoomtype">
 <input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllRoomtypeRequest" message="tns:retrieveAllRoomtype"/>
 <output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllRoomtypeResponse" message="tns:retrieveAllRoomtypeResponse"/>
@@ -160,6 +170,15 @@
 </portType>
 <binding name="HolidayWebServicePortBinding" type="tns:HolidayWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="persist">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="retrieveAllRoomtype">
 <soap:operation soapAction=""/>
 <input>
