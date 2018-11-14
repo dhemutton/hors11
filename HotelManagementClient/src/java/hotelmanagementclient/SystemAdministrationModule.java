@@ -1,8 +1,3 @@
-/*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
 package hotelmanagementclient;
 
 import ejb.session.stateless.EmployeeControllerRemote;
@@ -15,23 +10,19 @@ import exceptions.PartnerExistException;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- *
- * @author matthealoo
- */
 class SystemAdministratorModule {
-    
+
     private PartnerControllerRemote partnerControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
-    
+
     public SystemAdministratorModule() {
     }
-    
+
     public SystemAdministratorModule(PartnerControllerRemote partnerControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
         this.partnerControllerRemote = partnerControllerRemote;
         this.employeeControllerRemote = employeeControllerRemote;
     }
-    
+
     public void runSystemAdminModule(Employee employee) {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -59,13 +50,13 @@ class SystemAdministratorModule {
             }
         }
     }
-    
-    private void doCreateEmployee()  {
-        
+
+    private void doCreateEmployee() {
+
         try {
             Scanner scanner = new Scanner(System.in);
-            Employee newEmployee= new Employee();
-            
+            Employee newEmployee = new Employee();
+
             System.out.println("*** HoRS :: System Administration :: Create New Employee ***\n");
             System.out.print("Enter First Name> ");
             newEmployee.setFirstName(scanner.nextLine().trim());
@@ -78,17 +69,17 @@ class SystemAdministratorModule {
             System.out.print("4. GUESTRELATIONS" + "\n");
             int input = scanner.nextInt();
             while (true) {
-                if (input == 1){
+                if (input == 1) {
                     newEmployee.setEmployeeType(EmployeeTypeEnum.SYSTEMADMIN);
                     break;
-                } else if (input == 2){
+                } else if (input == 2) {
                     newEmployee.setEmployeeType(EmployeeTypeEnum.OPERATIONSMANAGER);
                     break;
-                    
-                } else if (input == 3){
+
+                } else if (input == 3) {
                     newEmployee.setEmployeeType(EmployeeTypeEnum.SALESMANAGER);
                     break;
-                    
+
                 } else if (input == 4) {
                     newEmployee.setEmployeeType(EmployeeTypeEnum.GUESTRELATIONS);
                     break;
@@ -103,57 +94,65 @@ class SystemAdministratorModule {
             newEmployee.setPassword(scanner.nextLine().trim());
             newEmployee.setIsLogin(Boolean.FALSE);
             newEmployee = employeeControllerRemote.createNewEmployee(newEmployee);
-            System.out.println("New employee " + newEmployee.getFirstName() + " "+ newEmployee.getLastName()+ " was created successfully!" + "\n");
+            System.out.println("New employee " + newEmployee.getFirstName() + " " + newEmployee.getLastName() + " was created successfully!" + "\n");
         } catch (EmployeeExistException ex) {
             System.out.println("An error has occurred while creating the new employee: " + ex.getMessage() + "!\n");
-            
+
         }
-        
+
     }
-    
+
     private void doViewAllEmployees() {
         System.out.println("*** HoRS :: System Administration :: View All Employees ***\n");
-        
+
         List<Employee> listOfEmployees = employeeControllerRemote.retrieveAllEmployee();
         if (listOfEmployees.size() == 0) {
             System.out.println("No employees to view");
         } else {
-            for (Employee employee: listOfEmployees) {
-                System.out.println("Id: " + employee.getEmployeeId() + " Name: " + employee.getFirstName() + " " + employee.getLastName() + "\n");
+            System.out.printf("%-5s%-20s%-25s\n", "ID", "Name", "Employee type");
+            for (Employee employee : listOfEmployees) {
+                System.out.printf("%-5d%-20s%-25s\n", employee.getEmployeeId(), employee.getFirstName() + " " + employee.getLastName(), employee.getEmployeeType());
             }
+            System.out.println();
         }
     }
-    
+
     private void doCreatePartner() {
         try {
             Scanner scanner = new Scanner(System.in);
-            Partner newPartner= new Partner();
-            
+            Partner newPartner = new Partner();
+
             System.out.println("*** HoRS :: System Administration :: Create New Partner ***\n");
             System.out.print("Enter Username> ");
             newPartner.setUsername(scanner.nextLine().trim());
             System.out.print("Enter Password> ");
             newPartner.setPassword(scanner.nextLine().trim());
-            
+            System.out.print("Is this partner a manager? (Y/N)> ");
+            String option = scanner.nextLine().trim();
+            if (option.equals("Y") || option.equals("y")) {
+                newPartner.setIsManager(Boolean.TRUE);
+            }
             newPartner.setIsLogin(Boolean.FALSE);
             newPartner = partnerControllerRemote.createNewPartner(newPartner);
             System.out.println("New partner " + newPartner.getUsername() + " was created successfully!" + "\n");
         } catch (PartnerExistException ex) {
             System.out.println("An error has occurred while creating the new partner: " + ex.getMessage() + "!\n");
-            
+
         }
     }
-    
+
     private void doViewAllPartners() {
         System.out.println("*** HoRS :: System Administration :: View All Partners ***\n");
-        
+
         List<Partner> listOfPartners = partnerControllerRemote.retrieveAllPartner();
         if (listOfPartners.size() == 0) {
             System.out.println("No partners to view");
         } else {
-            for (Partner partner: listOfPartners) {
-                System.out.println("Id: " + partner.getPartnerId()+ " Username: " + partner.getUsername()+ "\n");
+            System.out.printf("%-5s%-20s\n", "ID", "Username");
+            for (Partner partner : listOfPartners) {
+                System.out.printf("%-5d%-20s\n", partner.getPartnerId(), partner.getUsername());
             }
+            System.out.println();
         }
     }
 }
