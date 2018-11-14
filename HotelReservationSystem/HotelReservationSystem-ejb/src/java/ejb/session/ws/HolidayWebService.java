@@ -68,6 +68,11 @@ public class HolidayWebService {
 
         List<Room> rooms = roomControllerLocal.retrieveAllEnabledRooms();
 
+        for (Room room : rooms) {
+            room.setRoomType(null);
+            room.setReservations(null);
+        }
+
         return rooms;
     }
 
@@ -75,6 +80,11 @@ public class HolidayWebService {
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate) {
         List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsWithinDates(startDate, endDate);
 
+        for (Booking b : bookings) {
+            b.setPartner(null);
+            b.setReservation(null);
+            b.setGuest(null);
+        }
         return bookings;
     }
 
@@ -82,6 +92,13 @@ public class HolidayWebService {
     public List<Reservation> retrieveAllReservationFromBooking(Long bookingId) {
 
         List<Reservation> list = reservationControllerLocal.retrieveAllReservationFromBooking(bookingId);
+
+        for (Reservation r : list) {
+            r.setBooking(null);
+            r.setRoom(null);
+            r.setInitialRoomType(null);
+            r.setFinalRoomType(null);
+        }
 
         return list;
     }
@@ -96,12 +113,17 @@ public class HolidayWebService {
 
         List<RoomType> list = roomTypeControllerLocal.retrieveAllEnabledRoomType();
 
+        for (RoomType rt : list) {
+            rt.setRoomRates(null);
+            rt.setRooms(null);
+        }
         return list;
     }
 
     //reserve room
     public Reservation createNewReservation(Reservation reservation) {
         Reservation r = reservationControllerLocal.createNewReservation(reservation);
+        r.setBooking(null);
         return r;
     }
 
@@ -109,7 +131,10 @@ public class HolidayWebService {
     public Booking retrieveBookingByIdForPartner(Long bookingId, Long partnerId) throws BookingNotFoundException {
 
         Booking booking = bookingControllerLocal.retrieveBookingByIdForPartner(bookingId, partnerId);
-      
+        booking.setPartner(null);
+        booking.setReservation(null);
+        booking.setGuest(null);
+
         return booking;
     }
 
@@ -117,7 +142,12 @@ public class HolidayWebService {
     public List<Booking> retrieveAllBookingsForPartner(Long partnerId) {
 
         List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsForPartner(partnerId);
-        
+
+        for (Booking b : bookings) {
+            b.setPartner(null);
+            b.setReservation(null);
+            b.setGuest(null);
+        }
         return bookings;
     }
 
@@ -136,7 +166,10 @@ public class HolidayWebService {
     
         public List<RoomType> retrieveAllRoomtype() {
           List<RoomType> list=  roomTypeControllerLocal.retrieveAllRoomtype();
-      
+          for (RoomType rt: list) {
+              rt.setRoomRates(null);
+              rt.setRooms(null);
+          }
           return list;
         }
 }
