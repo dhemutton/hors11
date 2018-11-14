@@ -22,10 +22,6 @@
 
 <xs:element name="loginForPartnerResponse" type="tns:loginForPartnerResponse"/>
 
-<xs:element name="persist" type="tns:persist"/>
-
-<xs:element name="persistResponse" type="tns:persistResponse"/>
-
 <xs:element name="retrieveAllBookingsForPartner" type="tns:retrieveAllBookingsForPartner"/>
 
 <xs:element name="retrieveAllBookingsForPartnerResponse" type="tns:retrieveAllBookingsForPartnerResponse"/>
@@ -273,6 +269,18 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="retrieveAllBookingsForPartner">
+<xs:sequence>
+<xs:element name="arg0" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrieveAllBookingsForPartnerResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="loginForPartner">
 <xs:sequence>
 <xs:element name="arg0" type="xs:string" minOccurs="0"/>
@@ -296,28 +304,6 @@
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="retrieveAllBookingsForPartner">
-<xs:sequence>
-<xs:element name="arg0" type="xs:long" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="retrieveAllBookingsForPartnerResponse">
-<xs:sequence>
-<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="persist">
-<xs:sequence>
-<xs:element name="arg0" type="xs:anyType" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="persistResponse">
-<xs:sequence/>
 </xs:complexType>
 
 <xs:complexType name="retrieveAllReservationFromBooking">

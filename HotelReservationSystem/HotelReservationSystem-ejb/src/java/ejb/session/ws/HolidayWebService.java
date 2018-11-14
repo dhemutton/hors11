@@ -116,7 +116,11 @@ public class HolidayWebService {
             em.detach(r);
             r.setBooking(null);
             r.setRoom(null);      
-            r.setInitialRoomType(null);
+//            r.setInitialRoomType(null); need this
+       RoomType rt = r.getInitialRoomType();
+       em.detach(rt);
+       rt.setRooms(null);
+       rt.setRoomRates(null);
             r.setFinalRoomType(null);
         }
 
@@ -263,7 +267,4 @@ public class HolidayWebService {
         partnerControllerLocal.updatePartner(partner);
     }
 
-    public void persist(Object object) {
-        em.persist(object);
-    }
 }

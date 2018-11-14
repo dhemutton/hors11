@@ -271,8 +271,6 @@ public class Main {
                 reservation = createNewReservation(reservation);
                 booking.getReservation().add(reservation);
                 totalCost = totalCost.add(calculateReservationCost(booking.getBookingId(), reservation.getInitialRoomType().getRoomTypeId()));
-                                System.out.println("Cost: " + totalCost);
-
             }
         } catch (DatatypeConfigurationException ex) {
             System.out.println("Data type conversion to XML Gregorian Calendar error!");
