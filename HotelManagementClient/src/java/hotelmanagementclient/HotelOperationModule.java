@@ -1,6 +1,5 @@
 package hotelmanagementclient;
 
-import ejb.session.stateless.BookingControllerRemote;
 import ejb.session.stateless.EmployeeControllerRemote;
 import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
@@ -15,6 +14,8 @@ import static enums.EmployeeTypeEnum.OPERATIONSMANAGER;
 import static enums.ExceptionTypeEnum.TYPE1;
 import static enums.ExceptionTypeEnum.TYPE2;
 import enums.RateTypeEnum;
+import static enums.RateTypeEnum.NORMAL;
+import static enums.RateTypeEnum.PUBLISHED;
 import exceptions.RoomExistException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateExistException;
@@ -115,9 +116,9 @@ class HotelOperationModule {
                 if (choice == 1) {
                     doCreateRoomRate();
                 } else if (choice == 2) {
-                    doViewAllRoomRate();
-                } else if (choice == 3) {
                     doViewRoomRateDetails();
+                } else if (choice == 3) {
+                    doViewAllRoomRate();
                 } else if (choice == 4) {
                     employeeControllerRemote.updateEmployeeLogin(employee, false);
 
@@ -140,7 +141,7 @@ class HotelOperationModule {
             roomType.setName(scanner.nextLine().trim());
             List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
             while (true) {
-                System.out.print("Enter Rank (1 to "+(ranking.size()+1)+"). (blank if no change)> ");
+                System.out.print("Enter Rank (1 to " + (ranking.size() + 1) + "). (blank if no change)> ");
                 int option = scanner.nextInt();
                 if (option == ranking.size() + 1) {
                     roomType.setRanking(option);
@@ -257,7 +258,7 @@ class HotelOperationModule {
 
         List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
         while (true) {
-            System.out.print("Enter Rank (1 to "+ranking.size()+")> ");
+            System.out.print("Enter Rank (1 to " + ranking.size() + ")> ");
             int option = scanner.nextInt();
             if (option <= ranking.size() && option > 0) {
                 roomTypeControllerRemote.updateRankings(roomType.getRanking(), option);
@@ -265,7 +266,7 @@ class HotelOperationModule {
                 break;
             } else {
                 System.out.println("Invalid entry. please try again");
-            }       
+            }
         }
         scanner.nextLine();
         System.out.print("Enter Description (blank if no change)> ");
@@ -309,7 +310,7 @@ class HotelOperationModule {
     private void doDeleteRoomType(RoomType roomType) {
         Scanner sc = new Scanner(System.in);
         if (roomType.getIsUsed() == false) {
-            roomType.setIsEnabled(Boolean.FALSE);         
+            roomType.setIsEnabled(Boolean.FALSE);
             roomTypeControllerRemote.deleteRoomType(roomType);
             System.out.println("Room type successfully deleted! ");
 
@@ -352,7 +353,7 @@ class HotelOperationModule {
             while (true) {
                 int input = scanner.nextInt();
                 if (input > 0 && input <= roomTypes.size()) {
-                    roomTypeId = roomTypes.get(input-1).getRoomTypeId();
+                    roomTypeId = roomTypes.get(input - 1).getRoomTypeId();
                     break;
                 } else {
                     System.out.println("Incorrect input, please try again.");
@@ -418,7 +419,7 @@ class HotelOperationModule {
                 while (true) {
                     int choice = scanner.nextInt();
                     choice--;
-                    if (choice >=0 && choice < roomTypes.size()) {
+                    if (choice >= 0 && choice < roomTypes.size()) {
                         newroomTypeId = roomTypes.get(choice).getRoomTypeId();
                         break;
                     } else {
@@ -610,7 +611,7 @@ class HotelOperationModule {
                                 roomRate.setEndDate(endDate);
                             } else {
                                 again = true;
-                                System.out.println("End date is before start date! Please re-enter end date.");
+                                System.out.println("End date is before/equal to start date! Please re-enter end date.");
                             }
                         } catch (ParseException ex) {
                             again = true;
@@ -638,8 +639,10 @@ class HotelOperationModule {
                 }
             }
             scanner.nextLine();
-            System.out.println("Enable room rate? (Enter 'Y' to enable)");
-            if (scanner.nextLine().trim().equals("Y")) {
+            Date today = new Date();
+            if (roomRate.getRateType() == PUBLISHED || roomRate.getRateType() == NORMAL) {
+                roomRate.setIsEnabled(Boolean.TRUE);
+            } else if (roomRate.getStartDate().before(today) && roomRate.getEndDate().after(today) || roomRate.getStartDate().equals(today) || roomRate.getEndDate().equals(today)) {
                 roomRate.setIsEnabled(Boolean.TRUE);
             } else {
                 roomRate.setIsEnabled(Boolean.FALSE);
@@ -665,7 +668,6 @@ class HotelOperationModule {
             System.out.println("Room Rate Name: " + roomRate.getName());
             System.out.println("Room Rate Type: " + roomRate.getRateType());
             System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
-
             System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
             System.out.println("Room Rate End Date: " + roomRate.getEndDate());
 
@@ -686,7 +688,6 @@ class HotelOperationModule {
             System.out.println("Room Rate Name: " + roomRate.getName());
             System.out.println("Room Rate Type: " + roomRate.getRateType());
             System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
-
             System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
             System.out.println("Room Rate End Date: " + roomRate.getEndDate());
             System.out.println("*********************************************************************");
@@ -698,8 +699,10 @@ class HotelOperationModule {
                 int choice = sc.nextInt();
                 if (choice == 1) {
                     doUpdateRoomRateDetails(roomRate);
+                    break;
                 } else if (choice == 2) {
                     doDeleteRoomRate(roomRate);
+                    break;
                 } else if (choice == 3) {
                     break;
                 } else {
@@ -809,8 +812,10 @@ class HotelOperationModule {
             }
         }
 
-        System.out.println("Enable room rate? (Enter 'Y' to enable)");
-        if (scanner.nextLine().trim().equals("Y")) {
+        Date today = new Date();
+        if (roomRate.getRateType() == PUBLISHED || roomRate.getRateType() == NORMAL) {
+            roomRate.setIsEnabled(Boolean.TRUE);
+        } else if (roomRate.getStartDate().before(today) && roomRate.getEndDate().after(today) || roomRate.getStartDate().equals(today) || roomRate.getEndDate().equals(today)) {
             roomRate.setIsEnabled(Boolean.TRUE);
         } else {
             roomRate.setIsEnabled(Boolean.FALSE);
@@ -823,11 +828,6 @@ class HotelOperationModule {
     private void doDeleteRoomRate(RoomRate roomRate) {
         System.out.println("*** HoRS ::Hotel Operations :: Deleting Room Rate ***\n");
         Scanner scanner = new Scanner(System.in);
-        String input;
-
-        System.out.println("Which room rate would you like to delete?  (Enter room rate name) ");
-        input = scanner.nextLine().trim();
-
         if (!roomRate.getIsValid()) {
             System.out.println("Delete room rate?  (Enter 'Y' to change) ");
             if (scanner.nextLine().trim().equals("Y")) {
