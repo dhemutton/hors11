@@ -6,6 +6,7 @@
             <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/singleton/DataInitialization.java</file>
             <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomRateController.java</file>
             <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/ws/HolidayWebService.java</file>
+            <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/BookingController.java</file>
             <file>file:/Users/matthealoo/Desktop/hors11/HotelReservationSystem/HotelReservationSystem-ejb/src/java/ejb/session/stateless/RoomTypeController.java</file>
         </group>
     </open-files>

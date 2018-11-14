@@ -196,7 +196,6 @@ public class Main {
             List<Long> bookingList = retrieveAllBookingsWithinDates(startXmlCalendar, endXmlCalendar);
             for (Long bookingId : bookingList) {
                 reservationList.addAll(retrieveAllReservationFromBooking(bookingId));
-                System.out.println("num rooms used :" + retrieveAllReservationFromBooking(bookingId).size());
             }
             int roomsLeft = maxRooms - reservationList.size();
             if (roomsLeft > 0) {
@@ -271,7 +270,9 @@ public class Main {
                 
                 reservation = createNewReservation(reservation);
                 booking.getReservation().add(reservation);
-                totalCost.add(calculateReservationCost(booking.getBookingId(), reservation.getInitialRoomType().getRoomTypeId()));
+                totalCost = totalCost.add(calculateReservationCost(booking.getBookingId(), reservation.getInitialRoomType().getRoomTypeId()));
+                                System.out.println("Cost: " + totalCost);
+
             }
         } catch (DatatypeConfigurationException ex) {
             System.out.println("Data type conversion to XML Gregorian Calendar error!");
