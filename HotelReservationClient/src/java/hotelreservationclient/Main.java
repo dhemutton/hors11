@@ -1,17 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelreservationclient;
 
-/**
- *
- * @author matthealoo
- */import ejb.session.stateless.BookingControllerRemote;
-import ejb.session.stateless.EmployeeControllerRemote;
+import ejb.session.stateless.BookingControllerRemote;
 import ejb.session.stateless.GuestControllerRemote;
-import ejb.session.stateless.PartnerControllerRemote;
 import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
@@ -48,16 +38,10 @@ public class Main {
 
     @EJB(name = "RoomTypeControllerRemote")
     private static RoomTypeControllerRemote roomTypeControllerRemote;
-
-    @EJB(name = "PartnerControllerRemote")
-    private static PartnerControllerRemote partnerControllerRemote;
-
-    @EJB(name = "EmployeeControllerRemote")
-    private static EmployeeControllerRemote employeeControllerRemote;
     
     public static void main(String[] args) throws EmployeeNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException, BookingNotFoundException {
         MainApp mainApp = new MainApp(guestControllerRemote, reservationControllerRemote, bookingControllerRemote, roomControllerRemote, 
-                                      roomRateControllerRemote, roomTypeControllerRemote, partnerControllerRemote, employeeControllerRemote);
+                                      roomRateControllerRemote, roomTypeControllerRemote);
         mainApp.runApp();
     }
 }

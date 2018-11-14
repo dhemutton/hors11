@@ -166,6 +166,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         em.merge(roomRate);
     }
 
+    @Override
     public BigDecimal calculateReservationCost(Booking booking, RoomType roomType) {
         BigDecimal total = new BigDecimal(0);
         Date startDate = booking.getStartDate();
@@ -173,6 +174,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=:roomType AND rr.isEnabled = true");
         query.setParameter("roomType", roomType);
         List<RoomRate> roomRates = query.getResultList();
+        System.out.println("Number of room rates: "+roomRates.size());
         Date checkDate = startDate;
         BigDecimal promoRate = new BigDecimal(0);
         BigDecimal peakRate = new BigDecimal(0);
@@ -180,15 +182,19 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         for (RoomRate roomRate : roomRates) {
             if (roomRate.getRateType().equals(PROMO)) {
                 promoRate = roomRate.getRatePerNight();
+                System.out.println("Promo rate: "+promoRate);
             }
             if (roomRate.getRateType().equals(PEAK)) {
                 peakRate = roomRate.getRatePerNight();
+                System.out.println("Peak rate: "+peakRate);
             }
             if (roomRate.getRateType().equals(NORMAL)) {
                 normalRate = roomRate.getRatePerNight();
+                System.out.println("Normal rate: "+normalRate);
             }
         }
-        while (checkDate.before(endDate)) {
+        while (checkDate.before(endDate)||checkDate.equals(endDate)) {
+            System.out.println("Checking reservation on "+checkDate);
             boolean promo = false;
             boolean peak = false;
             for (RoomRate roomRate : roomRates) {
@@ -204,17 +210,22 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
                 }
             }
             if (peak == true && promo == true) {
-                total.add(promoRate);
+                total = total.add(promoRate);
+                System.out.println("Promotion rate was added");
             } else if (peak == true && promo == false) {
-                total.add(peakRate);
+                total = total.add(peakRate);
+                System.out.println("Peak rate was added");
             } else if(peak==false&&promo==true) {
-                    total.add(promoRate);
+                    total = total.add(promoRate);
+                    System.out.println("Promotion rate was added");
                 } else {
-                total.add(normalRate);
+                total = total.add(normalRate);
+                System.out.println("Normal rate was added");
             }
             Date temp = checkDate;
             checkDate.setDate(temp.getDate() + 1);
         }
+        System.out.println("Total cost: "+total);
         return total;
     }
 }

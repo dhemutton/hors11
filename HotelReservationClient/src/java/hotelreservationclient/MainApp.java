@@ -1,32 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelreservationclient;
 
-/**
- *
- * @author matthealoo
- */
 import ejb.session.stateless.BookingControllerRemote;
-import ejb.session.stateless.EmployeeControllerRemote;
 import ejb.session.stateless.GuestControllerRemote;
-import ejb.session.stateless.PartnerControllerRemote;
 import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
 import entity.Booking;
-import entity.Employee;
 import entity.Guest;
 import entity.Reservation;
 import entity.RoomType;
 import static enums.BookingStatusEnum.PENDING;
 import static enums.BookingTypeEnum.ONLINE;
-import static enums.BookingTypeEnum.WALKIN;
-import static enums.EmployeeTypeEnum.GUESTRELATIONS;
-import static enums.EmployeeTypeEnum.SYSTEMADMIN;
 import static enums.ExceptionTypeEnum.UNASSIGNED;
 import exceptions.BookingNotFoundException;
 import exceptions.EmployeeExistException;
@@ -45,14 +30,7 @@ import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import util.exception.EmployeeNotFoundException;
 
-/**
- *
- * @author matthealoo
- */
 class MainApp {
 
     private GuestControllerRemote guestControllerRemote;
@@ -61,21 +39,17 @@ class MainApp {
     private RoomControllerRemote roomControllerRemote;
     private RoomRateControllerRemote roomRateControllerRemote;
     private RoomTypeControllerRemote roomTypeControllerRemote;
-    private PartnerControllerRemote partnerControllerRemote;
-    private EmployeeControllerRemote employeeControllerRemote;
     private Boolean loggedIn = false;
     private Guest guest;
 
     public MainApp(GuestControllerRemote guestControllerRemote, ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, RoomControllerRemote roomControllerRemote,
-            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote, PartnerControllerRemote partnerControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
+            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote) {
         this.guestControllerRemote = guestControllerRemote;
         this.reservationControllerRemote = reservationControllerRemote;
         this.bookingControllerRemote = bookingControllerRemote;
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
-        this.partnerControllerRemote = partnerControllerRemote;
-        this.employeeControllerRemote = employeeControllerRemote;
     }
 
     public MainApp() {
@@ -84,8 +58,8 @@ class MainApp {
     public void runApp() throws BookingNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException {
         System.out.println("*** Welcome to HoRS Reservation Client  ***\n");
         Scanner sc = new Scanner(System.in);
-        Boolean again = true;
-        while (again) {
+        outerloop:
+        while (true) {
             try {
                 while (!loggedIn) {
                     System.out.println("1. Guest Login");
@@ -102,8 +76,7 @@ class MainApp {
                     } else if (choice == 3) {
                         doSearchRoom();
                     } else if (choice == 4) {
-                        again = false;
-                        break;
+                        break outerloop;
                     } else {
                         System.out.println("Invalid entry. Please try again");
                     }
@@ -138,8 +111,6 @@ class MainApp {
     }
 
     private void doGuestLogin() {
-        System.out.println("*** HoRS :: Reservation Client :: Login As Guest ***\n");
-
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your email address: ");
         String email = sc.nextLine().trim();
@@ -151,8 +122,6 @@ class MainApp {
             if (!guest.getIsLogin()) {
                 loggedIn = true;
                 guestControllerRemote.updateGuestLogin(guest, true);
-                System.out.println("Login successful! Redirecting...");
-
             } else {
                 System.out.println("Guest is already logged in.");
             }
@@ -169,6 +138,7 @@ class MainApp {
             Guest newGuest = new Guest();
 
             System.out.println("*** HoRS :: Reservation Client :: Register As Guest ***\n");
+            //maybe modify guest to have first, last name next time
             System.out.println("Enter Email Address> ");
             newGuest.setEmail(scanner.nextLine().trim());
             System.out.println("Enter password> ");
@@ -189,8 +159,6 @@ class MainApp {
     }
 
     private void doSearchRoom() {
-        System.out.println("*** HoRS :: Reservation Client :: Search Room ***\n");
-
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
@@ -294,7 +262,8 @@ class MainApp {
                 }
             }
             Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
-            totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
+            totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
+            System.out.println("Total cost so far: " + totalCost);
         }
         System.out.println("Total Cost: " + totalCost);
         booking.setCost(totalCost);
