@@ -108,4 +108,10 @@ public class PartnerController implements PartnerControllerRemote, PartnerContro
             partner.setIsLogin(loggedIn);
         em.merge(partner);
     }
+ 
+@Override
+    public void updatePartner(Partner partner) {
+        em.merge(partner);
+    }
 }
+    

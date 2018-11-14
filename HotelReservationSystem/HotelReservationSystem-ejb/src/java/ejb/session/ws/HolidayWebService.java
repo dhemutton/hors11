@@ -27,6 +27,8 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -35,6 +37,7 @@ import javax.ejb.Stateless;
 @WebService(serviceName = "HolidayWebService")
 @Stateless()
 public class HolidayWebService {
+    
 
     @EJB
     private RoomControllerLocal roomControllerLocal;
@@ -54,13 +57,22 @@ public class HolidayWebService {
     @EJB
     private BookingControllerLocal bookingControllerLocal;
 
+    
+    @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
+    private EntityManager em;
+    
     /**
      * Web service operation
      */
     //Login
     public Partner loginForPartner(String username, String password) throws InvalidLoginCredentials, PartnerNotFoundException {
+        
+        Partner partner = partnerControllerLocal.partnerLogin(username, password);
+        
+        em.detach(partner);
+        partner.getBookings().clear();
 
-        return partnerControllerLocal.partnerLogin(username, password);
+        return partner;
     }
 
     //Search room
@@ -69,6 +81,7 @@ public class HolidayWebService {
         List<Room> rooms = roomControllerLocal.retrieveAllEnabledRooms();
 
         for (Room room : rooms) {
+            em.detach(room);
             room.setRoomType(null);
             room.setReservations(null);
         }
@@ -81,6 +94,7 @@ public class HolidayWebService {
         List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsWithinDates(startDate, endDate);
 
         for (Booking b : bookings) {
+            em.detach(b);
             b.setPartner(null);
             b.setReservation(null);
             b.setGuest(null);
@@ -94,6 +108,7 @@ public class HolidayWebService {
         List<Reservation> list = reservationControllerLocal.retrieveAllReservationFromBooking(bookingId);
 
         for (Reservation r : list) {
+            em.detach(r);
             r.setBooking(null);
             r.setRoom(null);
             r.setInitialRoomType(null);
@@ -114,6 +129,7 @@ public class HolidayWebService {
         List<RoomType> list = roomTypeControllerLocal.retrieveAllEnabledRoomType();
 
         for (RoomType rt : list) {
+            em.detach(rt);
             rt.setRoomRates(null);
             rt.setRooms(null);
         }
@@ -123,6 +139,7 @@ public class HolidayWebService {
     //reserve room
     public Reservation createNewReservation(Reservation reservation) {
         Reservation r = reservationControllerLocal.createNewReservation(reservation);
+        em.detach(r);
         r.setBooking(null);
         return r;
     }
@@ -131,6 +148,7 @@ public class HolidayWebService {
     public Booking retrieveBookingByIdForPartner(Long bookingId, Long partnerId) throws BookingNotFoundException {
 
         Booking booking = bookingControllerLocal.retrieveBookingByIdForPartner(bookingId, partnerId);
+        em.detach(booking);
         booking.setPartner(null);
         booking.setReservation(null);
         booking.setGuest(null);
@@ -144,6 +162,7 @@ public class HolidayWebService {
         List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsForPartner(partnerId);
 
         for (Booking b : bookings) {
+            em.detach(b);
             b.setPartner(null);
             b.setReservation(null);
             b.setGuest(null);
@@ -167,9 +186,19 @@ public class HolidayWebService {
         public List<RoomType> retrieveAllRoomtype() {
           List<RoomType> list=  roomTypeControllerLocal.retrieveAllRoomtype();
           for (RoomType rt: list) {
+              em.detach(rt);
               rt.setRoomRates(null);
               rt.setRooms(null);
           }
           return list;
         }
+        
+            public void updatePartner(Partner partner) {
+                partnerControllerLocal.updatePartner(partner);
+            }  
+
+    public void persist(Object object) {
+        em.persist(object);
+    }
 }
+

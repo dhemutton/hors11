@@ -54,9 +54,13 @@
 
 <xs:element name="updateBookingResponse" type="tns:updateBookingResponse"/>
 
+<xs:element name="updatePartner" type="tns:updatePartner"/>
+
 <xs:element name="updatePartnerLogin" type="tns:updatePartnerLogin"/>
 
 <xs:element name="updatePartnerLoginResponse" type="tns:updatePartnerLoginResponse"/>
+
+<xs:element name="updatePartnerResponse" type="tns:updatePartnerResponse"/>
 
 <xs:complexType name="updateBooking">
 <xs:sequence>
@@ -222,6 +226,16 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="updatePartner">
+<xs:sequence>
+<xs:element name="arg0" type="tns:partner" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updatePartnerResponse">
+<xs:sequence/>
+</xs:complexType>
+
 <xs:complexType name="retrieveAllRoomtype">
 <xs:sequence/>
 </xs:complexType>
@@ -255,18 +269,6 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="retrieveAllBookingsForPartner">
-<xs:sequence>
-<xs:element name="arg0" type="xs:long" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="retrieveAllBookingsForPartnerResponse">
-<xs:sequence>
-<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
-</xs:sequence>
-</xs:complexType>
-
 <xs:complexType name="loginForPartner">
 <xs:sequence>
 <xs:element name="arg0" type="xs:string" minOccurs="0"/>
@@ -289,6 +291,18 @@
 <xs:complexType name="PartnerNotFoundException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrieveAllBookingsForPartner">
+<xs:sequence>
+<xs:element name="arg0" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrieveAllBookingsForPartnerResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
 </xs:sequence>
 </xs:complexType>
 

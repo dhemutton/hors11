@@ -229,7 +229,7 @@ public class Main {
         try {
             XMLGregorianCalendar startXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(startCalendar);
             XMLGregorianCalendar endXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(endCalendar);
-
+            booking.setPartner(partner);
             booking.setStartDate(startXmlCalendar);
             booking.setEndDate(endXmlCalendar);
             booking = createNewBooking(booking);
@@ -275,6 +275,8 @@ public class Main {
         }
         System.out.println("Total Cost: " + totalCost);
         booking.setCost(totalCost);
+        partner.getBookings().add(booking);
+        
         updateBooking(booking);
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
@@ -426,6 +428,13 @@ public class Main {
         ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
         ws.session.HolidayWebService port = service.getHolidayWebServicePort();
         return port.retrieveAllRoomtype();
+    }
+
+    private static void updatePartner(ws.session.Partner arg0) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        port.updatePartner(arg0);
     }
 
 }
