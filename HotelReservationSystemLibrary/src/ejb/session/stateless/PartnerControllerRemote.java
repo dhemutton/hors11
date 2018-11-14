@@ -25,5 +25,6 @@ public interface PartnerControllerRemote {
     public List<Partner> retrieveAllPartner();
     
         public Partner partnerLogin(String username, String password) throws InvalidLoginCredentials, PartnerNotFoundException;
+    public void updatePartnerLogin(Partner partner, boolean loggedIn);
 
 }

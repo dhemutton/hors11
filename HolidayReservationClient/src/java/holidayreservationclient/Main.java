@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package holidayreservationclient;
+
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,11 +27,11 @@ import ws.session.Partner;
 import ws.session.PartnerNotFoundException_Exception;
 import ws.session.Reservation;
 import java.util.Date;
+import java.util.InputMismatchException;
 import static ws.session.BookingStatusEnum.PENDING;
 import static ws.session.BookingTypeEnum.ONLINE;
 import static ws.session.ExceptionTypeEnum.UNASSIGNED;
 import ws.session.RoomType;
-
 
 /**
  *
@@ -42,62 +44,67 @@ public class Main {
     private Boolean loggedIn = false;
     private Partner partner;
 
-    
     /**
      * @param args the command line arguments
      */
-    public  void main(String[] args) {
+    public void main(String[] args) {
 
-    /**
-     * @param args the command line arguments
-     */
-        System.out.println("*** Welcome to HoRS Partner Client  ***\n");
+        /**
+         * @param args the command line arguments
+         */
+        System.out.println("*** Welcome to Holiday Reservation Client  ***\n");
         Scanner sc = new Scanner(System.in);
         while (true) {
-            while (!loggedIn) {
-                System.out.println("1. Partner Login");
-                System.out.println("3. Search Hotel Room");
-                System.out.println("4. Exit");
-                int choice = sc.nextInt();
-                sc.nextLine();
+            try {
+                while (!loggedIn) {
+                    System.out.println("1. Partner Login");
+                    System.out.println("2. Search Hotel Room");
+                    System.out.println("3. Exit");
+                    int choice = sc.nextInt();
+                    sc.nextLine();
 
-                if (choice == 1) {
-                    doPartnerLogin();
-                } else if (choice == 2) {
-                   doSearchRoom();
-                } else if (choice == 3) {
-
-                    break;
-                } else {
-                    System.out.println("Invalid entry. Please try again");
+                    if (choice == 1) {
+                        doPartnerLogin();
+                    } else if (choice == 2) {
+                        doSearchRoom();
+                    } else if (choice == 3) {
+                        break;
+                    } else {
+                        System.out.println("Invalid entry. Please try again");
+                    }
                 }
-            }
 
-            while (loggedIn&&partner.isIsManager()) {
+                while (loggedIn && partner.isIsManager()) {
 
-                System.out.println("1. Partner Search Hotel Room");
-                System.out.println("2. View Partner Reservation Details");
-                System.out.println("3. View All Partner Reservations");
-                System.out.println("4. Logout");
-                int choice = sc.nextInt();
-                sc.nextLine();
-                if (choice == 1) {
-                    doSearchRoom();
-                } else if (choice == 2) {
-                    doViewMyReservation(partner.getPartnerId());
-                } else if (choice == 3) {
-                    doViewAllMyReservation(partner.getPartnerId());
-                } else if (choice == 4) {
-                    loggedIn = false;
-                    break;
-                } else {
-                    System.out.println("Invalid entry. Please try again");
+                    System.out.println("1. Partner Search Hotel Room");
+                    System.out.println("2. View Partner Reservation Details");
+                    System.out.println("3. View All Partner Reservations");
+                    System.out.println("4. Logout");
+                    int choice = sc.nextInt();
+                    sc.nextLine();
+                    if (choice == 1) {
+                        doSearchRoom();
+                    } else if (choice == 2) {
+                        doViewMyReservation(partner.getPartnerId());
+                    } else if (choice == 3) {
+                        doViewAllMyReservation(partner.getPartnerId());
+                    } else if (choice == 4) {
+                        loggedIn = false;
+                        updatePartnerLogin(partner, false);
+                        break;
+                    } else {
+                        System.out.println("Invalid entry. Please try again");
+                    }
                 }
+            } catch (InputMismatchException ex) {
+                System.out.println("Input mismatch. Please try again.");
             }
         }
     }
 
     private void doPartnerLogin() {
+        System.out.println("*** HoRS :: Holiday Reservation Client :: Login As Partner ***\n");
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your username: ");
         String username = sc.nextLine().trim();
@@ -106,12 +113,12 @@ public class Main {
 
         try {
             partner = loginForPartner(username, password);
-//            if (!partner.getIsLogin()) {
-            loggedIn = true;
-//                      updatePartnerLogin(partner, true);
-//            } else {
-//                System.out.println("Guest is already logged in.");
-//            }
+            if (!partner.isIsLogin()) {
+                loggedIn = true;
+                updatePartnerLogin(partner, true);
+            } else {
+                System.out.println("Partner employee is already logged in.");
+            }
         } catch (PartnerNotFoundException_Exception ex) {
             System.out.println("An error has occurred while retrieving guest: " + ex.getMessage() + "\n");
         } catch (InvalidLoginCredentials_Exception ex) {
@@ -120,6 +127,8 @@ public class Main {
     }
 
     private void doSearchRoom() {
+        System.out.println("*** HoRS :: Holiday Reservation Client :: Search Room ***\n");
+
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
@@ -129,21 +138,39 @@ public class Main {
         Boolean again = true;
 
         while (again) {
-            try {
-                startDate = formatter.parse(sc.nextLine().trim());
-                again = false;
-            } catch (ParseException ex) {
+            String start = sc.nextLine().trim();
+            if (start.length() == 10) {
+                try {
+                    startDate = formatter.parse(start);
+                    again = false;
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
+            } else {
                 again = true;
                 System.out.println("Incorrect date format.");
             }
         }
-        System.out.println("Please enter end date (dd/mm/yyyy");
+
+        System.out.println("Enter end date (format: dd/mm/yyyy) >");
         again = true;
         while (again) {
-            try {
-                endDate = formatter.parse(sc.nextLine().trim());
-                again = false;
-            } catch (ParseException ex) {
+            String end = sc.nextLine().trim();
+            if (end.length() == 10) {
+                try {
+                    endDate = formatter.parse(end);
+                    if (startDate.before(endDate) || startDate.equals(endDate)) {
+                        again = false;
+                    } else {
+                        again = true;
+                        System.out.println("End date is before start date! Please re-enter end date.");
+                    }
+                } catch (ParseException ex) {
+                    again = true;
+                    System.out.println("Incorrect date format.");
+                }
+            } else {
                 again = true;
                 System.out.println("Incorrect date format.");
             }
@@ -176,13 +203,13 @@ public class Main {
             } else {
                 System.out.println("No more rooms are available during this period");
             }
-
         } catch (DatatypeConfigurationException ex) {
             System.out.println("Data type conversion to XML Gregorian Calendar error!");
         }
     }
 
     private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
+        BigDecimal totalCost = new BigDecimal(0);
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
         Booking booking = new Booking();
@@ -215,7 +242,7 @@ public class Main {
             sc.nextLine();
             for (int i = 0; i < quantity; i++) {
                 int choice;
-                System.out.println("Select room type to reserve : ");
+                System.out.println("Select room type to reserve for reservation " + (i + 1) + ": ");
                 List<RoomType> roomTypeList = retrieveAllEnabledRoomType();
                 while (true) {
                     for (int j = 1; j <= roomTypeList.size(); j++) {
@@ -232,19 +259,23 @@ public class Main {
                 reservation.setInitialRoomType(roomTypeList.get(choice - 1));
                 reservation.setBooking(booking);
                 reservation.setExceptionType(UNASSIGNED);
-                
+
                 reservation = createNewReservation(reservation);
-                
+                totalCost.add(calculateReservationCost(booking, reservation.getInitialRoomType()));
             }
         } catch (DatatypeConfigurationException ex) {
             System.out.println("Data type conversion to XML Gregorian Calendar error!");
 
         }
+        System.out.println("Total Cost: " + totalCost);
+        booking.setCost(totalCost);
+        updateBooking(booking);
+        System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
 
     private void doViewMyReservation(Long partnerId) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("*** HoRS :: Reservation Client :: View My Reservation ***\n");
+        System.out.println("*** HoRS :: Holiday Reservation Client :: View My Reservation ***\n");
         System.out.println("Which reservation would you like to view?  (Enter reservation id) ");
         Long bookingId = scanner.nextLong();
         try {
@@ -256,8 +287,21 @@ public class Main {
             System.out.println("Booking Status: " + booking.getBookingStatus());
             System.out.println("Total Cost: " + booking.getCost());
             List<Reservation> reservations = retrieveAllReservationFromBooking(booking.getBookingId());
-            System.out.println("Number of rooms reserved: " + reservations.size());
-            System.out.println("Room Type: " + reservations.get(0).getInitialRoomType().getName());
+            List<RoomType> ranking = retrieveAllRoomtype();
+            int[] quantityEach = new int[ranking.size()];
+            for (int i = 0; i < quantityEach.length; i++) {
+                quantityEach[i] = 0;
+            }
+            for (Reservation reservation : reservations) {
+                int rank = reservation.getInitialRoomType().getRanking();
+                rank--;
+                quantityEach[rank]++;
+            }
+            System.out.println("\nRooms reserved:");
+            for (int i = 0; i < quantityEach.length; i++) {
+                System.out.println(ranking.get(i).getName() + ": " + quantityEach[i]);
+            }
+            System.out.println("\nTotal number of rooms reserved: " + reservations.size());
             System.out.println("*********************************************************************");
             System.out.println();
 
@@ -267,7 +311,7 @@ public class Main {
     }
 
     private void doViewAllMyReservation(Long partnerId) {
-        System.out.println("*** HoRS :: Reservation Client :: View All My Reservations ***\n");
+        System.out.println("*** HoRS :: Holiday Reservation Client :: View All My Reservations ***\n");
 
         List<Booking> list = retrieveAllBookingsForPartner(partnerId);
         if (list.size() == 0) {
@@ -282,7 +326,9 @@ public class Main {
                 System.out.println("Total Cost: " + list.get(i).getCost());
                 List<Reservation> reservations = retrieveAllReservationFromBooking(list.get(i).getBookingId());
                 System.out.println("Number of rooms reserved: " + reservations.size());
-                System.out.println("Room Type: " + reservations.get(0).getInitialRoomType().getName());
+                for (int j = 0; j < reservations.size(); j++) {
+                    System.out.println("Room Type: " + reservations.get(j).getInitialRoomType().getName());
+                }
                 System.out.println("*********************************************************************");
                 System.out.println();
             }
@@ -352,19 +398,28 @@ public class Main {
         return port.retrieveBookingByIdForPartner(arg0, arg1);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    private static void updatePartnerLogin(ws.session.Partner arg0, boolean arg1) {
+        ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        port.updatePartnerLogin(arg0, arg1);
+    }
+
+    private static BigDecimal calculateReservationCost(ws.session.Booking arg0, ws.session.RoomType arg1) {
+        ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        return port.calculateReservationCost(arg0, arg1);
+    }
+
+    private static void updateBooking(ws.session.Booking arg0) {
+        ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        port.updateBooking(arg0);
+    }
+
+    private static java.util.List<ws.session.RoomType> retrieveAllRoomtype() {
+        ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        return port.retrieveAllRoomtype();
+    }
+
 }

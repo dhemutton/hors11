@@ -102,4 +102,10 @@ public class PartnerController implements PartnerControllerRemote, PartnerContro
             throw new InvalidLoginCredentials("Invalid password!");
      }
    
+    @Override
+    public void updatePartnerLogin(Partner partner, boolean loggedIn) {
+     
+            partner.setIsLogin(loggedIn);
+        em.merge(partner);
+    }
 }

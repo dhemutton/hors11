@@ -166,6 +166,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         em.merge(roomRate);
     }
 
+    @Override
     public BigDecimal calculateReservationCost(Booking booking, RoomType roomType) {
         BigDecimal total = new BigDecimal(0);
         Date startDate = booking.getStartDate();

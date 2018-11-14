@@ -19,6 +19,7 @@ import entity.RoomType;
 import exceptions.BookingNotFoundException;
 import exceptions.InvalidLoginCredentials;
 import exceptions.PartnerNotFoundException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -64,21 +65,21 @@ public class HolidayWebService {
 
     //Search room
     public List<Room> retrieveAllEnabledRooms() {
-        
+
         List<Room> rooms = roomControllerLocal.retrieveAllEnabledRooms();
-        
-        for (Room room: rooms) {
+
+        for (Room room : rooms) {
             room.setRoomType(null);
         }
-        
+
         return rooms;
     }
 
     //Search room
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate) {
         List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsWithinDates(startDate, endDate);
-        
-        for (Booking b: bookings) {
+
+        for (Booking b : bookings) {
             b.setPartner(null);
             b.setReservation(null);
             b.setGuest(null);
@@ -88,17 +89,16 @@ public class HolidayWebService {
 
     //Search room & view my reservation
     public List<Reservation> retrieveAllReservationFromBooking(Long bookingId) {
-        
-       List<Reservation> list = reservationControllerLocal.retrieveAllReservationFromBooking(bookingId);
-        
-        for (Reservation r: list) {
+
+        List<Reservation> list = reservationControllerLocal.retrieveAllReservationFromBooking(bookingId);
+
+        for (Reservation r : list) {
             r.setBooking(null);
             r.setRoom(null);
             r.setInitialRoomType(null);
             r.setFinalRoomType(null);
-                    
         }
-        
+
         return list;
     }
 
@@ -109,9 +109,9 @@ public class HolidayWebService {
 
     //reserve room
     public List<RoomType> retrieveAllEnabledRoomType() {
-        
+
         List<RoomType> list = roomTypeControllerLocal.retrieveAllEnabledRoomType();
-        
+
         for (RoomType rt : list) {
             rt.setRoomRates(null);
             rt.setRooms(null);
@@ -126,27 +126,47 @@ public class HolidayWebService {
 
     //view my reservation
     public Booking retrieveBookingByIdForPartner(Long bookingId, Long partnerId) throws BookingNotFoundException {
-        
+
         Booking booking = bookingControllerLocal.retrieveBookingByIdForPartner(bookingId, partnerId);
-         booking.setPartner(null);
-            booking.setReservation(null);
-            booking.setGuest(null);
-    
+        booking.setPartner(null);
+        booking.setReservation(null);
+        booking.setGuest(null);
+
         return booking;
     }
 
     //view all my reservation
     public List<Booking> retrieveAllBookingsForPartner(Long partnerId) {
-        
-         List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsForPartner(partnerId);
-        
-        for (Booking b: bookings) {
+
+        List<Booking> bookings = bookingControllerLocal.retrieveAllBookingsForPartner(partnerId);
+
+        for (Booking b : bookings) {
             b.setPartner(null);
             b.setReservation(null);
             b.setGuest(null);
         }
         return bookings;
     }
+
+    public void updatePartnerLogin(Partner partner, boolean loggedIn) {
+
+        partnerControllerLocal.updatePartnerLogin(partner, loggedIn);
+    }
+
+    public BigDecimal calculateReservationCost(Booking booking, RoomType roomType) {
+        return roomRateControllerLocal.calculateReservationCost(booking, roomType);
+    }
+
+    public void updateBooking(Booking booking) {
+        bookingControllerLocal.updateBooking(booking);
+    }
     
-    
+        public List<RoomType> retrieveAllRoomtype() {
+          List<RoomType> list=  roomTypeControllerLocal.retrieveAllRoomtype();
+          for (RoomType rt: list) {
+              rt.setRoomRates(null);
+              rt.setRooms(null);
+          }
+          return list;
+        }
 }

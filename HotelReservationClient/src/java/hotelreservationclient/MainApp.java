@@ -84,7 +84,8 @@ class MainApp {
     public void runApp() throws BookingNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException {
         System.out.println("*** Welcome to HoRS Reservation Client  ***\n");
         Scanner sc = new Scanner(System.in);
-        while (true) {
+        Boolean again = true;
+        while (again) {
             try {
                 while (!loggedIn) {
                     System.out.println("1. Guest Login");
@@ -101,6 +102,7 @@ class MainApp {
                     } else if (choice == 3) {
                         doSearchRoom();
                     } else if (choice == 4) {
+                        again = false;
                         break;
                     } else {
                         System.out.println("Invalid entry. Please try again");
@@ -136,6 +138,8 @@ class MainApp {
     }
 
     private void doGuestLogin() {
+        System.out.println("*** HoRS :: Reservation Client :: Login As Guest ***\n");
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your email address: ");
         String email = sc.nextLine().trim();
@@ -163,7 +167,6 @@ class MainApp {
             Guest newGuest = new Guest();
 
             System.out.println("*** HoRS :: Reservation Client :: Register As Guest ***\n");
-            //maybe modify guest to have first, last name next time
             System.out.println("Enter Email Address> ");
             newGuest.setEmail(scanner.nextLine().trim());
             System.out.println("Enter password> ");
@@ -184,6 +187,8 @@ class MainApp {
     }
 
     private void doSearchRoom() {
+        System.out.println("*** HoRS :: Reservation Client :: Search Room ***\n");
+
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
@@ -286,8 +291,8 @@ class MainApp {
                     break;
                 }
             }
-           Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
-           totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
+            Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
+            totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
         }
         System.out.println("Total Cost: " + totalCost);
         booking.setCost(totalCost);
@@ -311,17 +316,17 @@ class MainApp {
             List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
             List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
             int[] quantityEach = new int[ranking.size()];
-            for(int i=0; i<quantityEach.length; i++) {
-                quantityEach[i]=0;
+            for (int i = 0; i < quantityEach.length; i++) {
+                quantityEach[i] = 0;
             }
-            for(Reservation reservation : reservations) {
+            for (Reservation reservation : reservations) {
                 int rank = reservation.getInitialRoomType().getRanking();
                 rank--;
                 quantityEach[rank]++;
             }
             System.out.println("\nRooms reserved:");
-            for(int i=0; i<quantityEach.length; i++) {
-                System.out.println(ranking.get(i).getName()+": "+quantityEach[i]);
+            for (int i = 0; i < quantityEach.length; i++) {
+                System.out.println(ranking.get(i).getName() + ": " + quantityEach[i]);
             }
             System.out.println("\nTotal number of rooms reserved: " + reservations.size());
             System.out.println("*********************************************************************");
@@ -334,7 +339,7 @@ class MainApp {
 
     private void doViewAllMyReservation(Long guestId) {
         System.out.println("*** HoRS :: Reservation Client :: View All My Reservations ***\n");
-        
+
         List<Booking> list = bookingControllerRemote.retrieveAllBookingsForGuest(guestId);
         if (list.size() == 0) {
             System.out.println("No past reservations made.");
@@ -352,7 +357,7 @@ class MainApp {
                 for (int j = 0; j < reservations.size(); j++) {
                     System.out.println("Room Type: " + reservations.get(j).getInitialRoomType().getName());
                 }
-                
+
                 System.out.println("*********************************************************************");
                 System.out.println();
             }
