@@ -183,7 +183,7 @@
 
 <xs:complexType name="retrieveAllBookingsWithinDatesResponse">
 <xs:sequence>
-<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="return" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
 </xs:sequence>
 </xs:complexType>
 

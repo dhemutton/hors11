@@ -142,7 +142,7 @@ public class Main {
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         int maxRooms = retrieveAllEnabledRooms().size();
-        System.out.println("Please enter start date (dd/mm/yyyy");
+        System.out.println("Please enter start date (dd/mm/yyyy)");
         Boolean again = true;
 
         while (again) {
@@ -193,9 +193,10 @@ public class Main {
             XMLGregorianCalendar startXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(startCalendar);
             XMLGregorianCalendar endXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(endCalendar);
 
-            List<Booking> bookingList = retrieveAllBookingsWithinDates(startXmlCalendar, endXmlCalendar);
-            for (Booking booking : bookingList) {
-                reservationList.addAll(retrieveAllReservationFromBooking(booking.getBookingId()));
+            List<Long> bookingList = retrieveAllBookingsWithinDates(startXmlCalendar, endXmlCalendar);
+            for (Long bookingId : bookingList) {
+                reservationList.addAll(retrieveAllReservationFromBooking(bookingId));
+                System.out.println("num rooms used :" + retrieveAllReservationFromBooking(bookingId).size());
             }
             int roomsLeft = maxRooms - reservationList.size();
             if (roomsLeft > 0) {
@@ -374,13 +375,6 @@ public class Main {
         return port.retrieveAllBookingsForPartner(arg0);
     }
 
-    private static java.util.List<ws.session.Booking> retrieveAllBookingsWithinDates(javax.xml.datatype.XMLGregorianCalendar arg0, javax.xml.datatype.XMLGregorianCalendar arg1) {
-        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
-        // If the calling of port operations may lead to race condition some synchronization is required.
-        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
-        return port.retrieveAllBookingsWithinDates(arg0, arg1);
-    }
-
     private static java.util.List<ws.session.RoomType> retrieveAllEnabledRoomType() {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.
@@ -441,6 +435,13 @@ public class Main {
         // If the calling of port operations may lead to race condition some synchronization is required.
         ws.session.HolidayWebService port = service.getHolidayWebServicePort();
         return port.calculateReservationCost(arg0, arg1);
+    }
+
+    private static java.util.List<java.lang.Long> retrieveAllBookingsWithinDates(javax.xml.datatype.XMLGregorianCalendar arg0, javax.xml.datatype.XMLGregorianCalendar arg1) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        return port.retrieveAllBookingsWithinDates(arg0, arg1);
     }
 
 }
