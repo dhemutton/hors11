@@ -343,7 +343,7 @@ class HotelOperationModule {
             System.out.println("*** HoRS ::Hotel Operations :: Create New Room ***\n");
             System.out.print("Enter room number (4 digits only): ");
             room.setRoomNumber(scanner.nextLine().trim());
-            System.out.print("Select room type: ");
+            System.out.println("Select room type: ");
             List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllEnabledRoomType();
 
             for (int i = 0; i < roomTypes.size(); i++) {
@@ -351,8 +351,8 @@ class HotelOperationModule {
             }
             while (true) {
                 int input = scanner.nextInt();
-                if (input >= 0 && input < roomTypes.size()) {
-                    roomTypeId = roomTypes.get(input).getRoomTypeId();
+                if (input > 0 && input <= roomTypes.size()) {
+                    roomTypeId = roomTypes.get(input-1).getRoomTypeId();
                     break;
                 } else {
                     System.out.println("Incorrect input, please try again.");
@@ -409,7 +409,7 @@ class HotelOperationModule {
             System.out.println("Change room type?  (Enter 'Y' to change) ");
 
             if (scanner.nextLine().trim().equals("Y")) {
-                System.out.print("Select room type: ");
+                System.out.println("Select room type: ");
                 List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllEnabledRoomType();
 
                 for (int i = 0; i < roomTypes.size(); i++) {
@@ -418,14 +418,14 @@ class HotelOperationModule {
                 while (true) {
                     int choice = scanner.nextInt();
                     choice--;
-                    if (choice >= 0 && choice < roomTypes.size()) {
+                    if (choice >=0 && choice < roomTypes.size()) {
                         newroomTypeId = roomTypes.get(choice).getRoomTypeId();
                         break;
                     } else {
                         System.out.println("Incorrect input, please try again.");
                     }
                 }
-
+                roomControllerRemote.mergeRoom(room);
                 roomControllerRemote.updateRoom(room.getRoomId(), oldroomTypeId, newroomTypeId);
                 System.out.println("Room updated successfully!: \n");
             }
@@ -476,12 +476,11 @@ class HotelOperationModule {
     private void doViewAllRoom() {
         System.out.println("*** HoRS ::Hotel Operations :: View All Rooms ***\n");
         List<Room> list = roomControllerRemote.retrieveAllRooms();
-
+        System.out.printf("%-15s%-10s%-25s\n", "Room number", "Room ID", "Room Type");
         for (Room room : list) {
-            System.out.println("Room Number: " + room.getRoomNumber());
-            System.out.println("Room Type: " + room.getRoomType());
-            System.out.println("*********************************************************************");
+            System.out.printf("%-15s%-10d%-25s\n", room.getRoomNumber(), room.getRoomId(), room.getRoomType().getName());
         }
+        System.out.println();
 
     }
 

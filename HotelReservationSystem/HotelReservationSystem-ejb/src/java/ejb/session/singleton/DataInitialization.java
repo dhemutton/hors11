@@ -111,10 +111,10 @@ public class DataInitialization {
         partnerController.createNewPartner(new Partner("Matthea", "password", true));
         partnerController.createNewPartner(new Partner("Jonathan", "password", true));
         
-        roomTypeController.createRoomType(new RoomType("Type A", "Best room with everything", 8, "1 king-size bed", "8-10 people", "Toilet, balcony, kitchen, living room", 1, false, true));
-        roomTypeController.createRoomType(new RoomType("Type B", "Luxurious room", 6, "1 queen-size bed", "6-8 people", "Toilet, balcony, kitchen", 2, false, true));
-        roomTypeController.createRoomType(new RoomType("Type C", "Standard room", 4, "1 super single bed", "4-6 people", "Toilet, balcony", 3, false, true));
-        roomTypeController.createRoomType(new RoomType("Type D", "Budget room", 2, "1 single bed", "2-4 people", "Toilet", 4, false, true));
+        roomTypeController.createRoomType(new RoomType("Type A", "Best room with everything", 8, "1 king-size bed", "8-10 people", "Toilet, balcony, kitchen, living room", 1, true, true));
+        roomTypeController.createRoomType(new RoomType("Type B", "Luxurious room", 6, "1 queen-size bed", "6-8 people", "Toilet, balcony, kitchen", 2, true, true));
+        roomTypeController.createRoomType(new RoomType("Type C", "Standard room", 4, "1 super single bed", "4-6 people", "Toilet, balcony", 3, true, true));
+        roomTypeController.createRoomType(new RoomType("Type D", "Budget room", 2, "1 single bed", "2-4 people", "Toilet", 4, true, true));
 
         String stringDate1 = "13/11/2018";
         String stringDate2 = "15/11/2018";

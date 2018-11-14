@@ -70,7 +70,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
 
     @Override
     public List<Room> retrieveAllRooms() {
-        Query query = em.createQuery("SELECT r FROM Room r  ");
+        Query query = em.createQuery("SELECT r FROM Room r ORDER BY r.roomNumber ASC ");
         return query.getResultList();
     }
 
@@ -129,7 +129,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
         
         try {
             Room room = em.find(Room.class, roomId);
-            RoomType newroomType = roomTypeControllerLocal.retrieveRoomTypeById(oldroomTypeId);
+            RoomType newroomType = roomTypeControllerLocal.retrieveRoomTypeById(newRoomTypeId);
             newroomType.getRooms().size();
 
             if (!oldroomTypeId.equals(newRoomTypeId)) { //change in roomtype
@@ -138,10 +138,15 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
 
                     oldroomType.getRooms().remove(room);
                     room.setRoomType(newroomType); //set new room type to room
-                     newroomType.getRooms().add(room); //add new room to room type
+                    newroomType.getRooms().add(room); //add new room to room type
+                    em.merge(oldroomType);
+                    em.flush();
+                    em.merge(newroomType);
+                    em.flush();
             }
             
             em.merge(room);
+            em.flush();
             
         } catch (RoomTypeNotFoundException ex) {
             throw new RoomTypeNotFoundException("Room Type not found! ");
