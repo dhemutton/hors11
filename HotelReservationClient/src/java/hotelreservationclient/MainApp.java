@@ -309,8 +309,21 @@ class MainApp {
             System.out.println("Booking Status: " + booking.getBookingStatus());
             System.out.println("Total Cost: " + booking.getCost());
             List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
-            System.out.println("Number of rooms reserved: " + reservations.size());
-            System.out.println("Room Type: " + reservations.get(0).getInitialRoomType().getName());
+            List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
+            int[] quantityEach = new int[ranking.size()];
+            for(int i=0; i<quantityEach.length; i++) {
+                quantityEach[i]=0;
+            }
+            for(Reservation reservation : reservations) {
+                int rank = reservation.getInitialRoomType().getRanking();
+                rank--;
+                quantityEach[rank]++;
+            }
+            System.out.println("\nRooms reserved:");
+            for(int i=0; i<quantityEach.length; i++) {
+                System.out.println(ranking.get(i).getName()+": "+quantityEach[i]);
+            }
+            System.out.println("\nTotal number of rooms reserved: " + reservations.size());
             System.out.println("*********************************************************************");
             System.out.println();
 
