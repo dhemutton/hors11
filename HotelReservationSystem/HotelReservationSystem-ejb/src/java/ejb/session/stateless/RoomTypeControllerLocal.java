@@ -27,8 +27,10 @@ public interface RoomTypeControllerLocal {
 
     public RoomType updateRoomTypeRemoveRoomRate(RoomType roomType, List<Long> ids);
 
-    public void updateRankings(int option);
+    public void createRankings(int option);
 
     public void deleteRanking(int option);
+
+    public void updateRankings(int before, int after);
 
 }

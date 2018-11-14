@@ -120,7 +120,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     }
     
     @Override
-    public void updateRankings(int option) {
+    public void createRankings(int option) {
         List<RoomType> roomTypes = retrieveAllRoomtype();
         int temp = option-1;
         int temp1 = roomTypes.size()-1;
@@ -129,6 +129,41 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
             change++;
             roomTypes.get(i).setRanking(change);
             em.merge(roomTypes.get(i));
+            em.flush();
+        }
+    }
+    
+    @Override
+    public void updateRankings(int before, int after) {
+        List<RoomType> roomTypes = retrieveAllRoomtype();
+        if(before>after) {
+            roomTypes.get(before-1).setRanking(0);
+            em.merge(roomTypes.get(before-1));
+            em.flush();
+            for(int i=before-2; i>=(after-1); i--) {
+                int temp = roomTypes.get(i).getRanking();
+                temp++;
+                roomTypes.get(i).setRanking(temp);
+                em.merge(roomTypes.get(i));
+                em.flush();
+            }
+            roomTypes.get(before-1).setRanking(after);
+            em.merge(roomTypes.get(before-1));
+            em.flush();
+        }
+        else if(after>before) {
+            roomTypes.get(before-1).setRanking(0);
+            em.merge(roomTypes.get(before-1));
+            em.flush();
+            for(int i=before; i<after; i++) {
+                int temp = roomTypes.get(i).getRanking();
+                temp--;
+                roomTypes.get(i).setRanking(temp);
+                em.merge(roomTypes.get(i));
+                em.flush();
+            }
+            roomTypes.get(before-1).setRanking(after);
+            em.merge(roomTypes.get(before-1));
             em.flush();
         }
     }
