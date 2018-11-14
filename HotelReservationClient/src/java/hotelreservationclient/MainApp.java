@@ -151,6 +151,8 @@ class MainApp {
             if (!guest.getIsLogin()) {
                 loggedIn = true;
                 guestControllerRemote.updateGuestLogin(guest, true);
+                System.out.println("Login successful! Redirecting...");
+
             } else {
                 System.out.println("Guest is already logged in.");
             }

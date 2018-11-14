@@ -70,6 +70,7 @@ public class HolidayWebService {
 
         for (Room room : rooms) {
             room.setRoomType(null);
+            room.setReservations(null);
         }
 
         return rooms;
@@ -121,7 +122,9 @@ public class HolidayWebService {
 
     //reserve room
     public Reservation createNewReservation(Reservation reservation) {
-        return reservationControllerLocal.createNewReservation(reservation);
+        Reservation r = reservationControllerLocal.createNewReservation(reservation);
+        r.setBooking(null);
+        return r;
     }
 
     //view my reservation

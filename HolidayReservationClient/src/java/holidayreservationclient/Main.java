@@ -41,14 +41,17 @@ public class Main {
 
     @WebServiceRef(wsdlLocation = "META-INF/wsdl/localhost_8000/HolidayWebService/HolidayWebService.wsdl")
     private static HolidayWebService_Service service;
-    private Boolean loggedIn = false;
-    private Partner partner;
+    private static Boolean loggedIn = false;
+    private static Partner partner;
 
     /**
      * @param args the command line arguments
      */
-    public void main(String[] args) {
+    public static void main(String[] args) {
+        runApp();
+    }
 
+    public static void runApp() {
         /**
          * @param args the command line arguments
          */
@@ -102,7 +105,7 @@ public class Main {
         }
     }
 
-    private void doPartnerLogin() {
+    private static void doPartnerLogin() {
         System.out.println("*** HoRS :: Holiday Reservation Client :: Login As Partner ***\n");
 
         Scanner sc = new Scanner(System.in);
@@ -116,6 +119,8 @@ public class Main {
             if (!partner.isIsLogin()) {
                 loggedIn = true;
                 updatePartnerLogin(partner, true);
+                System.out.println("Login successful! Redirecting...");
+
             } else {
                 System.out.println("Partner employee is already logged in.");
             }
@@ -126,7 +131,7 @@ public class Main {
         }
     }
 
-    private void doSearchRoom() {
+    private static void doSearchRoom() {
         System.out.println("*** HoRS :: Holiday Reservation Client :: Search Room ***\n");
 
         Scanner sc = new Scanner(System.in);
@@ -208,7 +213,7 @@ public class Main {
         }
     }
 
-    private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
+    private static void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
         BigDecimal totalCost = new BigDecimal(0);
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
@@ -261,6 +266,7 @@ public class Main {
                 reservation.setExceptionType(UNASSIGNED);
 
                 reservation = createNewReservation(reservation);
+                booking.getReservation().add(reservation);
                 totalCost.add(calculateReservationCost(booking, reservation.getInitialRoomType()));
             }
         } catch (DatatypeConfigurationException ex) {
@@ -273,7 +279,7 @@ public class Main {
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
 
-    private void doViewMyReservation(Long partnerId) {
+    private static void doViewMyReservation(Long partnerId) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("*** HoRS :: Holiday Reservation Client :: View My Reservation ***\n");
         System.out.println("Which reservation would you like to view?  (Enter reservation id) ");
@@ -310,7 +316,7 @@ public class Main {
         }
     }
 
-    private void doViewAllMyReservation(Long partnerId) {
+    private static void doViewAllMyReservation(Long partnerId) {
         System.out.println("*** HoRS :: Holiday Reservation Client :: View All My Reservations ***\n");
 
         List<Booking> list = retrieveAllBookingsForPartner(partnerId);
