@@ -99,6 +99,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
         Room room = em.find(Room.class, RoomId);
 
         if (room != null) {
+            room.getReservations().size();
             return room;
         } else {
             throw new RoomNotFoundException("Room ID " + RoomId + " does not exist");
