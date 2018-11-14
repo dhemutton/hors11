@@ -251,7 +251,7 @@ public class DataInitialization {
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
 
         //Day 1 bookings (test 2am function)
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("13/11/2018"), formatter.parse("24/11/2018")));
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("14/11/2018"), formatter.parse("15/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("9@gmail.com"));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
@@ -292,6 +292,37 @@ public class DataInitialization {
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
         reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type D"), booking, UNASSIGNED));
+        
+        //Testing type 2 error
+        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("15/11/2018"), formatter.parse("24/11/2018")));
+        booking.setGuest(guestController.retrieveGuestByEmail("9@gmail.com"));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
+        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), booking, UNASSIGNED));
 
         //Day 2 bookings (test 2am function TYPE2 error)
         booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("24/11/2018"), formatter.parse("25/11/2018")));

@@ -52,7 +52,6 @@ class HotelOperationModule {
     }
 
     public void runHotelOperationsModule(Employee employee) {
-        //dailyControllerRemote.initialiseTimer();
         Scanner sc = new Scanner(System.in);
         if (employee.getEmployeeType().equals(OPERATIONSMANAGER)) { //Operations Manager
             while (true) {
