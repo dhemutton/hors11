@@ -35,19 +35,17 @@ class HotelOperationModule {
     private RoomRateControllerRemote roomRateControllerRemote;
     private RoomTypeControllerRemote roomTypeControllerRemote;
     private ReservationControllerRemote reservationControllerRemote;
-    private BookingControllerRemote bookingControllerRemote;
     private EmployeeControllerRemote employeeControllerRemote;
 
     public HotelOperationModule() {
     }
 
     public HotelOperationModule(RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote,
-            ReservationControllerRemote reservationControllerRemote, BookingControllerRemote bookingControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
+            ReservationControllerRemote reservationControllerRemote, EmployeeControllerRemote employeeControllerRemote) {
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
         this.reservationControllerRemote = reservationControllerRemote;
-        this.bookingControllerRemote = bookingControllerRemote;
         this.employeeControllerRemote = employeeControllerRemote;
     }
 
@@ -148,7 +146,7 @@ class HotelOperationModule {
                     roomType.setRanking(option);
                     break;
                 } else if (option <= ranking.size() && option > 0) {
-                    roomTypeControllerRemote.updateRankings(option);
+                    roomTypeControllerRemote.createRankings(option);
                     roomType.setRanking(option);
                     break;
                 } else {
@@ -259,11 +257,11 @@ class HotelOperationModule {
 
         List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
         while (true) {
-            System.out.print("Enter Rank (1 to "+(ranking.size()+1)+"). (blank if no change)> ");
+            System.out.print("Enter Rank (1 to "+ranking.size()+")> ");
             int option = scanner.nextInt();
             if (option <= ranking.size() && option > 0) {
-                roomTypeControllerRemote.updateRankings(option);
-                //roomType.setRanking(option);
+                roomTypeControllerRemote.updateRankings(roomType.getRanking(), option);
+                roomType.setRanking(option);
                 break;
             } else {
                 System.out.println("Invalid entry. please try again");
@@ -295,12 +293,12 @@ class HotelOperationModule {
         }
 
         System.out.print("Enter Size (blank if no change)> ");
-        int newSize = scanner.nextInt();
+        input = scanner.nextLine().trim();
         if (input.length() > 0) {
+            int newSize = Integer.parseInt(input);
             roomType.setSize(newSize);
         }
-        scanner.nextLine();
-        System.out.println("Disable room type? (Enter 'Y' to disable");
+        System.out.println("Disable room type? (Enter 'Y' to disable)");
         if (scanner.nextLine().trim().equals("Y")) {
             roomType.setIsEnabled(Boolean.FALSE);
         }
@@ -311,9 +309,7 @@ class HotelOperationModule {
     private void doDeleteRoomType(RoomType roomType) {
         Scanner sc = new Scanner(System.in);
         if (roomType.getIsUsed() == false) {
-            int rank = roomType.getRanking();
-            roomType.setIsEnabled(Boolean.FALSE);
-            roomTypeControllerRemote.deleteRanking(rank);
+            roomType.setIsEnabled(Boolean.FALSE);         
             roomTypeControllerRemote.deleteRoomType(roomType);
             System.out.println("Room type successfully deleted! ");
 

@@ -74,7 +74,7 @@ class MainApp {
                             frontOffice.runFrontOfficeModule(loginEmployee);
                             break;
                         } else {
-                            HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, reservationControllerRemote, bookingControllerRemote,employeeControllerRemote);
+                            HotelOperationModule hotelOperations = new HotelOperationModule(roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, reservationControllerRemote,employeeControllerRemote);
                             hotelOperations.runHotelOperationsModule(loginEmployee);
                             break;
                         }
