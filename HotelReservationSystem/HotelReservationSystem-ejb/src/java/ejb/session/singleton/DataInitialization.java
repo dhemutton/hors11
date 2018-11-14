@@ -52,10 +52,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import util.exception.EmployeeNotFoundException;
 
-/**
- *
- * @author sleep
- */
 @Singleton
 @LocalBean
 @Startup
@@ -192,28 +188,98 @@ public class DataInitialization {
         roomController.createRoom(new Room("4010", roomTypeController.retrieveRoomTypeByName("Type D")), roomTypeController.retrieveRoomTypeByName("Type D").getRoomTypeId());
         
         Booking booking;
+        Room room;
+        Reservation reservation;
         booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("14/11/2018"), formatter.parse("15/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("1@gmail.com"));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(1)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(2)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(3)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(4)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(5)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(6)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(7)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), roomTypeController.retrieveRoomTypeByName("Type C"), roomController.retrieveRoomById(new Long(21)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), roomTypeController.retrieveRoomTypeByName("Type C"), roomController.retrieveRoomById(new Long(22)), booking, NONE));
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(1)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(1));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(2)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(2));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(3)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(3));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(4)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(4));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(5)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(5));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(6)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(6));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type A"), roomTypeController.retrieveRoomTypeByName("Type A"), roomController.retrieveRoomById(new Long(7)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(7));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), roomTypeController.retrieveRoomTypeByName("Type C"), roomController.retrieveRoomById(new Long(21)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(21));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), roomTypeController.retrieveRoomTypeByName("Type C"), roomController.retrieveRoomById(new Long(22)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(22));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
         
         booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("14/11/2018"), formatter.parse("16/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("2@gmail.com"));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(11)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(12)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(13)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(14)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(15)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(16)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(17)), booking, NONE));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(18)), booking, NONE));
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(11)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(11));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(12)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(12));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(13)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(13));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(14)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(14));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(15)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(15));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(16)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(16));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(17)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(17));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
+        reservation = reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type B"), roomTypeController.retrieveRoomTypeByName("Type B"), roomController.retrieveRoomById(new Long(18)), booking, NONE));
+        room = roomController.retrieveRoomById(new Long(18));
+        room.getReservations().add(reservation);
+        room.setIsVacant(Boolean.FALSE);
+        roomController.mergeRoom(room);
         
         booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("15/11/2018"), formatter.parse("16/11/2018")));
         booking.setGuest(guestController.retrieveGuestByEmail("3@gmail.com"));

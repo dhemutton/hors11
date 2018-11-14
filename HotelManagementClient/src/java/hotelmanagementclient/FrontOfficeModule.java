@@ -23,6 +23,7 @@ import static enums.ExceptionTypeEnum.UNASSIGNED;
 import exceptions.BookingNotFoundException;
 import exceptions.ReservationNotFoundException;
 import exceptions.RoomNotFoundException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -227,6 +228,7 @@ class FrontOfficeModule {
     }
 
     private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
+        BigDecimal totalCost = new BigDecimal(0);
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
         Booking booking = bookingControllerRemote.createNewBooking(new Booking(WALKIN, PENDING, startDate, endDate));
@@ -256,8 +258,12 @@ class FrontOfficeModule {
                     break;
                 }
             }
-            reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
+            Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
+            totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
         }
+        booking.setCost(totalCost);
+        bookingControllerRemote.updateBooking(booking);
+        System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
 
     private void doSecretMethod() {

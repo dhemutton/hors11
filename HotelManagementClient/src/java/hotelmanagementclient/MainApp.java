@@ -67,7 +67,7 @@ class MainApp {
                         System.out.println("Login successful! Redirecting...");
                         if (loginEmployee.getEmployeeType().equals(SYSTEMADMIN)) {
                             SystemAdministratorModule systemAdmin = new SystemAdministratorModule(partnerControllerRemote, employeeControllerRemote);
-                            systemAdmin.runSystemAdminModule();
+                            systemAdmin.runSystemAdminModule(loginEmployee);
                             break;
                         } else if (loginEmployee.getEmployeeType().equals(GUESTRELATIONS)) {
                             FrontOfficeModule frontOffice = new FrontOfficeModule(reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote,employeeControllerRemote,selfInvokeDailyControllerRemote);
