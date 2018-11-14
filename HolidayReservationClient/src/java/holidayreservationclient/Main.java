@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.InputMismatchException;
 import static ws.session.BookingStatusEnum.PENDING;
 import static ws.session.BookingTypeEnum.ONLINE;
+import static ws.session.BookingTypeEnum.PARTNER;
 import static ws.session.ExceptionTypeEnum.UNASSIGNED;
 import ws.session.RoomType;
 
@@ -57,7 +58,8 @@ public class Main {
          */
         System.out.println("*** Welcome to Holiday Reservation Client  ***\n");
         Scanner sc = new Scanner(System.in);
-        while (true) {
+        Boolean again = true;
+        while (again) {
             try {
                 while (!loggedIn) {
                     System.out.println("1. Partner Login");
@@ -71,6 +73,7 @@ public class Main {
                     } else if (choice == 2) {
                         doSearchRoom();
                     } else if (choice == 3) {
+                        again = false;
                         break;
                     } else {
                         System.out.println("Invalid entry. Please try again");
@@ -139,7 +142,7 @@ public class Main {
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         int maxRooms = retrieveAllEnabledRooms().size();
-        System.out.println("Please enter start date (dd/mm/yyyy");
+        System.out.println("Please enter start date (dd/mm/yyyy)");
         Boolean again = true;
 
         while (again) {
@@ -190,9 +193,10 @@ public class Main {
             XMLGregorianCalendar startXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(startCalendar);
             XMLGregorianCalendar endXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(endCalendar);
 
-            List<Booking> bookingList = retrieveAllBookingsWithinDates(startXmlCalendar, endXmlCalendar);
-            for (Booking booking : bookingList) {
-                reservationList.addAll(retrieveAllReservationFromBooking(booking.getBookingId()));
+            List<Long> bookingList = retrieveAllBookingsWithinDates(startXmlCalendar, endXmlCalendar);
+            for (Long bookingId : bookingList) {
+                reservationList.addAll(retrieveAllReservationFromBooking(bookingId));
+                System.out.println("num rooms used :" + retrieveAllReservationFromBooking(bookingId).size());
             }
             int roomsLeft = maxRooms - reservationList.size();
             if (roomsLeft > 0) {
@@ -218,8 +222,9 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
         Booking booking = new Booking();
-        booking.setBookingType(ONLINE);
+        booking.setBookingType(PARTNER);
         booking.setBookingStatus(PENDING);
+        booking.setPartner(partner);
 
         GregorianCalendar startCalendar = new GregorianCalendar();
         startCalendar.setTime(startDate);
@@ -229,7 +234,6 @@ public class Main {
         try {
             XMLGregorianCalendar startXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(startCalendar);
             XMLGregorianCalendar endXmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(endCalendar);
-
             booking.setStartDate(startXmlCalendar);
             booking.setEndDate(endXmlCalendar);
             booking = createNewBooking(booking);
@@ -264,10 +268,10 @@ public class Main {
                 reservation.setInitialRoomType(roomTypeList.get(choice - 1));
                 reservation.setBooking(booking);
                 reservation.setExceptionType(UNASSIGNED);
-
+                
                 reservation = createNewReservation(reservation);
                 booking.getReservation().add(reservation);
-                totalCost.add(calculateReservationCost(booking, reservation.getInitialRoomType()));
+                totalCost.add(calculateReservationCost(booking.getBookingId(), reservation.getInitialRoomType().getRoomTypeId()));
             }
         } catch (DatatypeConfigurationException ex) {
             System.out.println("Data type conversion to XML Gregorian Calendar error!");
@@ -275,6 +279,8 @@ public class Main {
         }
         System.out.println("Total Cost: " + totalCost);
         booking.setCost(totalCost);
+        partner.getBookings().add(booking);
+        updatePartner(partner);
         updateBooking(booking);
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
@@ -369,13 +375,6 @@ public class Main {
         return port.retrieveAllBookingsForPartner(arg0);
     }
 
-    private static java.util.List<ws.session.Booking> retrieveAllBookingsWithinDates(javax.xml.datatype.XMLGregorianCalendar arg0, javax.xml.datatype.XMLGregorianCalendar arg1) {
-        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
-        // If the calling of port operations may lead to race condition some synchronization is required.
-        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
-        return port.retrieveAllBookingsWithinDates(arg0, arg1);
-    }
-
     private static java.util.List<ws.session.RoomType> retrieveAllEnabledRoomType() {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
         // If the calling of port operations may lead to race condition some synchronization is required.
@@ -410,11 +409,7 @@ public class Main {
         port.updatePartnerLogin(arg0, arg1);
     }
 
-    private static BigDecimal calculateReservationCost(ws.session.Booking arg0, ws.session.RoomType arg1) {
-        ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
-        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
-        return port.calculateReservationCost(arg0, arg1);
-    }
+    
 
     private static void updateBooking(ws.session.Booking arg0) {
         ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
@@ -426,6 +421,27 @@ public class Main {
         ws.session.HolidayWebService_Service service = new ws.session.HolidayWebService_Service();
         ws.session.HolidayWebService port = service.getHolidayWebServicePort();
         return port.retrieveAllRoomtype();
+    }
+
+    private static void updatePartner(ws.session.Partner arg0) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        port.updatePartner(arg0);
+    }
+
+    private static BigDecimal calculateReservationCost(java.lang.Long arg0, java.lang.Long arg1) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        return port.calculateReservationCost(arg0, arg1);
+    }
+
+    private static java.util.List<java.lang.Long> retrieveAllBookingsWithinDates(javax.xml.datatype.XMLGregorianCalendar arg0, javax.xml.datatype.XMLGregorianCalendar arg1) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        ws.session.HolidayWebService port = service.getHolidayWebServicePort();
+        return port.retrieveAllBookingsWithinDates(arg0, arg1);
     }
 
 }
