@@ -263,9 +263,7 @@ class MainApp {
             }
             Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
             totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
-            System.out.println("Total cost so far: " + totalCost);
         }
-        System.out.println("Total Cost: " + totalCost);
         booking.setCost(totalCost);
         bookingControllerRemote.updateBooking(booking);
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());

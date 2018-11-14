@@ -3,6 +3,7 @@ package ejb.session.stateless;
 import entity.Booking;
 import entity.RoomRate;
 import entity.RoomType;
+import static enums.BookingTypeEnum.WALKIN;
 import static enums.RateTypeEnum.NORMAL;
 import static enums.RateTypeEnum.PEAK;
 import static enums.RateTypeEnum.PROMO;
@@ -165,58 +166,63 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=:roomType AND rr.isEnabled = true");
         query.setParameter("roomType", roomType);
         List<RoomRate> roomRates = query.getResultList();
-        System.out.println("Number of room rates: "+roomRates.size());
+        System.out.println("Number of room rates: " + roomRates.size());
         Date checkDate = startDate;
         BigDecimal promoRate = new BigDecimal(0);
         BigDecimal peakRate = new BigDecimal(0);
         BigDecimal normalRate = new BigDecimal(0);
+        BigDecimal publishedRate = new BigDecimal(0);
         for (RoomRate roomRate : roomRates) {
+            if (roomRate.getRateType().equals(PUBLISHED)) {
+                publishedRate = roomRate.getRatePerNight();
+            }
             if (roomRate.getRateType().equals(PROMO)) {
                 promoRate = roomRate.getRatePerNight();
-                System.out.println("Promo rate: "+promoRate);
             }
             if (roomRate.getRateType().equals(PEAK)) {
                 peakRate = roomRate.getRatePerNight();
-                System.out.println("Peak rate: "+peakRate);
             }
             if (roomRate.getRateType().equals(NORMAL)) {
                 normalRate = roomRate.getRatePerNight();
-                System.out.println("Normal rate: "+normalRate);
             }
         }
-        while (checkDate.before(endDate)||checkDate.equals(endDate)) {
-            System.out.println("Checking reservation on "+checkDate);
+        while (checkDate.before(endDate) || checkDate.equals(endDate)) {
+            System.out.println("Checking reservation on " + checkDate);
             boolean promo = false;
             boolean peak = false;
-            for (RoomRate roomRate : roomRates) {
-                if (roomRate.getRateType().equals(PROMO)) {
-                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)||roomRate.getStartDate().equals(checkDate)||roomRate.getEndDate().equals(checkDate)) { //checking isValid
-                        promo = true;
+            if (booking.getBookingType() == WALKIN) {
+                total = total.add(publishedRate);
+            } else {
+                for (RoomRate roomRate : roomRates) {
+                    if (roomRate.getRateType().equals(PROMO)) {
+                        if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate) || roomRate.getStartDate().equals(checkDate) || roomRate.getEndDate().equals(checkDate)) { //checking isValid
+                            promo = true;
+                        }
+                    }
+                    if (roomRate.getRateType().equals(PEAK)) {
+                        if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate) || roomRate.getStartDate().equals(checkDate) || roomRate.getEndDate().equals(checkDate)) { //checking isValid
+                            peak = true;
+                        }
                     }
                 }
-                if (roomRate.getRateType().equals(PEAK)) {
-                    if (roomRate.getStartDate().before(checkDate) && roomRate.getEndDate().after(checkDate)||roomRate.getStartDate().equals(checkDate)||roomRate.getEndDate().equals(checkDate)) { //checking isValid
-                        peak = true;
-                    }
-                }
-            }
-            if (peak == true && promo == true) {
-                total = total.add(promoRate);
-                System.out.println("Promotion rate was added");
-            } else if (peak == true && promo == false) {
-                total = total.add(peakRate);
-                System.out.println("Peak rate was added");
-            } else if(peak==false&&promo==true) {
+                if (peak == true && promo == true) {
+                    total = total.add(promoRate);
+                    System.out.println("Promotion rate was added");
+                } else if (peak == true && promo == false) {
+                    total = total.add(peakRate);
+                    System.out.println("Peak rate was added");
+                } else if (peak == false && promo == true) {
                     total = total.add(promoRate);
                     System.out.println("Promotion rate was added");
                 } else {
-                total = total.add(normalRate);
-                System.out.println("Normal rate was added");
+                    total = total.add(normalRate);
+                    System.out.println("Normal rate was added");
+                }
             }
+
             Date temp = checkDate;
             checkDate.setDate(temp.getDate() + 1);
         }
-        System.out.println("Total cost: "+total);
         return total;
     }
 }
