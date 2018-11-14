@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entity;
 
 import enums.RateTypeEnum;
@@ -17,11 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-/**
- *
- * @author matthealoo
- */
 @Entity
 public class RoomRate implements Serializable {
 
@@ -36,8 +29,10 @@ public class RoomRate implements Serializable {
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal ratePerNight;
     @Column(nullable = true) //only period for peak and promo
+    @Temporal(TemporalType.DATE)
     private Date startDate;
     @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
     private Date endDate;
     private Boolean isValid;
     private Boolean isEnabled;

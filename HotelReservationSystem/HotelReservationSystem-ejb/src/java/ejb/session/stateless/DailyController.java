@@ -189,6 +189,7 @@ public class DailyController {
         }
     }
 
+    @Schedule(hour = "0")
     public void deleteAllRoomRates() {
         //Delete all room rates with no room types(assumed that room type was deleted)
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=null");
@@ -226,6 +227,7 @@ public class DailyController {
         }
     }
 
+    @Schedule(hour = "0")
     public void deleteAllRooms() {
         //Check for any room rates to be deleted
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.isVacant=true AND rr.isEnabled=false");
@@ -235,6 +237,7 @@ public class DailyController {
         }
     }
 
+    @Schedule(hour = "0")
     public void deleteAllRoomTypes() {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.isEnabled=false");
         List<RoomType> roomTypes = query.getResultList();
