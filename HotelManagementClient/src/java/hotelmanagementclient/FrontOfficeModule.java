@@ -48,12 +48,10 @@ class FrontOfficeModule {
         this.roomTypeControllerRemote = roomTypeControllerRemote;
         this.employeeControllerRemote = employeeControllerRemote;
         this.selfInvokeDailyControllerRemote = selfInvokeDailyControllerRemote;
-
     }
 
     public void runFrontOfficeModule(Employee loginEmployee) {
         System.out.println("*** HoRS :: Front Office ::  Guest Relations Officer ***\n");
-
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("1. Make walk in reservation");
@@ -72,7 +70,6 @@ class FrontOfficeModule {
                 doSecretMethod();
             } else if (choice == 5) {
                 employeeControllerRemote.updateEmployeeLogin(loginEmployee, false);
-
                 break;
             } else {
                 System.out.println("Invalid entry. Please try again");
@@ -87,16 +84,24 @@ class FrontOfficeModule {
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        int maxRooms = roomControllerRemote.retrieveAllRooms().size();
-        System.out.println("Please enter start date (dd/mm/yyyy)");
+        int maxRooms = roomControllerRemote.retrieveAllRooms().size();        
         Boolean again = true;
 
         while (again) {
+            System.out.println("Please enter start date (dd/mm/yyyy)");
             String start = sc.nextLine().trim();
             if (start.length() == 10) {
                 try {
                     startDate = formatter.parse(start);
-                    again = false;
+                    Date today = new Date();
+                    today.setDate(today.getDate()-1);
+                    if(startDate.after(today)) {
+                        again = false;
+                    }
+                    else {
+                        System.out.println("Enter a valid start date");
+                        again = true;
+                    }               
                 } catch (ParseException ex) {
                     again = true;
                     System.out.println("Incorrect date format.");

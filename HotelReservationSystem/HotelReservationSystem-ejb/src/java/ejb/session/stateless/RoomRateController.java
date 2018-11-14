@@ -190,7 +190,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
                 normalRate = roomRate.getRatePerNight();
             }
         }
-        while (checkDate.before(endDate) || checkDate.equals(endDate)) {
+        while (checkDate.before(endDate)) {
             System.out.println("Checking reservation on " + checkDate);
             boolean promo = false;
             boolean peak = false;
