@@ -32,7 +32,7 @@ class SystemAdministratorModule {
         this.employeeControllerRemote = employeeControllerRemote;
     }
     
-    public void runSystemAdminModule() {
+    public void runSystemAdminModule(Employee employee) {
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("*** HoRS :: System Administration ***\n");
@@ -52,6 +52,7 @@ class SystemAdministratorModule {
             } else if (choice == 4) {
                 doViewAllPartners();
             } else if (choice == 5) {
+                employeeControllerRemote.updateEmployeeLogin(employee, false);
                 break;
             } else {
                 System.out.println("Invalid entry. Please try again");
