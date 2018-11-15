@@ -55,16 +55,16 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             throw new RoomRateExistException("Room Rate already exists");
         }
         Date date = new Date();
-   if (roomRate.getRateType().equals(PEAK) ||  roomRate.getRateType().equals(PROMO)){
-        if (date.before(roomRate.getStartDate())) {
-            roomRate.setIsValid(Boolean.FALSE);
+        if (roomRate.getRateType().equals(PEAK) || roomRate.getRateType().equals(PROMO)) {
+            if (date.before(roomRate.getStartDate())) {
+                roomRate.setIsValid(Boolean.FALSE);
+            } else {
+                roomRate.setIsValid(Boolean.TRUE);
+            }
         } else {
             roomRate.setIsValid(Boolean.TRUE);
         }
-   } else {
-       roomRate.setIsValid(Boolean.TRUE);
-   }
-
+        roomRate.setIsEnabled(Boolean.TRUE);
         roomRate.setRoomType(roomType);
         roomType.getRoomRates().add(roomRate);
 
@@ -125,9 +125,10 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     public RoomRate retrieveRoomRateByName(String roomRateName) throws RoomRateNotFoundException {
         Query query = em.createQuery("SELECT r FROM RoomRate r WHERE r.name = :arg");
         query.setParameter("arg", roomRateName);
+        RoomRate rr = (RoomRate) query.getSingleResult();
 
         try {
-            return (RoomRate) query.getSingleResult();
+            return rr;
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new RoomRateNotFoundException("Room Rate Name " + roomRateName + " does not exist!");
         }
@@ -135,15 +136,22 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
 
     @Override
     public void updateRoomRate(RoomRate roomRate, Long roomTypeId) {
-        RoomType roomType = em.find(RoomType.class,
-                roomTypeId);
-        RoomType oldRoomType = roomRate.getRoomType();
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+
+        RoomType oldRoomType = em.find(RoomType.class, roomRate.getRoomType().getRoomTypeId());
+        oldRoomType.getRoomRates().size();
         oldRoomType.getRoomRates().remove(roomRate); //remove room rate from list of room rates attached to a room type
+        em.merge(oldRoomType);
+        em.flush();
 
         roomRate.setRoomType(roomType); //set new roomtype for room rate
         em.merge(roomRate);
+        em.flush();
 
+        roomType.getRoomRates().size();
         roomType.getRoomRates().add(roomRate);
+        em.merge(roomType);
+        em.flush();
 
     }
 

@@ -36,10 +36,10 @@ public class BookingController implements BookingControllerRemote, BookingContro
 
         em.persist(booking);
         em.flush();
-       
+
         return booking;
     }
-    
+
     @Override
     public Booking createNewBookingForGuest(Booking booking) {
 
@@ -103,10 +103,13 @@ public class BookingController implements BookingControllerRemote, BookingContro
     @Override
     public List<Booking> retrieveAllBookingsWithinDates(Date startDate, Date endDate) {
         List<Booking> finalList = new ArrayList<>();
-        Query query1 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate >= :startDate AND b.endDate <= :endDate"); //list1
-        Query query2 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate <= :startDate AND :endDate <= b.endDate"); //list2
-        Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate <= :startDate AND b.endDate >= :endDate"); //list3
-//        Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE :startDate > b.startDate AND :endDate < b.endDate "); //list3
+        Query query1 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate > :startDate AND b.endDate < :endDate"); //list1
+        Query query2 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate = :startDate AND b.endDate = :endDate"); //list1
+        Query query3 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate = :startDate AND b.endDate < :endDate"); //list1
+        Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate > :startDate AND b.endDate = :endDate"); //list1
+        Query query5 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate < :startDate AND b.endDate > :endDate"); //list3
+        Query query6 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate > :startDate AND b.startDate < :endDate"); //list3
+        Query query7= em.createQuery("SELECT DISTINCT b FROM Booking b WHERE :startDate > b.startDate AND :startDate < b.endDate"); //list3
 
         // Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN (:startDate AND :endDate) AND b.endDate BETWEEN (:startDate AND :endDate)");
         query1.setParameter("startDate", startDate);
@@ -115,8 +118,14 @@ public class BookingController implements BookingControllerRemote, BookingContro
         query2.setParameter("endDate", endDate);
         query3.setParameter("startDate", startDate);
         query3.setParameter("endDate", endDate);
-//        query4.setParameter("startDate", startDate);
-//        query4.setParameter("endDate", endDate);
+        query4.setParameter("startDate", startDate);
+        query4.setParameter("endDate", endDate);
+        query5.setParameter("startDate", startDate);
+        query5.setParameter("endDate", endDate);
+        query6.setParameter("startDate", startDate);
+        query6.setParameter("endDate", endDate);
+        query7.setParameter("startDate", startDate);
+
 
         finalList.addAll(query1.getResultList());
         List<Booking> list2 = query2.getResultList();
@@ -131,7 +140,35 @@ public class BookingController implements BookingControllerRemote, BookingContro
                 finalList.add(booking);
             }
         }
-//        finalList.addAll(query4.getResultList());
+
+        List<Booking> list4 = query4.getResultList();
+        for (Booking booking : list4) {
+            if (!finalList.contains(booking)) {
+                finalList.add(booking);
+            }
+        }
+
+        List<Booking> list5 = query5.getResultList();
+        for (Booking booking : list5) {
+            if (!finalList.contains(booking)) {
+                finalList.add(booking);
+            }
+        }
+        
+        List<Booking> list6 = query6.getResultList();
+        for (Booking booking : list6) {
+            if (!finalList.contains(booking)) {
+                finalList.add(booking);
+            }
+        }
+
+        List<Booking> list7 = query7.getResultList();
+        for (Booking booking : list7) {
+            if (!finalList.contains(booking)) {
+                finalList.add(booking);
+            }
+        }
+        
         for (Booking booking : finalList) {
             booking.getReservation().size();
         }

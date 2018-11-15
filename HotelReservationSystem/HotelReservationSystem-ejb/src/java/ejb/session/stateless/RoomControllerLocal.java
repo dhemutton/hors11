@@ -30,7 +30,7 @@ public interface RoomControllerLocal {
 
     public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException;
 
-    public void updateRoom(Long roomId, Long oldroomTypeId, Long newroomTypeId) throws RoomTypeNotFoundException;
+    public void updateRoom(Room room, Long oldroomTypeId, Long newroomTypeId) throws RoomTypeNotFoundException;
 
     public void deleteRoom(Long roomId);
 

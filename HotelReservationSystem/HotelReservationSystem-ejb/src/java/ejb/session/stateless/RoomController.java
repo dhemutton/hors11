@@ -48,11 +48,16 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
         try {
             RoomType roomType = roomTypeControllerLocal.retrieveRoomTypeById(roomTypeId);
             em.persist(room);
-
-            room.setRoomType(roomType);
-            roomType.getRooms().add(room);
             em.flush();
 
+            room.setRoomType(roomType);
+            roomType.setIsUsed(Boolean.TRUE);
+            roomType.getRooms().add(room);
+            em.merge(roomType);
+            em.flush();
+            em.merge(room);
+            em.flush();
+            
             return room;
         } catch (PersistenceException ex) {
             throw new RoomExistException("Room already exists");
@@ -122,13 +127,13 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     public void mergeRoom(Room room) {
         
         em.merge(room);
+        em.flush();
     }
     
     @Override
-    public void updateRoom(Long roomId, Long oldroomTypeId, Long newRoomTypeId) throws RoomTypeNotFoundException {
+    public void updateRoom(Room room, Long oldroomTypeId, Long newRoomTypeId) throws RoomTypeNotFoundException {
         
         try {
-            Room room = em.find(Room.class, roomId);
             RoomType newroomType = roomTypeControllerLocal.retrieveRoomTypeById(newRoomTypeId);
             newroomType.getRooms().size();
 
