@@ -89,7 +89,7 @@ class MainApp {
                 }
 
                 while (loggedIn) {
-                    System.out.println("*** Welcome to HoRS Reservation Client  ***\n");
+                    System.out.println("*** Welcome, " + guest.getFirstName() + "!  ***\n");
                     System.out.println("*** What would you like to do?  ***\n");
 
                     System.out.println("1. Search Hotel Room");
@@ -108,7 +108,7 @@ class MainApp {
                         loggedIn = false;
                         guestControllerRemote.updateGuestLogin(guest, false);
                         System.out.println("Logging out...");
-
+                        System.out.println();
                         break;
                     } else {
                         System.out.println("Invalid entry. Please try again");

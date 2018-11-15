@@ -44,8 +44,9 @@ class SystemAdministratorModule {
                 doViewAllPartners();
             } else if (choice == 5) {
                 System.out.println("Logging out...");
-
+                System.out.println();
                 System.out.println("(╯°□°）╯︵ ┻━┻)");
+                System.out.println();
 
                 System.out.println("Goodbye~");
                 employeeControllerRemote.updateEmployeeLogin(employee, false);
@@ -67,7 +68,7 @@ class SystemAdministratorModule {
             newEmployee.setFirstName(scanner.nextLine().trim());
             System.out.print("Enter Last Name> ");
             newEmployee.setLastName(scanner.nextLine().trim());
-            System.out.print("Enter employee role " + "\n");
+            System.out.println("Enter Employee Role " + "\n");
             System.out.print("1. SYSTEMADMIN" + "\n");
             System.out.print("2. OPERATIONSMANAGER" + "\n");
             System.out.print("3. SALESMANAGER" + "\n");
@@ -114,7 +115,7 @@ class SystemAdministratorModule {
         if (listOfEmployees.size() == 0) {
             System.out.println("No employees to view");
         } else {
-            System.out.printf("%-5s%-20s%-25s\n", "ID", "Name", "Employee type");
+            System.out.printf("%-5s%-20s%-25s\n", "ID", "Name", "Employee Role");
             for (Employee employee : listOfEmployees) {
                 System.out.printf("%-5d%-20s%-25s\n", employee.getEmployeeId(), employee.getFirstName() + " " + employee.getLastName(), employee.getEmployeeType());
             }
