@@ -95,6 +95,11 @@ public class Main {
                     } else if (choice == 3) {
                         doViewAllMyReservation(partner.getPartnerId());
                     } else if (choice == 4) {
+                        System.out.println("Logging out...");
+
+                        System.out.println("(╯°□°）╯︵ ┻━┻)");
+
+                        System.out.println("Goodbye~");
                         loggedIn = false;
                         updatePartnerLogin(partner, false);
                         break;
@@ -341,24 +346,24 @@ public class Main {
                 System.out.println("Total Cost: " + list.get(i).getCost());
                 List<Reservation> reservations = retrieveAllReservationFromBooking(bookingIds.get(i));
                 System.out.println("Number of rooms reserved: " + reservations.size());
-                  List<RoomType> ranking = retrieveAllRoomtype();
-            int[] quantityEach = new int[ranking.size()];
-            for (int j = 0; j < quantityEach.length; j++) {
-                quantityEach[j] = 0;
-            }
-            for (Reservation reservation : reservations) {
-                int rank = reservation.getInitialRoomType().getRanking();
-                rank--;
-                quantityEach[rank]++;
-            }
-            System.out.println("\nRooms reserved:");
-            for (int k = 0; k < quantityEach.length; k++) {
-                System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
-            }
-            System.out.println("\nTotal number of rooms reserved: " + reservations.size());
-            System.out.println("*********************************************************************");
-            System.out.println();
-              
+                List<RoomType> ranking = retrieveAllRoomtype();
+                int[] quantityEach = new int[ranking.size()];
+                for (int j = 0; j < quantityEach.length; j++) {
+                    quantityEach[j] = 0;
+                }
+                for (Reservation reservation : reservations) {
+                    int rank = reservation.getInitialRoomType().getRanking();
+                    rank--;
+                    quantityEach[rank]++;
+                }
+                System.out.println("\nRooms reserved:");
+                for (int k = 0; k < quantityEach.length; k++) {
+                    System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
+                }
+                System.out.println("\nTotal number of rooms reserved: " + reservations.size());
+                System.out.println("*********************************************************************");
+                System.out.println();
+
             }
         }
     }

@@ -97,6 +97,11 @@ class HotelOperationModule {
                 } else if (choice == 8) {
                     doRoomAllocationExceptionReport();
                 } else if (choice == 9) {
+                    System.out.println("Logging out...");
+
+                    System.out.println("(╯°□°）╯︵ ┻━┻)");
+
+                    System.out.println("Goodbye~");
                     employeeControllerRemote.updateEmployeeLogin(employee, false);
                     break;
                 } else {

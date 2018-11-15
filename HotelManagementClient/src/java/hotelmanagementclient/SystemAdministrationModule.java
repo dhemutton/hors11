@@ -32,7 +32,7 @@ class SystemAdministratorModule {
             System.out.println("2. View all employees");
             System.out.println("3. Create new partner");
             System.out.println("4. View all partners");
-            System.out.println("5. Exit");
+            System.out.println("5. Logout");
             int choice = sc.nextInt();
             if (choice == 1) {
                 doCreateEmployee();
@@ -43,6 +43,11 @@ class SystemAdministratorModule {
             } else if (choice == 4) {
                 doViewAllPartners();
             } else if (choice == 5) {
+                System.out.println("Logging out...");
+
+                System.out.println("(╯°□°）╯︵ ┻━┻)");
+
+                System.out.println("Goodbye~");
                 employeeControllerRemote.updateEmployeeLogin(employee, false);
                 break;
             } else {

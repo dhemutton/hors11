@@ -69,6 +69,12 @@ class FrontOfficeModule {
             } else if (choice == 4) {
                 doSecretMethod();
             } else if (choice == 5) {
+                System.out.println("Logging out...");
+
+                System.out.println("(╯°□°）╯︵ ┻━┻)");
+
+                System.out.println("Goodbye~");
+
                 employeeControllerRemote.updateEmployeeLogin(loginEmployee, false);
                 break;
             } else {
@@ -84,7 +90,7 @@ class FrontOfficeModule {
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        int maxRooms = roomControllerRemote.retrieveAllRooms().size();        
+        int maxRooms = roomControllerRemote.retrieveAllRooms().size();
         Boolean again = true;
 
         while (again) {
@@ -94,14 +100,13 @@ class FrontOfficeModule {
                 try {
                     startDate = formatter.parse(start);
                     Date today = new Date();
-                    today.setDate(today.getDate()-1);
-                    if(startDate.after(today)) {
+                    today.setDate(today.getDate() - 1);
+                    if (startDate.after(today)) {
                         again = false;
-                    }
-                    else {
+                    } else {
                         System.out.println("Enter a valid start date");
                         again = true;
-                    }               
+                    }
                 } catch (ParseException ex) {
                     again = true;
                     System.out.println("Incorrect date format.");

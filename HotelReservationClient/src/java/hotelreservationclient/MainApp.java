@@ -56,16 +56,18 @@ class MainApp {
     }
 
     public void runApp() throws BookingNotFoundException, RoomTypeNotFoundException, RoomNotFoundException, RoomRateNotFoundException, EmployeeExistException, ReservationNotFoundException {
-        System.out.println("*** Welcome to HoRS Reservation Client  ***\n");
         Scanner sc = new Scanner(System.in);
         outerloop:
         while (true) {
             try {
                 while (!loggedIn) {
+                    System.out.println("*** Welcome to HoRS Reservation Client  ***\n");
+
                     System.out.println("1. Guest Login");
                     System.out.println("2. Register as Guest");
                     System.out.println("3. Search Hotel Room");
                     System.out.println("4. Exit");
+                    System.out.println();
                     int choice = sc.nextInt();
                     sc.nextLine();
 
@@ -76,6 +78,10 @@ class MainApp {
                     } else if (choice == 3) {
                         doSearchRoom();
                     } else if (choice == 4) {
+                        System.out.println("(╯°□°）╯︵ ┻━┻)");
+
+                        System.out.println("Goodbye~");
+
                         break outerloop;
                     } else {
                         System.out.println("Invalid entry. Please try again");
@@ -83,6 +89,8 @@ class MainApp {
                 }
 
                 while (loggedIn) {
+                    System.out.println("*** Welcome to HoRS Reservation Client  ***\n");
+                    System.out.println("*** What would you like to do?  ***\n");
 
                     System.out.println("1. Search Hotel Room");
                     System.out.println("2. View My Reservation Details");
@@ -99,6 +107,8 @@ class MainApp {
                     } else if (choice == 4) {
                         loggedIn = false;
                         guestControllerRemote.updateGuestLogin(guest, false);
+                        System.out.println("Logging out...");
+
                         break;
                     } else {
                         System.out.println("Invalid entry. Please try again");
@@ -122,6 +132,10 @@ class MainApp {
             if (!guest.getIsLogin()) {
                 loggedIn = true;
                 guestControllerRemote.updateGuestLogin(guest, true);
+                System.out.println();
+                System.out.println("Login successful! Redirecting...");
+                System.out.println();
+
             } else {
                 System.out.println("Guest is already logged in.");
             }
@@ -159,6 +173,8 @@ class MainApp {
     }
 
     private void doSearchRoom() {
+        System.out.println("*** HoRS :: Reservation Client :: Search Room ***\n");
+
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
@@ -229,6 +245,8 @@ class MainApp {
     }
 
     private void doReserveRoom(int roomsLeft, Date startDate, Date endDate) {
+        System.out.println("*** HoRS :: Reservation Client :: Room Reservation ***\n");
+
         BigDecimal totalCost = new BigDecimal(0);
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
@@ -264,6 +282,8 @@ class MainApp {
             Reservation reservation = reservationControllerRemote.createNewReservation(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED));
             totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
         }
+        System.out.println("Total Cost: " + totalCost);
+
         booking.setCost(totalCost);
         bookingControllerRemote.updateBooking(booking);
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
@@ -312,6 +332,7 @@ class MainApp {
         List<Booking> list = bookingControllerRemote.retrieveAllBookingsForGuest(guestId);
         if (list.size() == 0) {
             System.out.println("No past reservations made.");
+            System.out.println();
         } else {
             for (int i = 0; i < list.size(); i++) {
                 System.out.println((i + 1) + ". Booking ID: " + list.get(i).getBookingId());
@@ -323,12 +344,24 @@ class MainApp {
                 List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
                 System.out.println("Number of rooms reserved: " + reservations.size());
 
-                for (int j = 0; j < reservations.size(); j++) {
-                    System.out.println("Room Type: " + reservations.get(j).getInitialRoomType().getName());
+                List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
+                int[] quantityEach = new int[ranking.size()];
+                for (int j = 0; j < quantityEach.length; j++) {
+                    quantityEach[j] = 0;
                 }
-
+                for (Reservation reservation : reservations) {
+                    int rank = reservation.getInitialRoomType().getRanking();
+                    rank--;
+                    quantityEach[rank]++;
+                }
+                System.out.println("\nRooms reserved:");
+                for (int k = 0; k < quantityEach.length; k++) {
+                    System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
+                }
+                System.out.println("\nTotal number of rooms reserved: " + reservations.size());
                 System.out.println("*********************************************************************");
                 System.out.println();
+
             }
         }
     }
