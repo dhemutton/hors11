@@ -263,6 +263,7 @@ class FrontOfficeModule {
             totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, reservation.getInitialRoomType()));
         }
         booking.setCost(totalCost);
+        System.out.println("Total cost: "+totalCost);
         bookingControllerRemote.updateBooking(booking);
         System.out.println("Reservation created! Reservation id : " + booking.getBookingId());
     }
