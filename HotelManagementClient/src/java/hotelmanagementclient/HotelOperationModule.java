@@ -416,7 +416,7 @@ class HotelOperationModule {
                 room.setRoomNumber(input);
             }
 
-            System.out.println("Enable Room?  (Enter 'Y' to enable) ");
+            System.out.println("Enable Room?  (Enter 'Y' to enable, else will be disabled) ");
             input = scanner.nextLine().trim();
             if(input.equals("Y")) {
                 room.setIsEnabled(Boolean.TRUE);
@@ -426,7 +426,7 @@ class HotelOperationModule {
             }
 
             if (scanner.nextLine().trim().equals("Y")) {
-                System.out.println("Set to vacant?  (Enter 'Y' to set) ");
+                System.out.println("Set to vacant?  (Enter 'Y' to set vacant, else will be occupied) ");
                 if (scanner.nextLine().trim().equals("Y")) {
                     room.setIsVacant(Boolean.TRUE);
                 } else {
