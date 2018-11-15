@@ -58,24 +58,14 @@ public class SelfInvokeDailyController implements SelfInvokeDailyControllerRemot
     public void dailyReservationRoomAssignment() {
         System.out.println("2am function activated");
         //SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date day1 = new Date();
-        Date day2 = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-                        day2 = formatter.parse("05/11/2018");
-                    day1.setDate(day2.getDate() - 1);
-
-        } catch (ParseException ex) {
-            System.out.println("Incorrect date format.");
-
-        }
+        Date today = new Date();
 
         //Obtain a list of all ending reservations(checking out)
-        List<Reservation> day1ReservationList = reservationController.retrieveAllReservationFromEndDate(day1);
+        List<Reservation> day1ReservationList = reservationController.retrieveAllReservationFromEndDate(today);
         System.out.println("Day 1 reservation list size: " + day1ReservationList.size());
 
         //Obtain a list of all starting reservations(checking in)
-        List<Reservation> day2ReservationList = reservationController.retrieveAllReservationFromStartDate(day2);
+        List<Reservation> day2ReservationList = reservationController.retrieveAllReservationFromStartDate(today);
         System.out.println("Day 2 reservation list size: " + day2ReservationList.size());
         //Obtain a list of all reservation that requires upgrades (deduct all assigned check in rooms from following method)
         List<Reservation> day2ReservationUpgrade = day2ReservationList;
