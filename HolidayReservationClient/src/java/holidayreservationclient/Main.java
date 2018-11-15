@@ -329,10 +329,10 @@ public class Main {
         for (Booking b : list) {
             bookingIds.add(b.getBookingId());
         }
-        if (list.size() == 0) {
+        if (bookingIds.size() == 0) {
             System.out.println("No past reservations made.");
         } else {
-            for (int i = 0; i <= bookingIds.size(); i++) {
+            for (int i = 0; i < bookingIds.size(); i++) {
                 System.out.println((i + 1) + ". Booking ID: " + list.get(i).getBookingId());
                 System.out.println("Start Date: " + list.get(i).getStartDate());
                 System.out.println("End Date: " + list.get(i).getEndDate());

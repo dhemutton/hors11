@@ -155,8 +155,8 @@ public class BookingController implements BookingControllerRemote, BookingContro
 
     @Override
     public List<Booking> retrieveAllBookingsForPartner(Long partnerId) {
-        Partner partner = em.find(Partner.class, partnerId);
-        partner.getBookings().size();
-        return partner.getBookings();
+        Query query = em.createQuery("SELECT b FROM Booking b WHERE b.partner.partnerId = :partnerId");
+        query.setParameter("partnerId", partnerId);
+        return query.getResultList();
     }
 }
