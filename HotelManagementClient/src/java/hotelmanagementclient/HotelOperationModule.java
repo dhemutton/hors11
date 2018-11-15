@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -146,7 +147,7 @@ class HotelOperationModule {
             roomType.setName(scanner.nextLine().trim());
             List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
             while (true) {
-                System.out.print("Enter Rank (1 to " + (ranking.size() + 1) + "). (blank if no change)> ");
+                System.out.print("Enter Rank (1 to " + (ranking.size() + 1) + "). > ");
                 int option = scanner.nextInt();
                 if (option == ranking.size() + 1) {
                     roomType.setRanking(option);
@@ -181,6 +182,8 @@ class HotelOperationModule {
 
         } catch (RoomTypeExistException ex) {
             System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
+        } catch (InputMismatchException ex) {
+            System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
         }
     }
 
@@ -193,12 +196,15 @@ class HotelOperationModule {
 
             RoomType roomType = roomTypeControllerRemote.retrieveRoomTypeByName(sc.nextLine().trim());
             System.out.println("Room Type Details: ");
+            System.out.println();
             System.out.println("Name: " + roomType.getName());
             System.out.println("Description: " + roomType.getDescription());
             System.out.println("Bed: " + roomType.getBed());
             System.out.println("Capacity: " + roomType.getCapacity());
             System.out.println("Amenities: " + roomType.getAmenities());
             System.out.println("Size: " + roomType.getSize());
+            System.out.println();
+
             System.out.println("Room rates: ");
 
             if (roomType.getRoomRates().size() == 0) {
@@ -215,6 +221,7 @@ class HotelOperationModule {
                     System.out.println();
                 }
             }
+            System.out.println();
 
             System.out.println("Rooms: ");
 
