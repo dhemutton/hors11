@@ -341,11 +341,24 @@ public class Main {
                 System.out.println("Total Cost: " + list.get(i).getCost());
                 List<Reservation> reservations = retrieveAllReservationFromBooking(bookingIds.get(i));
                 System.out.println("Number of rooms reserved: " + reservations.size());
-                for (int j = 0; j < reservations.size(); j++) {
-                    System.out.println("Room Type: " + reservations.get(j).getInitialRoomType().getName());
-                }
-                System.out.println("*********************************************************************");
-                System.out.println();
+                  List<RoomType> ranking = retrieveAllRoomtype();
+            int[] quantityEach = new int[ranking.size()];
+            for (int j = 0; j < quantityEach.length; j++) {
+                quantityEach[j] = 0;
+            }
+            for (Reservation reservation : reservations) {
+                int rank = reservation.getInitialRoomType().getRanking();
+                rank--;
+                quantityEach[rank]++;
+            }
+            System.out.println("\nRooms reserved:");
+            for (int k = 0; k < quantityEach.length; k++) {
+                System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
+            }
+            System.out.println("\nTotal number of rooms reserved: " + reservations.size());
+            System.out.println("*********************************************************************");
+            System.out.println();
+              
             }
         }
     }
