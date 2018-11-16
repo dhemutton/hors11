@@ -183,7 +183,7 @@ class MainApp {
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 //        int maxRooms = roomControllerRemote.retrieveAllEnabledRooms().size();
-        System.out.println("Please enter start date (dd/mm/yyyy)");
+        System.out.println("Please enter start date (dd/mm/yyyy):");
         Boolean again = true;
 
         while (again) {
@@ -202,7 +202,7 @@ class MainApp {
             }
         }
 
-        System.out.println("Enter end date (format: dd/mm/yyyy) >");
+        System.out.println("Enter end date (format: dd/mm/yyyy):");
         again = true;
         while (again) {
             String end = sc.nextLine().trim();
@@ -300,9 +300,9 @@ class MainApp {
         Booking booking = new Booking(ONLINE, PENDING, startDate, endDate);
         booking.setGuest(guest);
         while (true) {
-            System.out.println("How many rooms do you want to reserve? (Maximum: " + roomsLeft + ")");
-            quantity = sc.nextInt();
             try {
+                System.out.println("How many rooms do you want to reserve? (Maximum: " + roomsLeft + ")");
+                quantity = sc.nextInt();
                 if (quantity <= 0 || quantity > roomsLeft) {
                     System.out.println("Invalid entry. Please try again");
                 } else {
@@ -310,46 +310,61 @@ class MainApp {
                 }
             } catch (InputMismatchException ex) {
                 System.out.println("Invalid entry. Please try again");
+                sc.nextLine();
             }
         }
+
         sc.nextLine();
         List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledRoomType();
 
         for (int i = 0; i < quantity; i++) {
             int choice;
             while (true) {
-                System.out.println("Select room type to reserve for reservation (" + (i + 1) + "/" + quantity + "): ");
+                try {
+                    System.out.println("Select room type to reserve for reservation (" + (i + 1) + "/" + quantity + "): ");
 
-                for (int j = 1; j <= roomTypeList.size(); j++) {
-                    System.out.println(j + ". " + roomTypeList.get(j - 1).getName());
-                }
-                choice = sc.nextInt();
-                sc.nextLine();
-                if (choice < 1 || choice > roomTypeList.size()) {
-                    System.out.println("Invalid entry. Please try again");
-                } else if (map.get(roomTypeList.get(choice - 1).getRoomTypeId()) == 0) {
-                    System.out.println("Room Type " + roomTypeList.get(choice - 1).getName() + " is fully booked during this period. Please reserve a different room.");
-                } else {
-                    System.out.println("Making a reservation for " + roomTypeList.get(choice - 1).getName() + ".  Cost : $" + roomRateControllerRemote.calculateReservationCost(booking, roomTypeList.get(choice - 1)));
-                    System.out.println("Add to cart? (Enter 'Y' to confirm)");
-                    if (sc.nextLine().trim().equals("Y")) {
-                        map.put(roomTypeList.get(choice - 1).getRoomTypeId(), map.get(roomTypeList.get(choice - 1).getRoomTypeId()) - 1); //deduct room type inventory on map
-                        choiceMap.put(roomTypeList.get(choice - 1).getRoomTypeId(), choiceMap.get(roomTypeList.get(choice - 1).getRoomTypeId()) + 1); //add to the choice cart
-                        choiceReservationList.add(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED)); //add to reservation list
-                        totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, roomTypeList.get(choice - 1)));
-                        break;
+                    for (int j = 1; j <= roomTypeList.size(); j++) {
+                        System.out.println(j + ". " + roomTypeList.get(j - 1).getName());
                     }
+                    choice = sc.nextInt();
+                    sc.nextLine();
+                    if (choice < 1 || choice > roomTypeList.size()) {
+                        System.out.println("Invalid entry. Please try again");
+                    } else if (map.get(roomTypeList.get(choice - 1).getRoomTypeId()) == 0) {
+                        System.out.println("Room Type " + roomTypeList.get(choice - 1).getName() + " is fully booked during this period. Please reserve a different room.");
+                    } else {
+                        System.out.println("Making a reservation for " + roomTypeList.get(choice - 1).getName() + ".  Cost : $" + roomRateControllerRemote.calculateReservationCost(booking, roomTypeList.get(choice - 1)));
+                        System.out.println("Add to cart? (Enter 'Y' to confirm)");
+                        if (sc.nextLine().trim().equals("Y")) {
+                            map.put(roomTypeList.get(choice - 1).getRoomTypeId(), map.get(roomTypeList.get(choice - 1).getRoomTypeId()) - 1); //deduct room type inventory on map
+                            choiceMap.put(roomTypeList.get(choice - 1).getRoomTypeId(), choiceMap.get(roomTypeList.get(choice - 1).getRoomTypeId()) + 1); //add to the choice cart
+                            choiceReservationList.add(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED)); //add to reservation list
+                            totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, roomTypeList.get(choice - 1)));
+                            break;
+                        }
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("Invalid entry. Please try again");
+                    sc.nextLine();
+
                 }
             }
         }
 
         System.out.println();
-        System.out.println("Displaying Your Cart...");
-        System.out.println("-----------------------------------------------------------------------------------------------");
-        System.out.printf("%-30s %25s %23s ", "ROOM TYPE NAME", "NO. OF BOOKED ROOMS", "TOTAL COST/ROOM");
+
+        System.out.println(
+                "Displaying Your Cart...");
+        System.out.println(
+                "-----------------------------------------------------------------------------------------------");
+        System.out.printf(
+                "%-30s %25s %23s ", "ROOM TYPE NAME", "NO. OF BOOKED ROOMS", "TOTAL COST/ROOM");
         System.out.println();
-        System.out.println("-----------------------------------------------------------------------------------------------");
-        for (Long choiceId : choiceMap.keySet()) {
+
+        System.out.println(
+                "-----------------------------------------------------------------------------------------------");
+        for (Long choiceId
+                : choiceMap.keySet()) {
             try {
                 if (choiceMap.get(choiceId) != 0) {
                     System.out.format("%-30s %18s %23.2f ",
@@ -360,12 +375,18 @@ class MainApp {
                 System.out.println("Room Type not found!");
             }
         }
-        System.out.println("-----------------------------------------------------------------------------------------------");
 
-        System.out.println("Final Cost: " + totalCost);
+        System.out.println(
+                "-----------------------------------------------------------------------------------------------");
+
+        System.out.println(
+                "Final Cost: " + totalCost);
         System.out.println();
-        System.out.println("Confirm reservation? (Enter 'Y' to confirm)");
-        if (sc.nextLine().trim().equals("Y")) {
+
+        System.out.println(
+                "Confirm reservation? (Enter 'Y' to confirm)");
+        if (sc.nextLine()
+                .trim().equals("Y")) {
             booking.setCost(totalCost);
             booking = bookingControllerRemote.createNewBookingForGuest(booking); //input to database
             for (Reservation r : choiceReservationList) {
@@ -429,7 +450,6 @@ class MainApp {
                 System.out.println("Booking Status: " + list.get(i).getBookingStatus());
                 System.out.println("Total Cost: " + list.get(i).getCost());
                 List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
-                System.out.println("Number of rooms reserved: " + reservations.size());
 
                 List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
                 int[] quantityEach = new int[ranking.size()];
