@@ -73,6 +73,12 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
         return query.getResultList();
     }
 
+      @Override
+    public List<Room> retrieveAllEnabledAndVacantRooms() {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.isEnabled = true AND r.isVacant = true ");
+        return query.getResultList();
+    }
+    
     @Override
     public List<Room> retrieveAllRooms() {
         Query query = em.createQuery("SELECT r FROM Room r ORDER BY r.roomNumber ASC ");

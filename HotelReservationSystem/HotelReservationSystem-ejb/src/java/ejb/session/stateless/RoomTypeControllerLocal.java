@@ -13,9 +13,15 @@ public interface RoomTypeControllerLocal {
 
     public RoomType retrieveRoomTypeByName(String roomTypeName) throws RoomTypeNotFoundException;
 
+    public List<RoomType> retrieveAllEnabledAndIsUsedRoomTypesForWalkIn();
+
     public List<RoomType> retrieveAllRoomtype();
 
     public List<RoomType> retrieveAllEnabledRoomType();
+
+    public List<RoomType> retrieveAllEnabledAndIsUsedRoomType();
+
+    public List<RoomType> retrieveAllUsedRoomType();
 
     public void updateRoomType(RoomType roomType);
 

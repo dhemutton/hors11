@@ -229,10 +229,12 @@ class MainApp {
         for (Booking booking : bookingList) {
             reservationList.addAll(reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId()));
         }
+        
+        List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledAndIsUsedRoomType();
 
         //EDITED to show room type inventory
         HashMap<Long, Integer> map = new HashMap<>();
-        for (RoomType rt : roomTypeControllerRemote.retrieveAllEnabledRoomType()) {
+        for (RoomType rt : roomTypeList) {
             int maxRoomInventory = roomControllerRemote.retrieveAllRoomsFromRoomType(rt).size();
             map.put(rt.getRoomTypeId(), maxRoomInventory);
         }
@@ -242,10 +244,9 @@ class MainApp {
             map.put(id, map.get(id) - 1);
         }
         int roomsLeft = 0;
-        List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledRoomType();
 
         List<Long> availableRoomTypeIds = new ArrayList<>();
-        for (RoomType rt : roomTypeControllerRemote.retrieveAllEnabledRoomType()) {
+        for (RoomType rt : roomTypeList) {
             int vacancy = map.get(rt.getRoomTypeId());
             if (vacancy > 0) {
                 roomsLeft = roomsLeft + vacancy;
@@ -315,7 +316,7 @@ class MainApp {
         }
 
         sc.nextLine();
-        List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledRoomType();
+        List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledAndIsUsedRoomType();
 
         for (int i = 0; i < quantity; i++) {
             int choice;

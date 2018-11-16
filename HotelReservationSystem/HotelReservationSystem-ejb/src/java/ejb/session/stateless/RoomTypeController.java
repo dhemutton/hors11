@@ -53,6 +53,24 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     }
     
     @Override
+    public List<RoomType> retrieveAllEnabledAndIsUsedRoomType() {
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.isEnabled = true AND r.isUsed = true");
+        return query.getResultList();
+    }
+    
+      @Override
+    public List<RoomType> retrieveAllEnabledAndIsUsedRoomTypesForWalkIn() {
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.isEnabled = true AND r.isUsed = true AND r.roomRates.rateType = PUBLISHED");
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<RoomType> retrieveAllUsedRoomType() {
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.isUsed = true");
+        return query.getResultList();
+    }
+    
+    @Override
     public RoomType retrieveRoomTypeById(Long RoomTypeId) throws RoomTypeNotFoundException {
         RoomType roomType = em.find(RoomType.class, RoomTypeId);
         

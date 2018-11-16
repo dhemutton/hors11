@@ -26,6 +26,8 @@ public interface RoomControllerLocal {
 
     public List<Room> retrieveAllVacantRooms();
 
+    public List<Room> retrieveAllEnabledAndVacantRooms();
+
     public List<Room> retrieveAllOccupiedRooms();
 
     public Room retrieveRoomByRoomNum(String roomNum) throws RoomNotFoundException;
@@ -39,8 +41,7 @@ public interface RoomControllerLocal {
     public Room createRoom(Room room, Long roomTypeId) throws RoomExistException, RoomTypeNotFoundException;
 
     public Room retrieveRoomById(Long RoomId) throws RoomNotFoundException;
-    
-            public List<Room> retrieveAllRooms();
 
+    public List<Room> retrieveAllRooms();
 
 }
