@@ -154,7 +154,7 @@ class HotelOperationModule {
             roomType.setName(scanner.nextLine().trim());
             List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
             while (true) {
-                System.out.print("Enter Rank (1 to " + (ranking.size() + 1) + "). > ");
+                System.out.print("Enter Rank (1 to " + (ranking.size() + 1) + ") > ");
                 int option = scanner.nextInt();
                 if (option == ranking.size() + 1) {
                     roomType.setRanking(option);
@@ -437,7 +437,7 @@ class HotelOperationModule {
 
             if (scanner.nextLine().trim().equals("Y")) {
                 System.out.println("Select room type: ");
-                List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllEnabledRoomType();
+                List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
 
                 for (int i = 0; i < roomTypes.size(); i++) {
                     System.out.println((i + 1) + ". " + roomTypes.get(i).getName());

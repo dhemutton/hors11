@@ -173,7 +173,7 @@ public class Main {
             if (end.length() == 10) {
                 try {
                     endDate = formatter.parse(end);
-                    if (startDate.before(endDate) || startDate.equals(endDate)) {
+                    if (startDate.before(endDate)) {
                         again = false;
                     } else {
                         again = true;

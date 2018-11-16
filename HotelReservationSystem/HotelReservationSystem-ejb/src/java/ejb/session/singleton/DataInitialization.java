@@ -104,10 +104,10 @@ public class DataInitialization {
         employeeController.createNewEmployee(new Employee("Alison", "Soh", "333", "333", SALESMANAGER));
         employeeController.createNewEmployee(new Employee("Star", "Soh", "444", "444", GUESTRELATIONS));
 
-//        guestController.createGuest(new Guest("1@gmail.com", "guest1", "GUEST1", "1", "guest1"));
+        guestController.createGuest(new Guest("1@gmail.com", "guest1", "GUEST1", "1", "guest1"));
 //        guestController.createGuest(new Guest("2@gmail.com", "guest2", "GUEST2", "2", "guest2"));
 //        guestController.createGuest(new Guest("3@gmail.com", "guest3", "GUEST3", "3", "guest3"));
-//        partnerController.createNewPartner(new Partner("Matthea", "password", true));
+        partnerController.createNewPartner(new Partner("Matthea", "password", true));
 //        partnerController.createNewPartner(new Partner("Jonathan", "password", true));
         roomTypeController.createRoomType(new RoomType("Grand Suite", "Best room with everything", 8, "1 king-size bed", "8-10 people", "Toilet, balcony, kitchen, living room", 1, true, true));
         roomTypeController.createRoomType(new RoomType("Junior Suite", "Luxurious room", 6, "1 queen-size bed", "6-8 people", "Toilet, balcony, kitchen", 2, true, true));
