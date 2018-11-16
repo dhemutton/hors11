@@ -182,7 +182,6 @@ class MainApp {
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//        int maxRooms = roomControllerRemote.retrieveAllEnabledRooms().size();
         System.out.println("Please enter start date (dd/mm/yyyy):");
         Boolean again = true;
 
@@ -235,7 +234,7 @@ class MainApp {
         //EDITED to show room type inventory
         HashMap<Long, Integer> map = new HashMap<>();
         for (RoomType rt : roomTypeList) {
-            int maxRoomInventory = roomControllerRemote.retrieveAllRoomsFromRoomType(rt).size();
+            int maxRoomInventory = roomControllerRemote.retrieveAllEnabledRoomsFromRoomType(rt).size();
             map.put(rt.getRoomTypeId(), maxRoomInventory);
         }
 

@@ -23,6 +23,7 @@ import static enums.RateTypeEnum.PROMO;
 import exceptions.BookingNotFoundException;
 import exceptions.InvalidLoginCredentials;
 import exceptions.PartnerNotFoundException;
+import exceptions.RoomTypeNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -115,12 +116,12 @@ public class HolidayWebService {
         for (Reservation r : list) {
             em.detach(r);
             r.setBooking(null);
-            r.setRoom(null);      
+            r.setRoom(null);
 //            r.setInitialRoomType(null); need this
-       RoomType rt = r.getInitialRoomType();
-       em.detach(rt);
-       rt.setRooms(null);
-       rt.setRoomRates(null);
+            RoomType rt = r.getInitialRoomType();
+            em.detach(rt);
+            rt.setRooms(null);
+            rt.setRoomRates(null);
             r.setFinalRoomType(null);
         }
 
@@ -175,7 +176,7 @@ public class HolidayWebService {
             b.setPartner(null);
             b.setReservation(null);
 //            List<Reservation> rlist = b.getReservation();
-            
+
 //            for (Reservation r: rlist) {
 //                em.detach(r);
 //                r.setBooking(null);
@@ -192,8 +193,7 @@ public class HolidayWebService {
         partnerControllerLocal.updatePartnerLogin(partner, loggedIn);
     }
 
-    public BigDecimal calculateReservationCost(Long bookingId, Long roomTypeId) {
-        Booking booking = em.find(Booking.class, bookingId);
+    public BigDecimal calculateReservationCost(Booking booking, Long roomTypeId) {
         RoomType roomType = em.find(RoomType.class, roomTypeId);
         BigDecimal total = new BigDecimal(0);
         Date startDate = booking.getStartDate();
@@ -273,6 +273,38 @@ public class HolidayWebService {
 
     public void updatePartner(Partner partner) {
         partnerControllerLocal.updatePartner(partner);
+    }
+
+    public List<RoomType> retrieveAllEnabledAndIsUsedRoomType() {
+        List<RoomType> list = roomTypeControllerLocal.retrieveAllEnabledAndIsUsedRoomType();
+
+        for (RoomType rt : list) {
+            em.detach(rt);
+            rt.setRoomRates(null);
+            rt.setRooms(null);
+        }
+        return list;
+    }
+
+    public List<Room> retrieveAllEnabledRoomsFromRoomType(RoomType roomType) {
+        List<Room> rooms = roomControllerLocal.retrieveAllEnabledRoomsFromRoomType(roomType);
+
+        for (Room room : rooms) {
+            em.detach(room);
+            room.setRoomType(null);
+            room.setReservations(null);
+        }
+
+        return rooms;
+    }
+    
+        public RoomType retrieveRoomTypeById(Long RoomTypeId) throws RoomTypeNotFoundException {
+        RoomType rt = roomTypeControllerLocal.retrieveRoomTypeById(RoomTypeId);
+
+            em.detach(rt);
+            rt.setRoomRates(null);
+            rt.setRooms(null);
+        return rt;
     }
 
 }

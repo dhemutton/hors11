@@ -4,17 +4,11 @@
 <xsd:import namespace="http://ws.session.ejb/" schemaLocation="http://localhost:8000/HolidayWebService/HolidayWebService?xsd=1"/>
 </xsd:schema>
 </types>
-<message name="createNewReservation">
-<part name="parameters" element="tns:createNewReservation"/>
+<message name="retrieveAllEnabledAndIsUsedRoomType">
+<part name="parameters" element="tns:retrieveAllEnabledAndIsUsedRoomType"/>
 </message>
-<message name="createNewReservationResponse">
-<part name="parameters" element="tns:createNewReservationResponse"/>
-</message>
-<message name="retrieveAllEnabledRooms">
-<part name="parameters" element="tns:retrieveAllEnabledRooms"/>
-</message>
-<message name="retrieveAllEnabledRoomsResponse">
-<part name="parameters" element="tns:retrieveAllEnabledRoomsResponse"/>
+<message name="retrieveAllEnabledAndIsUsedRoomTypeResponse">
+<part name="parameters" element="tns:retrieveAllEnabledAndIsUsedRoomTypeResponse"/>
 </message>
 <message name="createNewBooking">
 <part name="parameters" element="tns:createNewBooking"/>
@@ -22,56 +16,11 @@
 <message name="createNewBookingResponse">
 <part name="parameters" element="tns:createNewBookingResponse"/>
 </message>
-<message name="retrieveAllReservationFromBooking">
-<part name="parameters" element="tns:retrieveAllReservationFromBooking"/>
+<message name="createNewReservation">
+<part name="parameters" element="tns:createNewReservation"/>
 </message>
-<message name="retrieveAllReservationFromBookingResponse">
-<part name="parameters" element="tns:retrieveAllReservationFromBookingResponse"/>
-</message>
-<message name="updateBooking">
-<part name="parameters" element="tns:updateBooking"/>
-</message>
-<message name="updateBookingResponse">
-<part name="parameters" element="tns:updateBookingResponse"/>
-</message>
-<message name="retrieveAllBookingsWithinDates">
-<part name="parameters" element="tns:retrieveAllBookingsWithinDates"/>
-</message>
-<message name="retrieveAllBookingsWithinDatesResponse">
-<part name="parameters" element="tns:retrieveAllBookingsWithinDatesResponse"/>
-</message>
-<message name="retrieveAllBookingsForPartner">
-<part name="parameters" element="tns:retrieveAllBookingsForPartner"/>
-</message>
-<message name="retrieveAllBookingsForPartnerResponse">
-<part name="parameters" element="tns:retrieveAllBookingsForPartnerResponse"/>
-</message>
-<message name="retrieveBookingByIdForPartner">
-<part name="parameters" element="tns:retrieveBookingByIdForPartner"/>
-</message>
-<message name="retrieveBookingByIdForPartnerResponse">
-<part name="parameters" element="tns:retrieveBookingByIdForPartnerResponse"/>
-</message>
-<message name="BookingNotFoundException">
-<part name="fault" element="tns:BookingNotFoundException"/>
-</message>
-<message name="calculateReservationCost">
-<part name="parameters" element="tns:calculateReservationCost"/>
-</message>
-<message name="calculateReservationCostResponse">
-<part name="parameters" element="tns:calculateReservationCostResponse"/>
-</message>
-<message name="retrieveAllRoomtype">
-<part name="parameters" element="tns:retrieveAllRoomtype"/>
-</message>
-<message name="retrieveAllRoomtypeResponse">
-<part name="parameters" element="tns:retrieveAllRoomtypeResponse"/>
-</message>
-<message name="retrieveAllEnabledRoomType">
-<part name="parameters" element="tns:retrieveAllEnabledRoomType"/>
-</message>
-<message name="retrieveAllEnabledRoomTypeResponse">
-<part name="parameters" element="tns:retrieveAllEnabledRoomTypeResponse"/>
+<message name="createNewReservationResponse">
+<part name="parameters" element="tns:createNewReservationResponse"/>
 </message>
 <message name="loginForPartner">
 <part name="parameters" element="tns:loginForPartner"/>
@@ -85,11 +34,56 @@
 <message name="PartnerNotFoundException">
 <part name="fault" element="tns:PartnerNotFoundException"/>
 </message>
+<message name="retrieveAllBookingsForPartner">
+<part name="parameters" element="tns:retrieveAllBookingsForPartner"/>
+</message>
+<message name="retrieveAllBookingsForPartnerResponse">
+<part name="parameters" element="tns:retrieveAllBookingsForPartnerResponse"/>
+</message>
+<message name="retrieveAllEnabledRoomType">
+<part name="parameters" element="tns:retrieveAllEnabledRoomType"/>
+</message>
+<message name="retrieveAllEnabledRoomTypeResponse">
+<part name="parameters" element="tns:retrieveAllEnabledRoomTypeResponse"/>
+</message>
+<message name="retrieveAllEnabledRooms">
+<part name="parameters" element="tns:retrieveAllEnabledRooms"/>
+</message>
+<message name="retrieveAllEnabledRoomsResponse">
+<part name="parameters" element="tns:retrieveAllEnabledRoomsResponse"/>
+</message>
+<message name="retrieveAllReservationFromBooking">
+<part name="parameters" element="tns:retrieveAllReservationFromBooking"/>
+</message>
+<message name="retrieveAllReservationFromBookingResponse">
+<part name="parameters" element="tns:retrieveAllReservationFromBookingResponse"/>
+</message>
+<message name="retrieveBookingByIdForPartner">
+<part name="parameters" element="tns:retrieveBookingByIdForPartner"/>
+</message>
+<message name="retrieveBookingByIdForPartnerResponse">
+<part name="parameters" element="tns:retrieveBookingByIdForPartnerResponse"/>
+</message>
+<message name="BookingNotFoundException">
+<part name="fault" element="tns:BookingNotFoundException"/>
+</message>
 <message name="updatePartnerLogin">
 <part name="parameters" element="tns:updatePartnerLogin"/>
 </message>
 <message name="updatePartnerLoginResponse">
 <part name="parameters" element="tns:updatePartnerLoginResponse"/>
+</message>
+<message name="updateBooking">
+<part name="parameters" element="tns:updateBooking"/>
+</message>
+<message name="updateBookingResponse">
+<part name="parameters" element="tns:updateBookingResponse"/>
+</message>
+<message name="retrieveAllRoomtype">
+<part name="parameters" element="tns:retrieveAllRoomtype"/>
+</message>
+<message name="retrieveAllRoomtypeResponse">
+<part name="parameters" element="tns:retrieveAllRoomtypeResponse"/>
 </message>
 <message name="updatePartner">
 <part name="parameters" element="tns:updatePartner"/>
@@ -97,51 +91,45 @@
 <message name="updatePartnerResponse">
 <part name="parameters" element="tns:updatePartnerResponse"/>
 </message>
+<message name="calculateReservationCost">
+<part name="parameters" element="tns:calculateReservationCost"/>
+</message>
+<message name="calculateReservationCostResponse">
+<part name="parameters" element="tns:calculateReservationCostResponse"/>
+</message>
+<message name="retrieveAllBookingsWithinDates">
+<part name="parameters" element="tns:retrieveAllBookingsWithinDates"/>
+</message>
+<message name="retrieveAllBookingsWithinDatesResponse">
+<part name="parameters" element="tns:retrieveAllBookingsWithinDatesResponse"/>
+</message>
+<message name="retrieveRoomTypeById">
+<part name="parameters" element="tns:retrieveRoomTypeById"/>
+</message>
+<message name="retrieveRoomTypeByIdResponse">
+<part name="parameters" element="tns:retrieveRoomTypeByIdResponse"/>
+</message>
+<message name="RoomTypeNotFoundException">
+<part name="fault" element="tns:RoomTypeNotFoundException"/>
+</message>
+<message name="retrieveAllEnabledRoomsFromRoomType">
+<part name="parameters" element="tns:retrieveAllEnabledRoomsFromRoomType"/>
+</message>
+<message name="retrieveAllEnabledRoomsFromRoomTypeResponse">
+<part name="parameters" element="tns:retrieveAllEnabledRoomsFromRoomTypeResponse"/>
+</message>
 <portType name="HolidayWebService">
-<operation name="createNewReservation">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/createNewReservationRequest" message="tns:createNewReservation"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/createNewReservationResponse" message="tns:createNewReservationResponse"/>
-</operation>
-<operation name="retrieveAllEnabledRooms">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomsRequest" message="tns:retrieveAllEnabledRooms"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomsResponse" message="tns:retrieveAllEnabledRoomsResponse"/>
+<operation name="retrieveAllEnabledAndIsUsedRoomType">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledAndIsUsedRoomTypeRequest" message="tns:retrieveAllEnabledAndIsUsedRoomType"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledAndIsUsedRoomTypeResponse" message="tns:retrieveAllEnabledAndIsUsedRoomTypeResponse"/>
 </operation>
 <operation name="createNewBooking">
 <input wsam:Action="http://ws.session.ejb/HolidayWebService/createNewBookingRequest" message="tns:createNewBooking"/>
 <output wsam:Action="http://ws.session.ejb/HolidayWebService/createNewBookingResponse" message="tns:createNewBookingResponse"/>
 </operation>
-<operation name="retrieveAllReservationFromBooking">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllReservationFromBookingRequest" message="tns:retrieveAllReservationFromBooking"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllReservationFromBookingResponse" message="tns:retrieveAllReservationFromBookingResponse"/>
-</operation>
-<operation name="updateBooking">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/updateBookingRequest" message="tns:updateBooking"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/updateBookingResponse" message="tns:updateBookingResponse"/>
-</operation>
-<operation name="retrieveAllBookingsWithinDates">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsWithinDatesRequest" message="tns:retrieveAllBookingsWithinDates"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsWithinDatesResponse" message="tns:retrieveAllBookingsWithinDatesResponse"/>
-</operation>
-<operation name="retrieveAllBookingsForPartner">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsForPartnerRequest" message="tns:retrieveAllBookingsForPartner"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsForPartnerResponse" message="tns:retrieveAllBookingsForPartnerResponse"/>
-</operation>
-<operation name="retrieveBookingByIdForPartner">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveBookingByIdForPartnerRequest" message="tns:retrieveBookingByIdForPartner"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveBookingByIdForPartnerResponse" message="tns:retrieveBookingByIdForPartnerResponse"/>
-<fault message="tns:BookingNotFoundException" name="BookingNotFoundException" wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveBookingByIdForPartner/Fault/BookingNotFoundException"/>
-</operation>
-<operation name="calculateReservationCost">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/calculateReservationCostRequest" message="tns:calculateReservationCost"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/calculateReservationCostResponse" message="tns:calculateReservationCostResponse"/>
-</operation>
-<operation name="retrieveAllRoomtype">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllRoomtypeRequest" message="tns:retrieveAllRoomtype"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllRoomtypeResponse" message="tns:retrieveAllRoomtypeResponse"/>
-</operation>
-<operation name="retrieveAllEnabledRoomType">
-<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomTypeRequest" message="tns:retrieveAllEnabledRoomType"/>
-<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomTypeResponse" message="tns:retrieveAllEnabledRoomTypeResponse"/>
+<operation name="createNewReservation">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/createNewReservationRequest" message="tns:createNewReservation"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/createNewReservationResponse" message="tns:createNewReservationResponse"/>
 </operation>
 <operation name="loginForPartner">
 <input wsam:Action="http://ws.session.ejb/HolidayWebService/loginForPartnerRequest" message="tns:loginForPartner"/>
@@ -149,27 +137,64 @@
 <fault message="tns:InvalidLoginCredentials" name="InvalidLoginCredentials" wsam:Action="http://ws.session.ejb/HolidayWebService/loginForPartner/Fault/InvalidLoginCredentials"/>
 <fault message="tns:PartnerNotFoundException" name="PartnerNotFoundException" wsam:Action="http://ws.session.ejb/HolidayWebService/loginForPartner/Fault/PartnerNotFoundException"/>
 </operation>
+<operation name="retrieveAllBookingsForPartner">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsForPartnerRequest" message="tns:retrieveAllBookingsForPartner"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsForPartnerResponse" message="tns:retrieveAllBookingsForPartnerResponse"/>
+</operation>
+<operation name="retrieveAllEnabledRoomType">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomTypeRequest" message="tns:retrieveAllEnabledRoomType"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomTypeResponse" message="tns:retrieveAllEnabledRoomTypeResponse"/>
+</operation>
+<operation name="retrieveAllEnabledRooms">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomsRequest" message="tns:retrieveAllEnabledRooms"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomsResponse" message="tns:retrieveAllEnabledRoomsResponse"/>
+</operation>
+<operation name="retrieveAllReservationFromBooking">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllReservationFromBookingRequest" message="tns:retrieveAllReservationFromBooking"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllReservationFromBookingResponse" message="tns:retrieveAllReservationFromBookingResponse"/>
+</operation>
+<operation name="retrieveBookingByIdForPartner">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveBookingByIdForPartnerRequest" message="tns:retrieveBookingByIdForPartner"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveBookingByIdForPartnerResponse" message="tns:retrieveBookingByIdForPartnerResponse"/>
+<fault message="tns:BookingNotFoundException" name="BookingNotFoundException" wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveBookingByIdForPartner/Fault/BookingNotFoundException"/>
+</operation>
 <operation name="updatePartnerLogin">
 <input wsam:Action="http://ws.session.ejb/HolidayWebService/updatePartnerLoginRequest" message="tns:updatePartnerLogin"/>
 <output wsam:Action="http://ws.session.ejb/HolidayWebService/updatePartnerLoginResponse" message="tns:updatePartnerLoginResponse"/>
+</operation>
+<operation name="updateBooking">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/updateBookingRequest" message="tns:updateBooking"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/updateBookingResponse" message="tns:updateBookingResponse"/>
+</operation>
+<operation name="retrieveAllRoomtype">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllRoomtypeRequest" message="tns:retrieveAllRoomtype"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllRoomtypeResponse" message="tns:retrieveAllRoomtypeResponse"/>
 </operation>
 <operation name="updatePartner">
 <input wsam:Action="http://ws.session.ejb/HolidayWebService/updatePartnerRequest" message="tns:updatePartner"/>
 <output wsam:Action="http://ws.session.ejb/HolidayWebService/updatePartnerResponse" message="tns:updatePartnerResponse"/>
 </operation>
+<operation name="calculateReservationCost">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/calculateReservationCostRequest" message="tns:calculateReservationCost"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/calculateReservationCostResponse" message="tns:calculateReservationCostResponse"/>
+</operation>
+<operation name="retrieveAllBookingsWithinDates">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsWithinDatesRequest" message="tns:retrieveAllBookingsWithinDates"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllBookingsWithinDatesResponse" message="tns:retrieveAllBookingsWithinDatesResponse"/>
+</operation>
+<operation name="retrieveRoomTypeById">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveRoomTypeByIdRequest" message="tns:retrieveRoomTypeById"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveRoomTypeByIdResponse" message="tns:retrieveRoomTypeByIdResponse"/>
+<fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveRoomTypeById/Fault/RoomTypeNotFoundException"/>
+</operation>
+<operation name="retrieveAllEnabledRoomsFromRoomType">
+<input wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomsFromRoomTypeRequest" message="tns:retrieveAllEnabledRoomsFromRoomType"/>
+<output wsam:Action="http://ws.session.ejb/HolidayWebService/retrieveAllEnabledRoomsFromRoomTypeResponse" message="tns:retrieveAllEnabledRoomsFromRoomTypeResponse"/>
+</operation>
 </portType>
 <binding name="HolidayWebServicePortBinding" type="tns:HolidayWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-<operation name="createNewReservation">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="retrieveAllEnabledRooms">
+<operation name="retrieveAllEnabledAndIsUsedRoomType">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -187,73 +212,7 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="retrieveAllReservationFromBooking">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="updateBooking">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="retrieveAllBookingsWithinDates">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="retrieveAllBookingsForPartner">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="retrieveBookingByIdForPartner">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="BookingNotFoundException">
-<soap:fault name="BookingNotFoundException" use="literal"/>
-</fault>
-</operation>
-<operation name="calculateReservationCost">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="retrieveAllRoomtype">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="retrieveAllEnabledRoomType">
+<operation name="createNewReservation">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -277,6 +236,54 @@
 <soap:fault name="PartnerNotFoundException" use="literal"/>
 </fault>
 </operation>
+<operation name="retrieveAllBookingsForPartner">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="retrieveAllEnabledRoomType">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="retrieveAllEnabledRooms">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="retrieveAllReservationFromBooking">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="retrieveBookingByIdForPartner">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="BookingNotFoundException">
+<soap:fault name="BookingNotFoundException" use="literal"/>
+</fault>
+</operation>
 <operation name="updatePartnerLogin">
 <soap:operation soapAction=""/>
 <input>
@@ -286,7 +293,64 @@
 <soap:body use="literal"/>
 </output>
 </operation>
+<operation name="updateBooking">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="retrieveAllRoomtype">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="updatePartner">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="calculateReservationCost">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="retrieveAllBookingsWithinDates">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="retrieveRoomTypeById">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="RoomTypeNotFoundException">
+<soap:fault name="RoomTypeNotFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="retrieveAllEnabledRoomsFromRoomType">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

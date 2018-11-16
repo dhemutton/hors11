@@ -24,7 +24,7 @@ public interface RoomControllerRemote {
 
     public List<Room> retrieveAllEnabledRooms();
 
-    public List<Room> retrieveAllRoomsFromRoomType(RoomType roomType);
+    public List<Room> retrieveAllEnabledRoomsFromRoomType(RoomType roomType);
 
     public List<Room> retrieveAllEnabledAndVacantRooms();
 
