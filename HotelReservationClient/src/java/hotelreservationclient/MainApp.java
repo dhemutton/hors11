@@ -445,36 +445,36 @@ class MainApp {
             System.out.println("No past reservations made.");
             System.out.println();
         } else {
-            System.out.println("------------------------------------------------------------------------------------------------------");
-            System.out.printf("%-5s %20s %20s %20s %20s ", "ID", "START DATE", "END DATE", "BOOKING TYPE", "TOTAL COST");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("%-5s %20s %20s %20s %20s %20s ", "ID", "START DATE", "END DATE", "BOOKING TYPE", "BOOKING STATUS", "TOTAL COST");
             System.out.println();
-            System.out.println("------------------------------------------------------------------------------------------------------");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------");
             for (int i = 0; i < list.size(); i++) {
                 String start = df.format( list.get(i).getStartDate());
                 String end = df.format(list.get(i).getEndDate());
-                System.out.format("%-5s %20s %20s %17s %20.2f ", list.get(i).getBookingId(), start, end , list.get(i).getBookingType().toString(), list.get(i).getCost());
+                System.out.format("%-5s %20s %20s %18s %20s %20.2f ", list.get(i).getBookingId(), start, end , list.get(i).getBookingType().toString(), list.get(i).getBookingStatus(), list.get(i).getCost());
 
-                List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
-
-                List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
-                int[] quantityEach = new int[ranking.size()];
-                for (int j = 0; j < quantityEach.length; j++) {
-                    quantityEach[j] = 0;
-                }
-                for (Reservation reservation : reservations) {
-                    int rank = reservation.getInitialRoomType().getRanking();
-                    rank--;
-                    quantityEach[rank]++;
-                }
-                System.out.println();
-                System.out.println("\nRooms reserved:");
-                System.out.println();
-
-                for (int k = 0; k < quantityEach.length; k++) {
-                    System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
-                }
-                System.out.println("\nTotal number of rooms reserved: " + reservations.size());
-                System.out.println("****************************************************************************************************************************************");
+//                List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
+//
+//                List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
+//                int[] quantityEach = new int[ranking.size()];
+//                for (int j = 0; j < quantityEach.length; j++) {
+//                    quantityEach[j] = 0;
+//                }
+//                for (Reservation reservation : reservations) {
+//                    int rank = reservation.getInitialRoomType().getRanking();
+//                    rank--;
+//                    quantityEach[rank]++;
+//                }
+//                System.out.println();
+//                System.out.println("\nRooms reserved:");
+//                System.out.println();
+//
+//                for (int k = 0; k < quantityEach.length; k++) {
+//                    System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
+//                }
+//                System.out.println("\nTotal number of rooms reserved: " + reservations.size());
+//                System.out.println("****************************************************************************************************************************************");
                 System.out.println();
 
             }

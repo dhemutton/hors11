@@ -794,6 +794,8 @@ class HotelOperationModule {
         Scanner sc = new Scanner(System.in);
         System.out.println("*** HoRS ::Hotel Operations :: View Room Rate Details ***\n");
         String input;
+                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
         try {
             System.out.println("Which room rate would you like to view details of?  (Enter room rate name) ");
             input = sc.nextLine().trim();
@@ -805,8 +807,8 @@ class HotelOperationModule {
             System.out.println("Room Type: " + roomRate.getRoomType().getName());
 
             System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
-            System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
-            System.out.println("Room Rate End Date: " + roomRate.getEndDate());
+            System.out.println("Room Rate Start Date: " + df.format(roomRate.getStartDate()));
+            System.out.println("Room Rate End Date: " + df.format(roomRate.getEndDate()));
             System.out.println("Room Rate Enabled? " + roomRate.getIsEnabled());
             System.out.println("Room Rate Valid? " + roomRate.getIsValid());
             System.out.println();
