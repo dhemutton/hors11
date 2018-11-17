@@ -115,8 +115,6 @@ public class DailyController {
                 for (int i = 0; i < day2ReservationUpgrade.size(); i++) {
                     if (day2ReservationUpgrade.get(i).getInitialRoomType().getRanking() == 1) {
                         day2ReservationUpgrade.get(i).setExceptionType(ExceptionTypeEnum.TYPE2);
-                        String temp = day2ReservationUpgrade.get(i).getExceptionDescription();
-                        day2ReservationUpgrade.get(i).setExceptionDescription(temp+"No available room upgrade\n");
                         reservationController.updateReservation(day2ReservationUpgrade.get(i));
                         day2ReservationUpgrade.remove(day2ReservationUpgrade.get(i));
                     }
@@ -147,8 +145,6 @@ public class DailyController {
                                 temp.setRoom(room);
                                 temp.setFinalRoomType(room.getRoomType());
                                 temp.setExceptionType(ExceptionTypeEnum.TYPE1);
-                                String tempException = temp.getExceptionDescription();
-                                temp.setExceptionDescription(tempException+"Room has been upgraded\n");
                                 room.setIsVacant(Boolean.FALSE);
                                 reservationController.updateReservation(temp);
                                 roomController.mergeRoom(room);
