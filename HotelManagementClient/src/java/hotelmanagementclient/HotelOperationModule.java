@@ -175,6 +175,9 @@ class HotelOperationModule {
             roomType.setIsUsed(Boolean.FALSE); //since no one can book yet
 
             roomType = roomTypeControllerRemote.createRoomType(roomType);
+            System.out.println("Room type is enabled. (Update room type to disable)");
+            System.out.println("Room type cannot be used. (Requires minimally a room and a normal room rate to be used)");
+
             System.out.println("New room type:  " + roomType.getName() + " created successfully!" + "\n");
         } catch (RoomTypeExistException | InputMismatchException ex) {
             System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
@@ -197,6 +200,9 @@ class HotelOperationModule {
             System.out.println("Capacity: " + roomType.getCapacity());
             System.out.println("Amenities: " + roomType.getAmenities());
             System.out.println("Size: " + roomType.getSize());
+            System.out.println("Enabled?  " + roomType.getIsEnabled());
+            System.out.println("Is Used?  " + roomType.getIsUsed());
+
             System.out.println();
 
             System.out.println("Room rates: ");
@@ -405,10 +411,9 @@ class HotelOperationModule {
 
             System.out.println("Enable Room?  (Enter 'Y' to enable, else will be disabled) ");
             input = scanner.nextLine().trim();
-            if(input.equals("Y")) {
+            if (input.equals("Y")) {
                 room.setIsEnabled(Boolean.TRUE);
-            }
-            else {
+            } else {
                 room.setIsEnabled(Boolean.FALSE);
             }
 

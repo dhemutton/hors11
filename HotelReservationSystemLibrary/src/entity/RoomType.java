@@ -41,8 +41,8 @@ public class RoomType implements Serializable {
     private String amenities;
     @Column(nullable = false, unique = true)
     private int ranking;
-    private Boolean isUsed = false; //since not enabled, cannot be used
-    private Boolean isEnabled = false; //never attach room rates upon creation
+    private Boolean isUsed = false; //no room, no normal room rate
+    private Boolean isEnabled = true; 
 
     @OneToMany(mappedBy = "roomType")
     private List<Room> rooms;
