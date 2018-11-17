@@ -79,10 +79,7 @@ class MainApp {
                     } else if (choice == 3) {
                         doSearchRoom();
                     } else if (choice == 4) {
-                        System.out.println("(╯°□°）╯︵ ┻━┻)");
-
                         System.out.println("Goodbye~");
-
                         break outerloop;
                     } else {
                         System.out.println("Invalid entry. Please try again");
@@ -232,12 +229,14 @@ class MainApp {
         List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledAndIsUsedRoomType();
 
         //EDITED to show room type inventory
+        //Long is ID of room types, Integer is number of rooms available
         HashMap<Long, Integer> map = new HashMap<>();
+        //Obtain total number of rooms for each room type
         for (RoomType rt : roomTypeList) {
             int maxRoomInventory = roomControllerRemote.retrieveAllEnabledRoomsFromRoomType(rt).size();
             map.put(rt.getRoomTypeId(), maxRoomInventory);
         }
-
+        //Obtain available rooms for each room type by deducting from max rooms available
         for (Reservation r : reservationList) {
             Long id = r.getInitialRoomType().getRoomTypeId();
             map.put(id, map.get(id) - 1);
@@ -248,7 +247,7 @@ class MainApp {
         for (RoomType rt : roomTypeList) {
             int vacancy = map.get(rt.getRoomTypeId());
             if (vacancy > 0) {
-                roomsLeft = roomsLeft + vacancy;
+                roomsLeft += vacancy;
                 availableRoomTypeIds.add(rt.getRoomTypeId());
             }
         }
