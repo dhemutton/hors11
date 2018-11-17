@@ -104,6 +104,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
     @Override
     public void updateRoomType(RoomType roomType) {
         em.merge(roomType);
+        em.flush();
     }
 
     @Override
