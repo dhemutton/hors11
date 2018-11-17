@@ -57,6 +57,9 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             throw new RoomRateExistException("Room Rate already exists");
         }
         Date date = new Date();
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
         if (roomRate.getRateType().equals(PEAK) || roomRate.getRateType().equals(PROMO)) {
             if (date.before(roomRate.getStartDate())) {
                 roomRate.setIsValid(Boolean.FALSE);

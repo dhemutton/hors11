@@ -89,35 +89,11 @@ class FrontOfficeModule {
 
     private void doWalkInSearchRoom() {
         System.out.println("*** HoRS :: Front Office Module:: Search Room ***\n");
-        Date today = new Date();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
+        Date startDate = new Date();
         Scanner sc = new Scanner(System.in);
-        Date startDate = null, endDate = null;
+        Date endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        
-        while (true) {
-            System.out.println("Please enter start date (dd/mm/yyyy):");
-            String start = sc.nextLine().trim();
-            if (start.length() == 10) {
-                try {
-                    startDate = formatter.parse(start);
-                    if(startDate.after(today)) {
-                        break;
-                    }
-                    else {
-                        System.out.println("Please enter a date starting from "+today);
-                    }
-                    
-                } catch (ParseException ex) {
-                    System.out.println("Incorrect date format.");
-                }
-            } else {
-                System.out.println("Incorrect date format.");
-            }
-        }
         
         while (true) {
             System.out.println("Enter end date (format: dd/mm/yyyy):");
@@ -367,7 +343,7 @@ class FrontOfficeModule {
         System.out.println("Confirm reservation? (Enter 'Y' to confirm)");
         if (sc.nextLine().trim().equals("Y")) {
             booking.setCost(totalCost);
-            booking = bookingControllerRemote.createNewBookingForGuest(booking); //input to database
+            booking = bookingControllerRemote.createNewBooking(booking); //input to database
             for (Reservation r : choiceReservationList) {
                 r.setBooking(booking);
                 reservationControllerRemote.createNewReservation(r); //input to database

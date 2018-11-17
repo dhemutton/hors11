@@ -63,7 +63,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
 
     @Override
     public List<RoomType> retrieveAllEnabledAndIsUsedRoomTypesForWalkIn() {
-        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.isEnabled = true AND r.isUsed = true AND r.roomRates.rateType = PUBLISHED");
+        Query query = em.createQuery("SELECT r FROM RoomType r JOIN r.roomRates rr WHERE r.isEnabled = true AND r.isUsed = true AND rr.rateType LIKE 'PUBLISHED'");
         return query.getResultList();
     }
 

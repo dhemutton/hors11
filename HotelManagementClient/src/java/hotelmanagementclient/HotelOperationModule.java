@@ -690,10 +690,6 @@ class HotelOperationModule {
             }
             scanner.nextLine();
             //If room rate is PROMO/PEAK, prompt for start and end date
-            Date today = new Date();
-            today.setHours(0);
-            today.setMinutes(0);
-            today.setSeconds(0);
             Date endDate, startDate;
             System.out.println("Enter Rate Per Night: ");
             roomRate.setRatePerNight(scanner.nextBigDecimal());
@@ -707,12 +703,8 @@ class HotelOperationModule {
                         if (start.length() == 10) {
                             try {
                                 startDate = formatter.parse(start);
-                                if (startDate.after(today)) {
-                                    break;
-                                } else {
-                                    System.out.println("Please enter a date starting from " + today);
-                                }
-
+                                roomRate.setStartDate(startDate);
+                                break;
                             } catch (ParseException ex) {
                                 System.out.println("Incorrect date format.");
                             }
@@ -727,6 +719,7 @@ class HotelOperationModule {
                             try {
                                 endDate = formatter.parse(end);
                                 if (startDate.before(endDate)) {
+                                    roomRate.setEndDate(endDate);
                                     break;
                                 } else {
                                     System.out.println("End date is before or equal to start date! Please re-enter end date.");
@@ -740,6 +733,8 @@ class HotelOperationModule {
                     }
                     if (!roomRateControllerRemote.validateRoomRatePeriod(roomRate.getRateType(), startDate, endDate).isEmpty()) {
                         System.out.println("Invalid period entered. Conflict with room rate");
+                    } else {
+                        break;
                     }
                 }
             }
@@ -938,7 +933,7 @@ class HotelOperationModule {
         System.out.println("Room rate updated successfully!: \n");
     }
 
-private void doDeleteRoomRate(RoomRate roomRate) {
+    private void doDeleteRoomRate(RoomRate roomRate) {
         System.out.println("*** HoRS ::Hotel Operations :: Deleting Room Rate ***\n");
         Scanner scanner = new Scanner(System.in);
         if (!roomRate.getIsValid()) {
