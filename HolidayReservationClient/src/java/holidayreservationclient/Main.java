@@ -65,7 +65,6 @@ public class Main {
                     System.out.println("3. Exit");
                     int choice = sc.nextInt();
                     sc.nextLine();
-
                     if (choice == 1) {
                         doPartnerLogin();
                     } else if (choice == 2) {
@@ -117,7 +116,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your username: ");
         String username = sc.nextLine().trim();
-        System.out.println("Please enter password");
+        System.out.println("Please enter your password: ");
         String password = sc.nextLine().trim();
 
         try {
@@ -125,7 +124,10 @@ public class Main {
             if (!partner.isIsLogin()) {
                 loggedIn = true;
                 updatePartnerLogin(partner, true);
+                System.out.println();
+
                 System.out.println("Login successful! Redirecting...");
+                System.out.println();
 
             } else {
                 System.out.println("Partner employee is already logged in.");
@@ -139,20 +141,28 @@ public class Main {
 
     private static void doSearchRoom() {
         System.out.println("*** HoRS :: Holiday Reservation Client :: Search Room ***\n");
-
+        Date today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        System.out.println("Please enter start date (dd/mm/yyyy)");
         Boolean again = true;
 
         while (again) {
+            System.out.println("Please enter start date (dd/mm/yyyy)");
+
             String start = sc.nextLine().trim();
             if (start.length() == 10) {
                 try {
                     startDate = formatter.parse(start);
-                    again = false;
+                    if (startDate.after(today)) {
+                        again = false;
+                    } else {
+                        System.out.println("Please enter a date starting after " + today);
+                    }
                 } catch (ParseException ex) {
                     again = true;
                     System.out.println("Incorrect date format.");
@@ -203,11 +213,15 @@ public class Main {
             List<RoomType> roomTypeList = retrieveAllEnabledAndIsUsedRoomType();
 
             //EDITED to show room type inventory
+            //Long is ID of room types, Integer is number of rooms available
             HashMap<Long, Integer> map = new HashMap<>();
+            //Obtain total number of rooms for each room type
+
             for (RoomType rt : roomTypeList) {
                 int maxRoomInventory = retrieveAllEnabledRoomsFromRoomType(rt).size();
                 map.put(rt.getRoomTypeId(), maxRoomInventory);
             }
+            //Obtain available rooms for each room type by deducting from max rooms available
 
             for (Reservation r : reservationList) {
                 Long id = r.getInitialRoomType().getRoomTypeId();
@@ -413,16 +427,27 @@ public class Main {
             for (int i = 0; i < quantityEach.length; i++) {
                 quantityEach[i] = 0;
             }
+            Boolean deleted = false;
+
             for (Reservation reservation : reservations) {
-                int rank = reservation.getInitialRoomType().getRanking();
-                rank--;
-                quantityEach[rank]++;
+                if (reservation.getInitialRoomType() != null) {
+
+                    int rank = reservation.getInitialRoomType().getRanking();
+                    rank--;
+                    quantityEach[rank]++;
+                } else {
+                    deleted = true;
+                }
             }
             System.out.println("\nRooms reserved:");
             for (int i = 0; i < quantityEach.length; i++) {
                 System.out.println(ranking.get(i).getName() + ": " + quantityEach[i]);
             }
             System.out.println("\nTotal number of rooms reserved: " + reservations.size());
+            if (deleted) {
+                System.out.println("One of the booked room types is not offered anymore.");
+            }
+
             System.out.println("*********************************************************************");
             System.out.println();
 
@@ -433,40 +458,27 @@ public class Main {
 
     private static void doViewAllMyReservation(Long partnerId) {
         System.out.println("*** HoRS :: Holiday Reservation Client :: View All My Reservations ***\n");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
         List<Booking> list = retrieveAllBookingsForPartner(partnerId);
         List<Long> bookingIds = new ArrayList<>();
+        System.out.println("Displaying Past Reservations...");
+
         for (Booking b : list) {
             bookingIds.add(b.getBookingId());
         }
+
         if (bookingIds.size() == 0) {
             System.out.println("No past reservations made.");
         } else {
+            System.out.println("--------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("%-5s %20s %20s %20s %20s %20s ", "ID", "START DATE", "END DATE", "BOOKING TYPE", "BOOKING STATUS", "TOTAL COST");
+            System.out.println();
+            System.out.println("--------------------------------------------------------------------------------------------------------------------");
             for (int i = 0; i < bookingIds.size(); i++) {
-                System.out.println((i + 1) + ". Booking ID: " + list.get(i).getBookingId());
-                System.out.println("Start Date: " + list.get(i).getStartDate());
-                System.out.println("End Date: " + list.get(i).getEndDate());
-                System.out.println("Booking Type: " + list.get(i).getBookingType());
-                System.out.println("Booking Status: " + list.get(i).getBookingStatus());
-                System.out.println("Total Cost: " + list.get(i).getCost());
-                List<Reservation> reservations = retrieveAllReservationFromBooking(bookingIds.get(i));
-                System.out.println("Number of rooms reserved: " + reservations.size());
-                List<RoomType> ranking = retrieveAllRoomtype();
-                int[] quantityEach = new int[ranking.size()];
-                for (int j = 0; j < quantityEach.length; j++) {
-                    quantityEach[j] = 0;
-                }
-                for (Reservation reservation : reservations) {
-                    int rank = reservation.getInitialRoomType().getRanking();
-                    rank--;
-                    quantityEach[rank]++;
-                }
-                System.out.println("\nRooms reserved:");
-                for (int k = 0; k < quantityEach.length; k++) {
-                    System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
-                }
-                System.out.println("\nTotal number of rooms reserved: " + reservations.size());
-                System.out.println("*********************************************************************");
+                String start = df.format(list.get(i).getStartDate());
+                String end = df.format(list.get(i).getEndDate());
+                System.out.format("%-5s %20s %20s %18s %20s %20.2f ", list.get(i).getBookingId(), start, end, list.get(i).getBookingType().toString(), list.get(i).getBookingStatus(), list.get(i).getCost());
                 System.out.println();
 
             }
@@ -582,5 +594,4 @@ public class Main {
         return port.retrieveAllEnabledRoomsFromRoomType(arg0);
     }
 
-    
 }

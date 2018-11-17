@@ -122,7 +122,7 @@ class MainApp {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your email address: ");
         String email = sc.nextLine().trim();
-        System.out.println("Please enter password");
+        System.out.println("Please enter your password: ");
         String password = sc.nextLine().trim();
 
         try {
@@ -400,7 +400,7 @@ class MainApp {
         System.out.println("*** HoRS :: Reservation Client :: View My Reservation ***\n");
         System.out.println("Which reservation would you like to view?  (Enter reservation id) ");
         Long bookingId = scanner.nextLong();
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
         try {
             Booking booking = bookingControllerRemote.retrieveBookingByIdForGuest(bookingId, guestId);
@@ -416,16 +416,24 @@ class MainApp {
             for (int i = 0; i < quantityEach.length; i++) {
                 quantityEach[i] = 0;
             }
+            Boolean deleted = false;
             for (Reservation reservation : reservations) {
-                int rank = reservation.getInitialRoomType().getRanking();
-                rank--;
-                quantityEach[rank]++;
+                if (reservation.getInitialRoomType() != null) {
+                    int rank = reservation.getInitialRoomType().getRanking();
+                    rank--;
+                    quantityEach[rank]++;
+                } else {
+                    deleted = true;
+                }
             }
             System.out.println("\nRooms reserved:");
             for (int i = 0; i < quantityEach.length; i++) {
                 System.out.println(ranking.get(i).getName() + ": " + quantityEach[i]);
             }
             System.out.println("\nTotal number of rooms reserved: " + reservations.size());
+            if (deleted) {
+                System.out.println("One of the booked room types is not offered anymore.");
+            }
             System.out.println("*********************************************************************");
             System.out.println();
 
@@ -450,31 +458,9 @@ class MainApp {
             System.out.println();
             System.out.println("--------------------------------------------------------------------------------------------------------------------");
             for (int i = 0; i < list.size(); i++) {
-                String start = df.format( list.get(i).getStartDate());
+                String start = df.format(list.get(i).getStartDate());
                 String end = df.format(list.get(i).getEndDate());
-                System.out.format("%-5s %20s %20s %18s %20s %20.2f ", list.get(i).getBookingId(), start, end , list.get(i).getBookingType().toString(), list.get(i).getBookingStatus(), list.get(i).getCost());
-
-//                List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
-//
-//                List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
-//                int[] quantityEach = new int[ranking.size()];
-//                for (int j = 0; j < quantityEach.length; j++) {
-//                    quantityEach[j] = 0;
-//                }
-//                for (Reservation reservation : reservations) {
-//                    int rank = reservation.getInitialRoomType().getRanking();
-//                    rank--;
-//                    quantityEach[rank]++;
-//                }
-//                System.out.println();
-//                System.out.println("\nRooms reserved:");
-//                System.out.println();
-//
-//                for (int k = 0; k < quantityEach.length; k++) {
-//                    System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
-//                }
-//                System.out.println("\nTotal number of rooms reserved: " + reservations.size());
-//                System.out.println("****************************************************************************************************************************************");
+                System.out.format("%-5s %20s %20s %18s %20s %20.2f ", list.get(i).getBookingId(), start, end, list.get(i).getBookingType().toString(), list.get(i).getBookingStatus(), list.get(i).getCost());
                 System.out.println();
 
             }
