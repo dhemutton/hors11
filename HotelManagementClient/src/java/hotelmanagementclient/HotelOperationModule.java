@@ -672,6 +672,23 @@ class HotelOperationModule {
                     System.out.println("Incorrect input, please try again.");
                 }
             }
+            //User input room type
+            System.out.println("Select room type to apply this room rate for: ");
+            List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
+            for (int i = 0; i < roomTypes.size(); i++) {
+                System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
+            }
+            while (true) {
+                choice = scanner.nextInt();
+                choice--;
+                if (choice >= 0 && choice < roomTypes.size()) {
+                    roomTypeId = roomTypes.get(choice).getRoomTypeId();
+                    break;
+                } else {
+                    System.out.println("Incorrect input, please try again.");
+                }
+            }
+            scanner.nextLine();
             //If room rate is PROMO/PEAK, prompt for start and end date
             Date today = new Date();
             today.setHours(0);
@@ -682,7 +699,7 @@ class HotelOperationModule {
             roomRate.setRatePerNight(scanner.nextBigDecimal());
             scanner.nextLine();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            if (choice == 3 || choice == 4) {
+            if (roomRate.getRateType()==PROMO || roomRate.getRateType()==PEAK) {
                 while (true) {
                     while (true) {
                         System.out.println("Please enter start date (dd/mm/yyyy):");
@@ -703,24 +720,6 @@ class HotelOperationModule {
                             System.out.println("Incorrect date format.");
                         }
                     }
-                    //User input room type
-                    System.out.println("Select room type to apply this room rate for: ");
-                    List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
-                    for (int i = 0; i < roomTypes.size(); i++) {
-                        System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
-                    }
-                    while (true) {
-                        choice = scanner.nextInt();
-                        choice--;
-                        if (choice >= 0 && choice < roomTypes.size()) {
-                            roomTypeId = roomTypes.get(choice).getRoomTypeId();
-                            break;
-                        } else {
-                            System.out.println("Incorrect input, please try again.");
-                        }
-                    }
-                    scanner.nextLine();
-
                     while (true) {
                         System.out.println("Enter end date (format: dd/mm/yyyy):");
                         String end = scanner.nextLine().trim();
@@ -760,6 +759,7 @@ class HotelOperationModule {
                     rt.setIsUsed(Boolean.TRUE);
                     System.out.println("Room type " + rt.getName() + " is set to used since there is at least a room and a normal room rate for this room type.");
                 }
+                roomTypeControllerRemote.updateRoomType(rt);
             }
             roomRate = roomRateControllerRemote.createRoomRate(roomRate, roomTypeId);
 
@@ -774,7 +774,7 @@ class HotelOperationModule {
     private void doViewAllRoomRate() {
         System.out.println("*** HoRS ::Hotel Operations :: View All Room Rates ***\n");
         List<RoomRate> list = roomRateControllerRemote.retrieveAllRoomRates();
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
         System.out.println("------------------------------------------------------------------------------------------------------------------");
 
