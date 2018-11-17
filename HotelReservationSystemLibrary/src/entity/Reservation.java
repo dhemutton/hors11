@@ -22,7 +22,6 @@ public class Reservation implements Serializable {
     private Boolean checkOutLate = false;
     private Boolean isCheckedIn = false;
     private Boolean isCheckedOut = false;
-    private String exceptionDescription;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ExceptionTypeEnum exceptionType;
