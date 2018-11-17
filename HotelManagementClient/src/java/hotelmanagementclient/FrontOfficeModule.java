@@ -12,6 +12,7 @@ import entity.Employee;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomType;
+import static enums.BookingStatusEnum.COMPLETED;
 import static enums.BookingStatusEnum.PENDING;
 import static enums.BookingTypeEnum.WALKIN;
 import static enums.ExceptionTypeEnum.UNASSIGNED;
@@ -277,7 +278,7 @@ class FrontOfficeModule {
         BigDecimal totalCost = new BigDecimal(0);
         Scanner sc = new Scanner(System.in);
         int quantity = 0;
-        Booking booking = new Booking(WALKIN, PENDING, startDate, endDate);
+        Booking booking = new Booking(WALKIN, COMPLETED, startDate, endDate);
         while (true) {
             try {
                 System.out.println("How many rooms do you want to reserve? (Maximum: " + roomsLeft + ")");
@@ -317,7 +318,16 @@ class FrontOfficeModule {
                         if (sc.nextLine().trim().equals("Y")) {
                             map.put(roomTypeList.get(choice - 1).getRoomTypeId(), map.get(roomTypeList.get(choice - 1).getRoomTypeId()) - 1); //deduct room type inventory on map
                             choiceMap.put(roomTypeList.get(choice - 1).getRoomTypeId(), choiceMap.get(roomTypeList.get(choice - 1).getRoomTypeId()) + 1); //add to the choice cart
-                            choiceReservationList.add(new Reservation(roomTypeList.get(choice - 1), booking, UNASSIGNED)); //add to reservation list
+                            List<Room> availableRooms = roomControllerRemote.retrieveAllVacantRooms();
+                            Room temp = null;
+                            for(Room room : availableRooms) {
+                                if(room.getRoomType().equals(roomTypeList.get(choice - 1).getRoomTypeId())) {
+                                    temp=room;
+                                    room.setIsVacant(Boolean.FALSE);
+                                    roomControllerRemote.mergeRoom(room);
+                                }
+                            }
+                            choiceReservationList.add(new Reservation(roomTypeList.get(choice - 1), roomTypeList.get(choice - 1), temp, booking, UNASSIGNED)); //add to reservation list
                             totalCost = totalCost.add(roomRateControllerRemote.calculateReservationCost(booking, roomTypeList.get(choice - 1)));
                             break;
                         }

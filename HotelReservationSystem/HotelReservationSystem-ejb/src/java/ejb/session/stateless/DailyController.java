@@ -188,6 +188,25 @@ public class DailyController {
     }
 
     @Schedule(hour = "0")
+    public void updateRoomRates() {
+        Date today = new Date();
+        List<RoomRate> roomRates = roomRateController.retrieveAllEnabledRoomRates();
+        int count = roomRates.size();
+        for(int i=0; i<count; i++) {
+            if(roomRates.get(i).getRateType()==PROMO||roomRates.get(i).getRateType()==PEAK) {
+                if(roomRates.get(i).getStartDate().after(today)||roomRates.get(i).getEndDate().before(today)) {
+                    roomRates.get(i).setIsValid(Boolean.TRUE);
+                }
+                else {
+                    roomRates.get(i).setIsValid(Boolean.FALSE);
+                }
+                em.merge(roomRates.get(i));
+                em.flush();
+            }
+        }
+    }
+    
+    @Schedule(hour = "0")
     public void deleteAllRoomRates() {
         //Delete all room rates with no room types(assumed that room type was deleted)
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType=null");
@@ -245,4 +264,5 @@ public class DailyController {
             }
         }
     }
+    
 }
