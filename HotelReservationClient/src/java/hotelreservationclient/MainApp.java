@@ -190,13 +190,12 @@ class MainApp {
             if (start.length() == 10) {
                 try {
                     startDate = formatter.parse(start);
-                    if(startDate.after(today)) {
+                    if (startDate.after(today)) {
                         break;
+                    } else {
+                        System.out.println("Please enter a date starting after " + today);
                     }
-                    else {
-                        System.out.println("Please enter a date starting after "+today);
-                    }
-                    
+
                 } catch (ParseException ex) {
                     System.out.println("Incorrect date format.");
                 }
@@ -204,7 +203,7 @@ class MainApp {
                 System.out.println("Incorrect date format.");
             }
         }
-        
+
         while (true) {
             System.out.println("Enter end date (format: dd/mm/yyyy):");
             String end = sc.nextLine().trim();
@@ -228,7 +227,7 @@ class MainApp {
         for (Booking booking : bookingList) {
             reservationList.addAll(reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId()));
         }
-        
+
         List<RoomType> roomTypeList = roomTypeControllerRemote.retrieveAllEnabledAndIsUsedRoomType();
 
         //EDITED to show room type inventory
@@ -402,11 +401,13 @@ class MainApp {
         System.out.println("*** HoRS :: Reservation Client :: View My Reservation ***\n");
         System.out.println("Which reservation would you like to view?  (Enter reservation id) ");
         Long bookingId = scanner.nextLong();
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
         try {
             Booking booking = bookingControllerRemote.retrieveBookingByIdForGuest(bookingId, guestId);
             System.out.println("Booking ID: " + bookingId);
-            System.out.println("Start Date: " + booking.getStartDate());
-            System.out.println("End Date: " + booking.getEndDate());
+            System.out.println("Start Date: " + df.format(booking.getStartDate()));
+            System.out.println("End Date: " + df.format(booking.getEndDate()));
             System.out.println("Booking Type: " + booking.getBookingType());
             System.out.println("Booking Status: " + booking.getBookingStatus());
             System.out.println("Total Cost: " + booking.getCost());
@@ -436,19 +437,24 @@ class MainApp {
 
     private void doViewAllMyReservation(Long guestId) {
         System.out.println("*** HoRS :: Reservation Client :: View All My Reservations ***\n");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
         List<Booking> list = bookingControllerRemote.retrieveAllBookingsForGuest(guestId);
+        System.out.println("Displaying Past Reservations...");
+
         if (list.size() == 0) {
             System.out.println("No past reservations made.");
             System.out.println();
         } else {
+            System.out.println("------------------------------------------------------------------------------------------------------");
+            System.out.printf("%-5s %20s %20s %20s %20s ", "ID", "START DATE", "END DATE", "BOOKING TYPE", "TOTAL COST");
+            System.out.println();
+            System.out.println("------------------------------------------------------------------------------------------------------");
             for (int i = 0; i < list.size(); i++) {
-                System.out.println((i + 1) + ". Booking ID: " + list.get(i).getBookingId());
-                System.out.println("Start Date: " + list.get(i).getStartDate());
-                System.out.println("End Date: " + list.get(i).getEndDate());
-                System.out.println("Booking Type: " + list.get(i).getBookingType());
-                System.out.println("Booking Status: " + list.get(i).getBookingStatus());
-                System.out.println("Total Cost: " + list.get(i).getCost());
+                String start = df.format( list.get(i).getStartDate());
+                String end = df.format(list.get(i).getEndDate());
+                System.out.format("%-5s %20s %20s %17s %20.2f ", list.get(i).getBookingId(), start, end , list.get(i).getBookingType().toString(), list.get(i).getCost());
+
                 List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(list.get(i).getBookingId());
 
                 List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
@@ -461,12 +467,15 @@ class MainApp {
                     rank--;
                     quantityEach[rank]++;
                 }
+                System.out.println();
                 System.out.println("\nRooms reserved:");
+                System.out.println();
+
                 for (int k = 0; k < quantityEach.length; k++) {
                     System.out.println(ranking.get(k).getName() + ": " + quantityEach[k]);
                 }
                 System.out.println("\nTotal number of rooms reserved: " + reservations.size());
-                System.out.println("*********************************************************************");
+                System.out.println("****************************************************************************************************************************************");
                 System.out.println();
 
             }

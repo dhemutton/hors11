@@ -789,18 +789,21 @@ class HotelOperationModule {
     private void doViewAllRoomRate() {
         System.out.println("*** HoRS ::Hotel Operations :: View All Room Rates ***\n");
         List<RoomRate> list = roomRateControllerRemote.retrieveAllRoomRates();
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
+
+        System.out.printf("%-40s %-20s %-15s %-20s %-20s\n", "Room Rate Name", "Rate Type", "Rate/Night", "Start Date", "End Date");
+        System.out.println();
+
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
 
         for (RoomRate roomRate : list) {
-            System.out.println("Room Rate Name: " + roomRate.getName());
-            System.out.println("Room Rate Type: " + roomRate.getRateType());
-            System.out.println("Room Type: " + roomRate.getRoomType().getName());
-
-            System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
-            System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
-            System.out.println("Room Rate End Date: " + roomRate.getEndDate());
-
-            System.out.println("*********************************************************************");
+            System.out.printf("%-40s %-20s %-15.2f %-20s %-20s\n", roomRate.getName(), roomRate.getRateType().toString(), roomRate.getRatePerNight(), df.format(roomRate.getStartDate()), df.format(roomRate.getEndDate()));
         }
+        System.out.println();
+        System.out.println("***************************************************************************************************************************");
+
     }
 
     private void doViewRoomRateDetails() {
@@ -820,6 +823,10 @@ class HotelOperationModule {
             System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
             System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
             System.out.println("Room Rate End Date: " + roomRate.getEndDate());
+            System.out.println("Room Rate Enabled? " + roomRate.getIsEnabled());
+            System.out.println("Room Rate Valid? " + roomRate.getIsValid());
+            System.out.println();
+
             System.out.println("*********************************************************************");
             while (true) {
                 System.out.println("Choose following options");
@@ -857,48 +864,7 @@ class HotelOperationModule {
         if (input.length() > 0) {
             roomRate.setName(input);
         }
-//        try {
-//            System.out.println("Change rate type?  (Enter 'Y' to change) ");
-//            if (scanner.nextLine().trim().equals("Y")) {
-//
-//                System.out.println("Select rate type: ");
-//                System.out.println("1. Published");
-//                System.out.println("2. Normal");
-//                System.out.println("3. Peak");
-//                System.out.println("4. Promo");
-//
-//                while (true) {
-//                    choice = scanner.nextInt();
-//                    scanner.nextLine();
-//                    if (choice == 1) {
-//                        roomRate.setRateType(RateTypeEnum.PUBLISHED);
-//                        roomRate.setForPartner(Boolean.FALSE);
-//                        roomRate.setEndDate(null);
-//                        roomRate.setStartDate(null);
-//                        break;
-//                    } else if (choice == 2) {
-//                        roomRate.setRateType(RateTypeEnum.NORMAL);
-//                        roomRate.setForPartner(Boolean.TRUE);
-//                        roomRate.setEndDate(null);
-//                        roomRate.setStartDate(null);
-//                        break;
-//
-//                    } else if (choice == 3) {
-//                        roomRate.setRateType(RateTypeEnum.PEAK);
-//                        roomRate.setForPartner(Boolean.TRUE);
-//
-//                        break;
-//
-//                    } else if (choice == 4) {
-//                        roomRate.setRateType(RateTypeEnum.PROMO);
-//                        roomRate.setForPartner(Boolean.TRUE);
-//
-//                        break;
-//                    } else {
-//                        System.out.println("Incorrect input, please try again.");
-//                    }
-//                }
-//            }
+
         System.out.println("Change Rate Per Night?  (Enter 'Y' to change) ");
         if (scanner.nextLine().trim().equals("Y")) {
             System.out.println("Enter Rate Per Night: ");
@@ -957,24 +923,6 @@ class HotelOperationModule {
                 }
             }
 
-//            System.out.println("Change room type for this room rate?  (Enter 'Y' to change) ");
-//            if (scanner.nextLine().trim().equals("Y")) {
-//                System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
-//                List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
-//                for (int i = 0; i < roomTypes.size(); i++) {
-//                    System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
-//                }
-//                while (true) {
-//                    choice = scanner.nextInt();
-//                    choice--;
-//                    if (choice >= 0 && choice < roomTypes.size()) {
-//                        roomTypeId = roomTypes.get(choice).getRoomTypeId();
-//                        break;
-//                    } else {
-//                        System.out.println("Incorrect input, please try again.");
-//                    }
-//                }
-//        }
             Date today = new Date();
             if (roomRate.getRateType() == PUBLISHED || roomRate.getRateType() == NORMAL) {
                 roomRate.setIsValid(Boolean.TRUE);
