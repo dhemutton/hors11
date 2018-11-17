@@ -183,7 +183,6 @@ class MainApp {
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        System.out.println("Please enter start date (dd/mm/yyyy):");
 
         while (true) {
             System.out.println("Please enter start date (dd/mm/yyyy):");
@@ -195,7 +194,7 @@ class MainApp {
                         break;
                     }
                     else {
-                        System.out.println("Please enter a date starting from "+today);
+                        System.out.println("Please enter a date starting after "+today);
                     }
                     
                 } catch (ParseException ex) {

@@ -350,7 +350,8 @@ class HotelOperationModule {
             System.out.println("Room type successfully deleted! ");
 
         } else {
-            System.out.println("Room type " + roomType.getName() + "is in use. Unable to delete room type record");
+            System.out.println("Room type " + roomType.getName() + " is in use. Unable to delete room type record");
+            System.out.println("Room type has to have no rooms to be safely deleted.");
             System.out.println("Do you want to disable room type now? (Enter 'Y' to disable, else will be enabled)");
             if (sc.nextLine().trim().equals("Y")) {
                 System.out.println("Disabled room type  " + roomType.getName() + " !");
@@ -566,9 +567,9 @@ class HotelOperationModule {
             }
 
         } catch (RoomNotFoundException ex) {
-            System.out.println("An error has occurred while retrieving the room " + ex.getMessage() + "!\n");
+            System.out.println("An error has occurred while retrieving the room : " + ex.getMessage() + "!\n");
         } catch (RoomTypeNotFoundException ex) {
-            System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
+            System.out.println("An error has occurred while retrieving the room type : " + ex.getMessage() + "!\n");
 
         }
     }
@@ -749,7 +750,7 @@ class HotelOperationModule {
                 System.out.println("Room rate is valid.");
             } else {
                 roomRate.setIsValid(Boolean.FALSE);
-                System.out.println("Room rate is not valid yet. Stated period is in the future.");
+                System.out.println("Room rate is not valid yet. Stated period is in the future or past. Update room rate to change period.");
             }
             //check if roomtype has a room after normal room rate creation
             RoomType rt = roomTypeControllerRemote.retrieveRoomTypeById(roomTypeId);
@@ -779,7 +780,8 @@ class HotelOperationModule {
             System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "\n");
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "\n");
-
+        } catch (InputMismatchException ex) {
+            System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "\n");
         }
 
     }
@@ -839,6 +841,8 @@ class HotelOperationModule {
             }
         } catch (RoomRateNotFoundException ex) {
             System.out.println("An error has occurred while retrieving the room rate" + ex.getMessage() + "!\n");
+        } catch (InputMismatchException ex) {
+            System.out.println("An error has occurred while retrieving the room rate" + ex.getMessage() + "!\n");
         }
     }
 
@@ -853,49 +857,48 @@ class HotelOperationModule {
         if (input.length() > 0) {
             roomRate.setName(input);
         }
-        int choice = 0;
-
-        System.out.println("Change rate type?  (Enter 'Y' to change) ");
-        if (scanner.nextLine().trim().equals("Y")) {
-            System.out.println("Select rate type: ");
-            System.out.println("1. Published");
-            System.out.println("2. Normal");
-            System.out.println("3. Peak");
-            System.out.println("4. Promo");
-
-            while (true) {
-                choice = scanner.nextInt();
-                scanner.nextLine();
-                if (choice == 1) {
-                    roomRate.setRateType(RateTypeEnum.PUBLISHED);
-                    roomRate.setForPartner(Boolean.FALSE);
-                    roomRate.setEndDate(null);
-                    roomRate.setStartDate(null);
-                    break;
-                } else if (choice == 2) {
-                    roomRate.setRateType(RateTypeEnum.NORMAL);
-                    roomRate.setForPartner(Boolean.TRUE);
-                    roomRate.setEndDate(null);
-                    roomRate.setStartDate(null);
-                    break;
-
-                } else if (choice == 3) {
-                    roomRate.setRateType(RateTypeEnum.PEAK);
-                    roomRate.setForPartner(Boolean.TRUE);
-
-                    break;
-
-                } else if (choice == 4) {
-                    roomRate.setRateType(RateTypeEnum.PROMO);
-                    roomRate.setForPartner(Boolean.TRUE);
-
-                    break;
-
-                } else {
-                    System.out.println("Incorrect input, please try again.");
-                }
-            }
-        }
+//        try {
+//            System.out.println("Change rate type?  (Enter 'Y' to change) ");
+//            if (scanner.nextLine().trim().equals("Y")) {
+//
+//                System.out.println("Select rate type: ");
+//                System.out.println("1. Published");
+//                System.out.println("2. Normal");
+//                System.out.println("3. Peak");
+//                System.out.println("4. Promo");
+//
+//                while (true) {
+//                    choice = scanner.nextInt();
+//                    scanner.nextLine();
+//                    if (choice == 1) {
+//                        roomRate.setRateType(RateTypeEnum.PUBLISHED);
+//                        roomRate.setForPartner(Boolean.FALSE);
+//                        roomRate.setEndDate(null);
+//                        roomRate.setStartDate(null);
+//                        break;
+//                    } else if (choice == 2) {
+//                        roomRate.setRateType(RateTypeEnum.NORMAL);
+//                        roomRate.setForPartner(Boolean.TRUE);
+//                        roomRate.setEndDate(null);
+//                        roomRate.setStartDate(null);
+//                        break;
+//
+//                    } else if (choice == 3) {
+//                        roomRate.setRateType(RateTypeEnum.PEAK);
+//                        roomRate.setForPartner(Boolean.TRUE);
+//
+//                        break;
+//
+//                    } else if (choice == 4) {
+//                        roomRate.setRateType(RateTypeEnum.PROMO);
+//                        roomRate.setForPartner(Boolean.TRUE);
+//
+//                        break;
+//                    } else {
+//                        System.out.println("Incorrect input, please try again.");
+//                    }
+//                }
+//            }
         System.out.println("Change Rate Per Night?  (Enter 'Y' to change) ");
         if (scanner.nextLine().trim().equals("Y")) {
             System.out.println("Enter Rate Per Night: ");
@@ -906,90 +909,91 @@ class HotelOperationModule {
         Date startDate = new Date();
         Date endDate;
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        if (choice == 0 && (roomRate.getRateType().equals(PEAK) || roomRate.getRateType().equals(PROMO))) {
+        if (roomRate.getRateType().equals(PEAK) || roomRate.getRateType().equals(PROMO)) {
             System.out.println("Change start date and end date? (Enter 'Y' to change)");
             if (scanner.nextLine().trim().equals("Y")) {
-                choice = 3;
-            }
-        }
-        if (choice == 3 || choice == 4) {
-            System.out.println("Enter start date (format: dd/mm/yyyy) >");
-            Boolean again = true;
+                System.out.println("Enter start date (format: dd/mm/yyyy) >");
+                Boolean again = true;
 
-            while (again) {
-                String start = scanner.nextLine().trim();
-                if (start.length() == 10) {
-                    try {
-                        startDate = formatter.parse(start);
-                        roomRate.setStartDate(startDate);
-                        again = false;
-                    } catch (ParseException ex) {
-                        again = true;
-                        System.out.println("Incorrect date format.");
-                    }
-                } else {
-                    again = true;
-                    System.out.println("Incorrect date format.");
-                }
-            }
-
-            System.out.println("Enter end date (format: dd/mm/yyyy) >");
-            again = true;
-            while (again) {
-                String end = scanner.nextLine().trim();
-                if (end.length() == 10) {
-                    try {
-                        endDate = formatter.parse(end);
-                        if (startDate.before(endDate) || startDate.equals(endDate)) {
+                while (again) {
+                    String start = scanner.nextLine().trim();
+                    if (start.length() == 10) {
+                        try {
+                            startDate = formatter.parse(start);
+                            roomRate.setStartDate(startDate);
                             again = false;
-                            roomRate.setEndDate(endDate);
-                        } else {
+                        } catch (ParseException ex) {
                             again = true;
-                            System.out.println("End date is before/equal to start date! Please re-enter end date.");
+                            System.out.println("Incorrect date format.");
                         }
-                    } catch (ParseException ex) {
+                    } else {
                         again = true;
                         System.out.println("Incorrect date format.");
                     }
-                } else {
-                    again = true;
-                    System.out.println("Incorrect date format.");
+                }
+
+                System.out.println("Enter end date (format: dd/mm/yyyy) >");
+                again = true;
+                while (again) {
+                    String end = scanner.nextLine().trim();
+                    if (end.length() == 10) {
+                        try {
+                            endDate = formatter.parse(end);
+                            if (startDate.before(endDate) || startDate.equals(endDate)) {
+                                again = false;
+                                roomRate.setEndDate(endDate);
+                            } else {
+                                again = true;
+                                System.out.println("End date is before/equal to start date! Please re-enter end date.");
+                            }
+                        } catch (ParseException ex) {
+                            again = true;
+                            System.out.println("Incorrect date format.");
+                        }
+                    } else {
+                        again = true;
+                        System.out.println("Incorrect date format.");
+                    }
                 }
             }
-        }
 
-        System.out.println("Change room type for this room rate?  (Enter 'Y' to change) ");
-        if (scanner.nextLine().trim().equals("Y")) {
-            System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
-            List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
-            for (int i = 0; i < roomTypes.size(); i++) {
-                System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
+//            System.out.println("Change room type for this room rate?  (Enter 'Y' to change) ");
+//            if (scanner.nextLine().trim().equals("Y")) {
+//                System.out.println("Select room type to apply this room rate for: (Enter 'Y' to add) ");
+//                List<RoomType> roomTypes = roomTypeControllerRemote.retrieveAllRoomtype();
+//                for (int i = 0; i < roomTypes.size(); i++) {
+//                    System.out.println((i + 1) + ". " + roomTypes.get(i).getName());
+//                }
+//                while (true) {
+//                    choice = scanner.nextInt();
+//                    choice--;
+//                    if (choice >= 0 && choice < roomTypes.size()) {
+//                        roomTypeId = roomTypes.get(choice).getRoomTypeId();
+//                        break;
+//                    } else {
+//                        System.out.println("Incorrect input, please try again.");
+//                    }
+//                }
+//        }
+            Date today = new Date();
+            if (roomRate.getRateType() == PUBLISHED || roomRate.getRateType() == NORMAL) {
+                roomRate.setIsValid(Boolean.TRUE);
+                System.out.println("Room rate is valid.");
+            } else if (roomRate.getStartDate().before(today) && roomRate.getEndDate().after(today) || roomRate.getStartDate().equals(today) || roomRate.getEndDate().equals(today)) {
+                roomRate.setIsValid(Boolean.TRUE);
+                System.out.println("Room rate is valid.");
+            } else {
+                roomRate.setIsValid(Boolean.FALSE);
+                System.out.println("Room rate is not valid yet. Stated period is in the future.");
+
             }
-            while (true) {
-                choice = scanner.nextInt();
-                choice--;
-                if (choice >= 0 && choice < roomTypes.size()) {
-                    roomTypeId = roomTypes.get(choice).getRoomTypeId();
-                    break;
-                } else {
-                    System.out.println("Incorrect input, please try again.");
-                }
-            }
+
+            roomRate.setIsEnabled(Boolean.TRUE);
+            System.out.println("Room rate " + roomRate.getName() + " is enabled. (Update room rate to disable)");
+
+            roomRateControllerRemote.updateRoomRate(roomRate, roomTypeId);
+            System.out.println("Room rate updated successfully!: \n");
         }
-
-        Date today = new Date();
-        if (roomRate.getRateType() == PUBLISHED || roomRate.getRateType() == NORMAL) {
-            roomRate.setIsValid(Boolean.TRUE);
-        } else if (roomRate.getStartDate().before(today) && roomRate.getEndDate().after(today) || roomRate.getStartDate().equals(today) || roomRate.getEndDate().equals(today)) {
-            roomRate.setIsValid(Boolean.TRUE);
-        } else {
-            roomRate.setIsValid(Boolean.FALSE);
-        }
-
-        roomRate.setIsEnabled(Boolean.TRUE);
-
-        roomRateControllerRemote.updateRoomRate(roomRate, roomTypeId);
-        System.out.println("Room rate updated successfully!: \n");
     }
 
     private void doDeleteRoomRate(RoomRate roomRate) {
@@ -1002,7 +1006,8 @@ class HotelOperationModule {
                 System.out.println("Successfully deleted room rate record.");
             }
         } else {
-            System.out.println("Room rate is used, unable to delete room rate record.");
+            System.out.println("Room rate is valid, unable to delete room rate record.");
+            System.out.println("Normal and published room rates cannot be deleted but you can update their details.");
             System.out.println("Do you want to disable room rate now? (Enter 'Y' to disable)");
             if (scanner.nextLine().trim().equals("Y")) {
                 System.out.println("Disabled room rate " + roomRate.getName() + " !");
