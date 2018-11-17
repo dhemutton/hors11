@@ -167,6 +167,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     public void deleteRoom(Long roomId) {
         Room room = em.find(Room.class, roomId);
         RoomType roomType = em.find(RoomType.class, room.getRoomType().getRoomTypeId());
+        roomType.getRooms().size();
         roomType.getRooms().remove(room);
         if(roomType.getRooms().isEmpty()) {
             roomType.setIsUsed(Boolean.FALSE);
@@ -174,8 +175,6 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
         em.merge(roomType);
         em.flush();
         room.setIsEnabled(Boolean.FALSE);
-        room.getRoomType().getRooms().size();
-        room.getRoomType().getRooms().remove(room);
         
         em.remove(room);
     }

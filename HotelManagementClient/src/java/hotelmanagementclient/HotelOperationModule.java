@@ -200,8 +200,10 @@ class HotelOperationModule {
             System.out.println("Capacity: " + roomType.getCapacity());
             System.out.println("Amenities: " + roomType.getAmenities());
             System.out.println("Size: " + roomType.getSize());
+            System.out.println("Rank: " + roomType.getRanking());
             System.out.println("Enabled?  " + roomType.getIsEnabled());
             System.out.println("Is Used?  " + roomType.getIsUsed());
+            System.out.println("*************************************");
 
             System.out.println();
 
@@ -217,6 +219,9 @@ class HotelOperationModule {
                     System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
                     System.out.println("Room Rate End Date: " + roomRate.getEndDate());
                     System.out.println("Room Rate Enabled? " + roomRate.getIsEnabled());
+                    System.out.println("Room Rate Valid? " + roomRate.getIsValid());
+                    System.out.println();
+
                     System.out.println("*************************************");
                     System.out.println();
                 }
@@ -228,11 +233,13 @@ class HotelOperationModule {
             if (roomType.getRooms().isEmpty()) {
                 System.out.println("No rooms of this room type");
             } else {
-                for (Room room : roomType.getRooms()) {
-                    System.out.println("Room Number: " + room.getRoomNumber());
-                }
-                System.out.println("*************************************");
 
+                System.out.printf("%-15s%-10s%-20s%-20s\n", "Room number", "Room ID", "Enabled?", "Vacant?");
+                for (Room room : roomType.getRooms()) {
+                    System.out.printf("%-15s%-10d%-20s%-20s\n", room.getRoomNumber(), room.getRoomId(), room.getIsEnabled(), room.getIsVacant());
+                }
+                System.out.println();
+                System.out.println("*************************************");
             }
             while (true) {
                 System.out.println("Choose one of the following options");
@@ -252,8 +259,9 @@ class HotelOperationModule {
                     System.out.println("Invalid option selected. Please try again");
                 }
             }
-
         } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
+        } catch (InputMismatchException ex) {
             System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
         }
     }
@@ -269,18 +277,28 @@ class HotelOperationModule {
         }
 
         List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
-        while (true) {
-            System.out.print("Enter Rank (1 to " + ranking.size() + ")> ");
-            int option = scanner.nextInt();
-            if (option <= ranking.size() && option > 0) {
-                roomTypeControllerRemote.updateRankings(roomType.getRanking(), option);
-                roomType.setRanking(option);
-                break;
-            } else {
-                System.out.println("Invalid entry. please try again");
+        System.out.println("Change Rank? (Enter 'Y' to change rank)");
+        if (scanner.nextLine().trim().equals("Y")) {
+            while (true) {
+                System.out.print("Enter Rank (1 to " + ranking.size() + ")> ");
+                try {
+                    int option = scanner.nextInt();
+
+                    if (option <= ranking.size() && option > 0) {
+                        roomTypeControllerRemote.updateRankings(roomType.getRanking(), option);
+                        roomType.setRanking(option);
+                        break;
+                    } else {
+                        System.out.println("Invalid entry. please try again");
+                        scanner.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("Input mismatch. Try again.");
+                    scanner.nextLine();
+                }
             }
         }
-        scanner.nextLine();
+
         System.out.print("Enter Description (blank if no change)> ");
         input = scanner.nextLine().trim();
         if (input.length() > 0) {
@@ -311,9 +329,14 @@ class HotelOperationModule {
             int newSize = Integer.parseInt(input);
             roomType.setSize(newSize);
         }
-        System.out.println("Disable room type? (Enter 'Y' to disable)");
+        System.out.println("Disable room type? (Enter 'Y' to disable, else will be enabled)");
         if (scanner.nextLine().trim().equals("Y")) {
+            System.out.println("Disabled room type  " + roomType.getName() + " !");
             roomType.setIsEnabled(Boolean.FALSE);
+        } else {
+            roomType.setIsEnabled(Boolean.TRUE);
+            System.out.println("Enabled room type  " + roomType.getName() + " !");
+
         }
         roomTypeControllerRemote.updateRoomType(roomType);
         System.out.println("Room type " + roomType.getName() + " updated successfully! \n");
@@ -328,7 +351,7 @@ class HotelOperationModule {
 
         } else {
             System.out.println("Room type " + roomType.getName() + "is in use. Unable to delete room type record");
-            System.out.println("Do you want to disable room type now? (Enter 'Y' to disable)");
+            System.out.println("Do you want to disable room type now? (Enter 'Y' to disable, else will be enabled)");
             if (sc.nextLine().trim().equals("Y")) {
                 System.out.println("Disabled room type  " + roomType.getName() + " !");
                 roomType.setIsEnabled(Boolean.FALSE);
@@ -437,13 +460,13 @@ class HotelOperationModule {
             } else {
                 room.setIsEnabled(Boolean.FALSE);
             }
-                System.out.println("Set to vacant?  (Enter 'Y' to set vacant, else will be occupied) ");
-                if (scanner.nextLine().trim().equals("Y")) {
-                    room.setIsVacant(Boolean.TRUE);
-                } else {
-                    room.setIsVacant(Boolean.FALSE);
-                }
-            
+            System.out.println("Set to vacant?  (Enter 'Y' to set vacant, else will be occupied) ");
+            if (scanner.nextLine().trim().equals("Y")) {
+                room.setIsVacant(Boolean.TRUE);
+            } else {
+                room.setIsVacant(Boolean.FALSE);
+            }
+
             System.out.println("Change room type?  (Enter 'Y' to change) ");
 
             if (scanner.nextLine().trim().equals("Y")) {
@@ -471,10 +494,10 @@ class HotelOperationModule {
                     System.out.println("Previous room type " + rt.getName() + " is set to unused since there is no more rooms for this room type.");
                 }
 
-                //check if new roomtype has a room after the room type change
+                //check if new roomtype will have a room after the room type change
                 RoomType newrt = roomTypeControllerRemote.retrieveRoomTypeById(newroomTypeId);
                 Boolean canBeUsed = false;
-                if (newrt.getRooms().size() == 0) {
+                if (newrt.getRooms().size() == 0) { //0 since havent add this new room creation yet
                     for (RoomRate rr : newrt.getRoomRates()) {
                         if (rr.getRateType().equals(NORMAL)) {
                             newrt.setIsUsed(Boolean.TRUE);
@@ -520,6 +543,15 @@ class HotelOperationModule {
             if (room.getIsVacant()) {
                 System.out.println("Delete room?  (Enter 'Y' to delete) ");
                 if (scanner.nextLine().trim().equals("Y")) {
+
+                    //check if roomtype has no more rooms after the room deletion
+                    RoomType rt = roomTypeControllerRemote.retrieveRoomTypeById(room.getRoomType().getRoomTypeId());
+                    if (rt.getRooms().size() == 1) {
+                        rt.setIsUsed(Boolean.FALSE);
+                        roomTypeControllerRemote.updateRoomType(rt);
+                        System.out.println("Previous room type " + rt.getName() + " is set to unused since there is no more rooms for this room type.");
+                    }
+
                     roomControllerRemote.deleteRoom(room.getRoomId());
                     System.out.println("Successfully deleted room record.");
                 }
@@ -535,6 +567,9 @@ class HotelOperationModule {
 
         } catch (RoomNotFoundException ex) {
             System.out.println("An error has occurred while retrieving the room " + ex.getMessage() + "!\n");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the room type " + ex.getMessage() + "!\n");
+
         }
     }
 
@@ -706,12 +741,34 @@ class HotelOperationModule {
             Date today = new Date();
             if (roomRate.getRateType() == PUBLISHED || roomRate.getRateType() == NORMAL) {
                 roomRate.setIsEnabled(Boolean.TRUE);
+                roomRate.setIsValid(Boolean.TRUE);
+                System.out.println("Room rate is enabled. (Update room rate to disable)");
+                System.out.println("Room rate is valid.");
             } else if (roomRate.getStartDate().before(today) && roomRate.getEndDate().after(today) || roomRate.getStartDate().equals(today) || roomRate.getEndDate().equals(today)) {
-                roomRate.setIsEnabled(Boolean.TRUE);
+                roomRate.setIsValid(Boolean.TRUE);
+                System.out.println("Room rate is valid.");
             } else {
-                roomRate.setIsEnabled(Boolean.FALSE);
+                roomRate.setIsValid(Boolean.FALSE);
+                System.out.println("Room rate is not valid yet. Stated period is in the future.");
             }
+            //check if roomtype has a room after normal room rate creation
+            RoomType rt = roomTypeControllerRemote.retrieveRoomTypeById(roomTypeId);
 
+            if (roomRate.getRateType().equals(NORMAL)) {
+                if (rt.getRooms().size() == 0) {
+                    rt.setIsUsed(Boolean.FALSE);
+                    roomTypeControllerRemote.updateRoomType(rt);
+                    System.out.println("Room type " + rt.getName() + " is still set to unused since there is no rooms for this room type.");
+                } else {
+                    System.out.println("Room type " + rt.getName() + " is set to used since there is at least a room and a normal room rate for this room type.");
+                }
+            } else {
+                if (rt.getRooms().size() == 0) {
+                    rt.setIsUsed(Boolean.FALSE);
+                    roomTypeControllerRemote.updateRoomType(rt);
+                    System.out.println("Room type " + rt.getName() + " is still set to unused since there is no rooms for this room type.");
+                }
+            }
             roomRate = roomRateControllerRemote.createRoomRate(roomRate, roomTypeId);
 
             System.out.println("New room rate:  " + roomRate.getName() + " created successfully!" + "\n");
@@ -720,6 +777,9 @@ class HotelOperationModule {
             System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "!\n");
         } catch (RoomTypeCannotHaveDuplicatePublishedOrNormalException ex) {
             System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "\n");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("An error has occurred while creating the new room rate: " + ex.getMessage() + "\n");
+
         }
 
     }
