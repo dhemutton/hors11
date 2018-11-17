@@ -350,7 +350,8 @@ class HotelOperationModule {
             System.out.println("Room type successfully deleted! ");
 
         } else {
-            System.out.println("Room type " + roomType.getName() + "is in use. Unable to delete room type record");
+            System.out.println("Room type " + roomType.getName() + " is in use. Unable to delete room type record");
+            System.out.println("Room type has to have no rooms to be safely deleted.");
             System.out.println("Do you want to disable room type now? (Enter 'Y' to disable, else will be enabled)");
             if (sc.nextLine().trim().equals("Y")) {
                 System.out.println("Disabled room type  " + roomType.getName() + " !");
@@ -749,7 +750,7 @@ class HotelOperationModule {
                 System.out.println("Room rate is valid.");
             } else {
                 roomRate.setIsValid(Boolean.FALSE);
-                System.out.println("Room rate is not valid yet. Stated period is in the future.");
+                System.out.println("Room rate is not valid yet. Stated period is in the future or past. Update room rate to change period.");
             }
             //check if roomtype has a room after normal room rate creation
             RoomType rt = roomTypeControllerRemote.retrieveRoomTypeById(roomTypeId);
@@ -1005,7 +1006,8 @@ class HotelOperationModule {
                 System.out.println("Successfully deleted room rate record.");
             }
         } else {
-            System.out.println("Room rate is used, unable to delete room rate record.");
+            System.out.println("Room rate is valid, unable to delete room rate record.");
+            System.out.println("Normal and published room rates cannot be deleted but you can update their details.");
             System.out.println("Do you want to disable room rate now? (Enter 'Y' to disable)");
             if (scanner.nextLine().trim().equals("Y")) {
                 System.out.println("Disabled room rate " + roomRate.getName() + " !");

@@ -117,6 +117,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         Query query = em.createQuery("SELECT r FROM Reservation r JOIN r.booking b WHERE r.finalRoomType=:rt AND b.endDate<:today");
         query.setParameter("rt", rt);
         query.setParameter("today", today);
+        try {
         List<Reservation> reservations = query.getResultList();
         for (Reservation reservation : reservations) {
             if(reservation.getInitialRoomType().equals(rt)) {
@@ -126,11 +127,14 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
             em.merge(reservation);
             em.flush();
         }
+        } catch (NoResultException ex ) {
+            System.out.println("No past reservations with this room type.");
+        }
         //Settle all future reservations
         query = em.createQuery("SELECT r FROM Reservation r JOIN r.booking b WHERE r.finalRoomType=:rt AND b.startDate>:today");
         query.setParameter("rt", rt);
         query.setParameter("today", today);
-        reservations = query.getResultList();
+        List<Reservation> reservations = query.getResultList();
         if (ranking == 1) {
             for (Reservation reservation : reservations) {
                 reservation.setInitialRoomType(roomTypes.get(ranking));
