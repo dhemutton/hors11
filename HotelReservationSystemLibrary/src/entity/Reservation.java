@@ -181,20 +181,5 @@ public class Reservation implements Serializable {
      */
     public void setIsCheckedOut(Boolean isCheckedOut) {
         this.isCheckedOut = isCheckedOut;
-    }
-
-    /**
-     * @return the exceptionDescription
-     */
-    public String getExceptionDescription() {
-        return exceptionDescription;
-    }
-
-    /**
-     * @param exceptionDescription the exceptionDescription to set
-     */
-    public void setExceptionDescription(String exceptionDescription) {
-        this.exceptionDescription = exceptionDescription;
-    }
-    
+    }   
 }
