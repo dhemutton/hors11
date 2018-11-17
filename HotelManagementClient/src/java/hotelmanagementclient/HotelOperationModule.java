@@ -759,6 +759,7 @@ class HotelOperationModule {
                     rt.setIsUsed(Boolean.TRUE);
                     System.out.println("Room type " + rt.getName() + " is set to used since there is at least a room and a normal room rate for this room type.");
                 }
+                roomTypeControllerRemote.updateRoomType(rt);
             }
             roomRate = roomRateControllerRemote.createRoomRate(roomRate, roomTypeId);
 
