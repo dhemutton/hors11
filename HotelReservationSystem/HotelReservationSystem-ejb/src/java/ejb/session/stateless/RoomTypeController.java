@@ -122,8 +122,10 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         for (Reservation reservation : reservations) {
             if(reservation.getInitialRoomType().equals(rt)) {
                 reservation.setInitialRoomType(null);
+                reservation.setExceptionDescription("Previous room type no longer available\n");
             }
             reservation.setFinalRoomType(null);
+            reservation.setExceptionDescription("Previous room type no longer available\n");
             em.merge(reservation);
             em.flush();
         }
@@ -140,6 +142,8 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
                 reservation.setInitialRoomType(roomTypes.get(ranking));
                 reservation.setFinalRoomType(roomTypes.get(ranking));
                 reservation.setExceptionType(ExceptionTypeEnum.TYPE2);
+                String temp = reservation.getExceptionDescription();
+                reservation.setExceptionDescription(temp+"Previous room type no longer available\n");
                 em.merge(reservation);
                 em.flush();
             }
@@ -148,6 +152,8 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
                 reservation.setInitialRoomType(roomTypes.get(ranking - 2));
                 reservation.setFinalRoomType(roomTypes.get(ranking - 2));
                 reservation.setExceptionType(ExceptionTypeEnum.TYPE1);
+                String temp = reservation.getExceptionDescription();
+                reservation.setExceptionDescription(temp+"Previous room type no longer available\n");
                 em.merge(reservation);
                 em.flush();
             }

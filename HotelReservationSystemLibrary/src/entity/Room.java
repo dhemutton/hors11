@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entity;
 
 import java.io.Serializable;
 import java.util.List;
+import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,10 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-/**
- *
- * @author matthealoo
- */
 @Entity
 public class Room implements Serializable {
 
@@ -31,7 +23,7 @@ public class Room implements Serializable {
     private Boolean isEnabled = true;
     private Boolean isVacant = true;
     
-    @OneToMany (mappedBy ="room") 
+    @OneToMany (cascade=REMOVE, mappedBy ="room") 
     private List<Reservation> reservations;
 
     @ManyToOne
