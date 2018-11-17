@@ -88,49 +88,51 @@ class FrontOfficeModule {
 
     private void doWalkInSearchRoom() {
         System.out.println("*** HoRS :: Front Office Module:: Search Room ***\n");
-
+        Date today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
         Scanner sc = new Scanner(System.in);
         Date startDate = null, endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        System.out.println("Please enter start date (dd/mm/yyyy):");
-        Boolean again = true;
-
-        while (again) {
+        
+        while (true) {
+            System.out.println("Please enter start date (dd/mm/yyyy):");
             String start = sc.nextLine().trim();
             if (start.length() == 10) {
                 try {
                     startDate = formatter.parse(start);
-                    again = false;
+                    if(startDate.after(today)) {
+                        break;
+                    }
+                    else {
+                        System.out.println("Please enter a date starting from "+today);
+                    }
+                    
                 } catch (ParseException ex) {
-                    again = true;
                     System.out.println("Incorrect date format.");
                 }
             } else {
-                again = true;
                 System.out.println("Incorrect date format.");
             }
         }
-
-        System.out.println("Enter end date (format: dd/mm/yyyy):");
-        again = true;
-        while (again) {
+        
+        while (true) {
+            System.out.println("Enter end date (format: dd/mm/yyyy):");
             String end = sc.nextLine().trim();
             if (end.length() == 10) {
                 try {
                     endDate = formatter.parse(end);
                     if (startDate.before(endDate)) {
-                        again = false;
+                        break;
                     } else {
-                        again = true;
                         System.out.println("End date is before or equal to start date! Please re-enter end date.");
                     }
-                } catch (ParseException ex) {
-                    again = true;
+                } catch (ParseException ex) {;
                     System.out.println("Incorrect date format.");
                 }
             } else {
-                again = true;
                 System.out.println("Incorrect date format.");
             }
         }

@@ -22,6 +22,7 @@ public class Reservation implements Serializable {
     private Boolean checkOutLate = false;
     private Boolean isCheckedIn = false;
     private Boolean isCheckedOut = false;
+    private String exceptionDescription;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ExceptionTypeEnum exceptionType;
@@ -181,6 +182,20 @@ public class Reservation implements Serializable {
      */
     public void setIsCheckedOut(Boolean isCheckedOut) {
         this.isCheckedOut = isCheckedOut;
+    }
+
+    /**
+     * @return the exceptionDescription
+     */
+    public String getExceptionDescription() {
+        return exceptionDescription;
+    }
+
+    /**
+     * @param exceptionDescription the exceptionDescription to set
+     */
+    public void setExceptionDescription(String exceptionDescription) {
+        this.exceptionDescription = exceptionDescription;
     }
     
 }

@@ -11,8 +11,6 @@ import exceptions.RoomExistException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomTypeNotFoundException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -168,6 +166,13 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     @Override
     public void deleteRoom(Long roomId) {
         Room room = em.find(Room.class, roomId);
+        RoomType roomType = em.find(RoomType.class, room.getRoomType().getRoomTypeId());
+        roomType.getRooms().remove(room);
+        if(roomType.getRooms().isEmpty()) {
+            roomType.setIsUsed(Boolean.FALSE);
+        }
+        em.merge(roomType);
+        em.flush();
         room.setIsEnabled(Boolean.FALSE);
         room.getRoomType().getRooms().size();
         room.getRoomType().getRooms().remove(room);

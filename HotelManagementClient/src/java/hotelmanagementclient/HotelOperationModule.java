@@ -101,10 +101,6 @@ class HotelOperationModule {
                     doRoomAllocationExceptionReport();
                 } else if (choice == 9) {
                     System.out.println("Logging out...");
-
-                    System.out.println("(╯°□°）╯︵ ┻━┻)");
-
-                    System.out.println("Goodbye~");
                     employeeControllerRemote.updateEmployeeLogin(employee, false);
                     break;
                 } else {
@@ -129,12 +125,7 @@ class HotelOperationModule {
                     doViewAllRoomRate();
                 } else if (choice == 4) {
                     System.out.println("Logging out...");
-
-                    System.out.println("(╯°□°）╯︵ ┻━┻)");
-
-                    System.out.println("Goodbye~");
                     employeeControllerRemote.updateEmployeeLogin(employee, false);
-
                     break;
                 } else {
                     System.out.println("Invalid entry. Please try again");
@@ -180,29 +171,25 @@ class HotelOperationModule {
             roomType.setCapacity(scanner.nextLine().trim());
             System.out.print("Enter amenities> ");
             roomType.setAmenities(scanner.nextLine().trim());
-            roomType.setIsEnabled(Boolean.FALSE); //since no room rate yet
+            roomType.setIsEnabled(Boolean.TRUE); //Default setting: only set to FALSE if intended to delete but isUsed is true
             roomType.setIsUsed(Boolean.FALSE); //since no one can book yet
 
             roomType = roomTypeControllerRemote.createRoomType(roomType);
-
             System.out.println("New room type:  " + roomType.getName() + " created successfully!" + "\n");
-
-        } catch (RoomTypeExistException ex) {
-            System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
-        } catch (InputMismatchException ex) {
+        } catch (RoomTypeExistException | InputMismatchException ex) {
             System.out.println("An error has occurred while creating the new room type: " + ex.getMessage() + "!\n");
         }
     }
 
     private void doViewRoomTypeDetails() {
         System.out.println("*** HoRS ::Hotel Operations :: View Room Type Details ***\n");
-        System.out.println("Enter the room type name: \n");
+        System.out.println("Enter the room type name: ");
 
         Scanner sc = new Scanner(System.in);
         try {
 
             RoomType roomType = roomTypeControllerRemote.retrieveRoomTypeByName(sc.nextLine().trim());
-            System.out.println("Room Type Details: ");
+            System.out.println("\nRoom Type Details: ");
             System.out.println();
             System.out.println("Name: " + roomType.getName());
             System.out.println("Description: " + roomType.getDescription());
@@ -214,7 +201,7 @@ class HotelOperationModule {
 
             System.out.println("Room rates: ");
 
-            if (roomType.getRoomRates().size() == 0) {
+            if (roomType.getRoomRates().isEmpty()) {
                 System.out.println("No room rates");
             } else {
                 for (RoomRate roomRate : roomType.getRoomRates()) {
@@ -232,7 +219,7 @@ class HotelOperationModule {
 
             System.out.println("Rooms: ");
 
-            if (roomType.getRooms().size() == 0) {
+            if (roomType.getRooms().isEmpty()) {
                 System.out.println("No rooms of this room type");
             } else {
                 for (Room room : roomType.getRooms()) {
