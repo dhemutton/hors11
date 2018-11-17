@@ -3,10 +3,12 @@ package ejb.session.stateless;
 import entity.Booking;
 import entity.RoomRate;
 import entity.RoomType;
+import enums.RateTypeEnum;
 import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 public interface RoomRateControllerLocal {
@@ -38,5 +40,7 @@ public interface RoomRateControllerLocal {
     public void mergeRoomRate(RoomRate roomRate);
 
     public BigDecimal calculateReservationCost(Booking booking, RoomType roomType);
+
+    public List<RoomRate> validateRoomRatePeriod(RateTypeEnum rateType, Date startDate, Date endDate);
 
 }

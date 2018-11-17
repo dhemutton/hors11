@@ -4,6 +4,7 @@ import entity.Booking;
 import entity.RoomRate;
 import entity.RoomType;
 import static enums.BookingTypeEnum.WALKIN;
+import enums.RateTypeEnum;
 import static enums.RateTypeEnum.NORMAL;
 import static enums.RateTypeEnum.PEAK;
 import static enums.RateTypeEnum.PROMO;
@@ -12,6 +13,7 @@ import exceptions.RoomRateExistException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -109,8 +111,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
     }
 
     @Override
-    public RoomRate
-            retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException {
+    public RoomRate retrieveRoomRateById(Long RoomRateId) throws RoomRateNotFoundException {
         RoomRate roomRate = em.find(RoomRate.class,
                 RoomRateId);
 
@@ -239,5 +240,84 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             checkDate.setDate(temp.getDate() + 1);
         }
         return total;
+    }
+    
+    @Override
+    public List<RoomRate> validateRoomRatePeriod(RateTypeEnum rateType, Date startDate, Date endDate) {
+        List<RoomRate> finalList = new ArrayList<>();
+        Query query1 = em.createQuery("SELECT DISTINCT r FROM RoomRate r WHERE r.rateType=:rateType AND r.startDate > :startDate AND r.endDate < :endDate"); //list1
+        Query query2 = em.createQuery("SELECT DISTINCT r FROM RoomRate r WHERE r.rateType=:rateType AND r.startDate = :startDate AND r.endDate = :endDate"); //list1
+        Query query3 = em.createQuery("SELECT DISTINCT r FROM RoomRate r WHERE r.rateType=:rateType AND r.startDate = :startDate AND r.endDate < :endDate"); //list1
+        Query query4 = em.createQuery("SELECT DISTINCT r FROM RoomRate r WHERE r.rateType=:rateType AND r.startDate > :startDate AND r.endDate = :endDate"); //list1
+        Query query5 = em.createQuery("SELECT DISTINCT r FROM RoomRate r WHERE r.rateType=:rateType AND r.startDate < :startDate AND r.endDate > :endDate"); //list3
+        Query query6 = em.createQuery("SELECT DISTINCT r FROM RoomRate r WHERE r.rateType=:rateType AND r.startDate > :startDate AND r.startDate < :endDate"); //list3
+        Query query7 = em.createQuery("SELECT DISTINCT r FROM RoomRate r WHERE r.rateType=:rateType AND :startDate > r.startDate AND :startDate < r.endDate"); //list3
+
+        // Query query4 = em.createQuery("SELECT DISTINCT b FROM Booking b WHERE b.startDate BETWEEN (:startDate AND :endDate) AND b.endDate BETWEEN (:startDate AND :endDate)");
+        query1.setParameter("startDate", startDate);
+        query1.setParameter("endDate", endDate);
+        query1.setParameter("rateType", rateType);
+        query2.setParameter("startDate", startDate);
+        query2.setParameter("endDate", endDate);
+        query2.setParameter("rateType", rateType);
+        query3.setParameter("startDate", startDate);
+        query3.setParameter("endDate", endDate);
+        query3.setParameter("rateType", rateType);
+        query4.setParameter("startDate", startDate);
+        query4.setParameter("endDate", endDate);
+        query4.setParameter("rateType", rateType);
+        query5.setParameter("startDate", startDate);
+        query5.setParameter("endDate", endDate);
+        query5.setParameter("rateType", rateType);
+        query6.setParameter("startDate", startDate);
+        query6.setParameter("endDate", endDate);
+        query6.setParameter("rateType", rateType);
+        query7.setParameter("startDate", startDate);
+        query7.setParameter("rateType", rateType);
+
+
+        finalList.addAll(query1.getResultList());
+        List<RoomRate> list2 = query2.getResultList();
+        for (RoomRate roomRate : list2) {
+            if (!finalList.contains(roomRate)) {
+                finalList.add(roomRate);
+            }
+        }
+        List<RoomRate> list3 = query3.getResultList();
+        for (RoomRate roomRate : list3) {
+            if (!finalList.contains(roomRate)) {
+                finalList.add(roomRate);
+            }
+        }
+
+        List<RoomRate> list4 = query4.getResultList();
+        for (RoomRate roomRate : list4) {
+            if (!finalList.contains(roomRate)) {
+                finalList.add(roomRate);
+            }
+        }
+
+        List<RoomRate> list5 = query5.getResultList();
+        for (RoomRate roomRate : list5) {
+            if (!finalList.contains(roomRate)) {
+                finalList.add(roomRate);
+            }
+        }
+        
+        List<RoomRate> list6 = query6.getResultList();
+        for (RoomRate roomRate : list6) {
+            if (!finalList.contains(roomRate)) {
+                finalList.add(roomRate);
+            }
+        }
+
+        List<RoomRate> list7 = query7.getResultList();
+        for (RoomRate roomRate : list7) {
+            if (!finalList.contains(roomRate)) {
+                finalList.add(roomRate);
+            }
+        }
+
+        return finalList;
     }
 }

@@ -40,10 +40,11 @@ public class Reservation implements Serializable {
     private Booking booking;
 
     public Reservation() {
-        
+        this.exceptionDescription="";
     }
 
     public Reservation(RoomType initialRoomType, Booking booking, ExceptionTypeEnum exceptionType) {
+        this();
         this.initialRoomType = initialRoomType;
         this.booking = booking;
         this.exceptionType = exceptionType;
@@ -51,6 +52,7 @@ public class Reservation implements Serializable {
     }
     
     public Reservation(RoomType initialRoomType, RoomType finalRoomType, Room room, Booking booking, ExceptionTypeEnum exceptionType) {
+        this();
         this.initialRoomType = initialRoomType;
         this.finalRoomType = finalRoomType;
         this.room = room;
