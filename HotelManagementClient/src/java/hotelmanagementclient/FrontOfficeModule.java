@@ -74,8 +74,9 @@ class FrontOfficeModule {
                 doSecretMethod();
             } else if (choice == 5) {
                 System.out.println("Logging out...");
-
+                System.out.println();
                 System.out.println("(╯°□°）╯︵ ┻━┻)");
+                System.out.println();
 
                 System.out.println("Goodbye~");
 
@@ -94,7 +95,7 @@ class FrontOfficeModule {
         Date endDate = null;
         List<Reservation> reservationList = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        
+
         while (true) {
             System.out.println("Enter end date (format: dd/mm/yyyy):");
             String end = sc.nextLine().trim();
@@ -296,9 +297,9 @@ class FrontOfficeModule {
                             choiceMap.put(roomTypeList.get(choice - 1).getRoomTypeId(), choiceMap.get(roomTypeList.get(choice - 1).getRoomTypeId()) + 1); //add to the choice cart
                             List<Room> availableRooms = roomControllerRemote.retrieveAllVacantRooms();
                             Room temp = null;
-                            for(Room room : availableRooms) {
-                                if(room.getRoomType().equals(roomTypeList.get(choice - 1))) {
-                                    temp=room;
+                            for (Room room : availableRooms) {
+                                if (room.getRoomType().equals(roomTypeList.get(choice - 1))) {
+                                    temp = room;
                                     room.setIsVacant(Boolean.FALSE);
                                     roomControllerRemote.mergeRoom(room);
                                 }
@@ -354,10 +355,26 @@ class FrontOfficeModule {
     }
 
     private void doSecretMethod() {
-        selfInvokeDailyControllerRemote.dailyReservationRoomAssignment();
-//        selfInvokeDailyControllerRemote.deleteAllRoomRates();
-//        selfInvokeDailyControllerRemote.deleteAllRoomTypes();
-//        selfInvokeDailyControllerRemote.deleteAllRooms();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Invoke 2am secret method? (Enter 'Y' to confirm)");
+        if (sc.nextLine().trim().equals("Y")) {
+            selfInvokeDailyControllerRemote.dailyReservationRoomAssignment();
+        }
+
+        System.out.println("Invoke 12am secret method to delete all non-valid room rates? (Enter 'Y' to confirm)");
+        if (sc.nextLine().trim().equals("Y")) {
+            selfInvokeDailyControllerRemote.deleteAllRoomRates();
+        }
+        System.out.println("Invoke 12am secret method to delete all unused room types? (Enter 'Y' to confirm)");
+        if (sc.nextLine().trim().equals("Y")) {
+            selfInvokeDailyControllerRemote.deleteAllRoomTypes();
+        }
+
+        System.out.println("Invoke 12am secret method to delete all unused room? (Enter 'Y' to confirm)");
+        if (sc.nextLine().trim().equals("Y")) {
+            selfInvokeDailyControllerRemote.deleteAllRooms();
+        }
+        
         System.out.println("Secret Method done hehe!");
     }
 

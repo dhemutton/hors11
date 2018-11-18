@@ -751,7 +751,7 @@ class HotelOperationModule {
                         }
                     }
                     if (!roomRateControllerRemote.validateRoomRatePeriod(roomRate.getRateType(), startDate, endDate).isEmpty()) {
-                        System.out.println("Invalid period entered. Conflict with room rate");
+                        System.out.println("Invalid period entered. Conflict with existing period of the same rate type.");
                     } else {
                         break;
                     }

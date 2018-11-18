@@ -43,8 +43,10 @@ public class Main {
     
     
     public static void main(String[] args)  {
+        while (true) {
         MainApp mainApp = new MainApp(guestControllerRemote, reservationControllerRemote, bookingControllerRemote, roomControllerRemote, roomRateControllerRemote, roomTypeControllerRemote, partnerControllerRemote, employeeControllerRemote, selfInvokeDailyControllerRemote);
         mainApp.runApp();
+        }
     }
     
 }
