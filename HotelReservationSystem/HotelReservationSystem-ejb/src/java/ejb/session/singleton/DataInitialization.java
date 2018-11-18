@@ -274,22 +274,22 @@ public class DataInitialization {
 //        room.getReservations().add(reservation);
 //        room.setIsVacant(Boolean.FALSE);
 //        roomController.mergeRoom(room);
-
-        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("18/11/2018"), formatter.parse("19/11/2018")));
-        booking.setGuest(guestController.retrieveGuestByEmail("1@gmail.com"));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
-        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
+//
+//        booking = bookingController.createNewBooking(new Booking(ONLINE, PENDING, formatter.parse("18/11/2018"), formatter.parse("19/11/2018")));
+//        booking.setGuest(guestController.retrieveGuestByEmail("1@gmail.com"));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Grand Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Junior Suite"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
+//        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Family Room"), booking, UNASSIGNED));
 //        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
 //        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));
 //        reservationController.createNewReservation(new Reservation(roomTypeController.retrieveRoomTypeByName("Type C"), booking, UNASSIGNED));

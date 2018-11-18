@@ -370,7 +370,7 @@ class FrontOfficeModule {
             selfInvokeDailyControllerRemote.deleteAllRoomTypes();
         }
 
-        System.out.println("Invoke 12am secret method to delete all unused room? (Enter 'Y' to confirm)");
+        System.out.println("Invoke 12am secret method to delete all unused room ? (Enter 'Y' to confirm)");
         if (sc.nextLine().trim().equals("Y")) {
             selfInvokeDailyControllerRemote.deleteAllRooms();
         }
