@@ -297,7 +297,7 @@ class FrontOfficeModule {
                             List<Room> availableRooms = roomControllerRemote.retrieveAllVacantRooms();
                             Room temp = null;
                             for(Room room : availableRooms) {
-                                if(room.getRoomType().equals(roomTypeList.get(choice - 1).getRoomTypeId())) {
+                                if(room.getRoomType().equals(roomTypeList.get(choice - 1))) {
                                     temp=room;
                                     room.setIsVacant(Boolean.FALSE);
                                     roomControllerRemote.mergeRoom(room);
