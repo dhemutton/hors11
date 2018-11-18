@@ -64,7 +64,6 @@ public class Main {
                     System.out.println("2. Search Hotel Room");
                     System.out.println("3. Exit");
                     int choice = sc.nextInt();
-                    sc.nextLine();
                     if (choice == 1) {
                         doPartnerLogin();
                     } else if (choice == 2) {
@@ -93,10 +92,13 @@ public class Main {
                         doViewAllMyReservation(partner.getPartnerId());
                     } else if (choice == 4) {
                         System.out.println("Logging out...");
-
+                        System.out.println();
                         System.out.println("(╯°□°）╯︵ ┻━┻)");
+                        System.out.println();
 
                         System.out.println("Goodbye~");
+                        System.out.println();
+
                         loggedIn = false;
                         updatePartnerLogin(partner, false);
                         break;
@@ -410,14 +412,20 @@ public class Main {
 
     private static void doViewMyReservation(Long partnerId) {
         Scanner scanner = new Scanner(System.in);
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
         System.out.println("*** HoRS :: Holiday Reservation Client :: View My Reservation ***\n");
         System.out.println("Which reservation would you like to view?  (Enter reservation id) ");
         Long bookingId = scanner.nextLong();
         try {
             Booking booking = retrieveBookingByIdForPartner(bookingId, partnerId);
             System.out.println("Booking ID: " + bookingId);
-            System.out.println("Start Date: " + booking.getStartDate());
-            System.out.println("End Date: " + booking.getEndDate());
+            Date date = booking.getStartDate().toGregorianCalendar().getTime();
+            String start = df.format(date);
+            System.out.println("Start Date: " + start);
+            date = booking.getEndDate().toGregorianCalendar().getTime();
+            String end = df.format(date);
+            System.out.println("End Date: " + end);
             System.out.println("Booking Type: " + booking.getBookingType());
             System.out.println("Booking Status: " + booking.getBookingStatus());
             System.out.println("Total Cost: " + booking.getCost());
@@ -476,8 +484,10 @@ public class Main {
             System.out.println();
             System.out.println("--------------------------------------------------------------------------------------------------------------------");
             for (int i = 0; i < bookingIds.size(); i++) {
-                String start = df.format(list.get(i).getStartDate());
-                String end = df.format(list.get(i).getEndDate());
+                Date date = list.get(i).getStartDate().toGregorianCalendar().getTime();
+                String start = df.format(date);
+                date = list.get(i).getEndDate().toGregorianCalendar().getTime();
+                String end = df.format(date);
                 System.out.format("%-5s %20s %20s %18s %20s %20.2f ", list.get(i).getBookingId(), start, end, list.get(i).getBookingType().toString(), list.get(i).getBookingStatus(), list.get(i).getCost());
                 System.out.println();
 

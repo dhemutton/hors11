@@ -125,7 +125,7 @@ public class RoomRate implements Serializable {
     public Boolean getForPartner() {
         return forPartner;
     }
-
+ 
     public void setForPartner(Boolean forPartner) {
         this.forPartner = forPartner;
     }

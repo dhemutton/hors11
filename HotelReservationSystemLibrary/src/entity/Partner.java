@@ -36,13 +36,10 @@ public class Partner implements Serializable {
     
     @OneToMany(mappedBy = "partner")
     private List<Booking> bookings;
-    
-//    @OneToMany(mappedBy = "partner")
-//    private List<PartnerCustomer> partnerCustomers;
+   
 
     public Partner() {
          bookings = new ArrayList<>();
-//         partnerCustomers = new ArrayList<>();
 
     }
 
@@ -57,13 +54,6 @@ public class Partner implements Serializable {
         return isManager;
     }
 
-//    public List<PartnerCustomer> getPartnerCustomers() {
-//        return partnerCustomers;
-//    }
-//
-//    public void setPartnerCustomers(List<PartnerCustomer> partnerCustomers) {
-//        this.partnerCustomers = partnerCustomers;
-//    }
     public void setIsManager(Boolean isManager) {
         this.isManager = isManager;
     }
