@@ -39,7 +39,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
             return roomType;
         } catch (PersistenceException ex) {
 
-            throw new RoomTypeExistException("Room type already exists");
+            throw new RoomTypeExistException("Room type already exists or input details are too lengthy.");
         }
     }
 

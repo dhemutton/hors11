@@ -58,7 +58,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
             
             return room;
         } catch (PersistenceException ex) {
-            throw new RoomExistException("Room already exists");
+            throw new RoomExistException("Room already exists or input details are too lengthy. Room number can only be 4 digits.");
             
         } catch (RoomTypeNotFoundException ex) {
             throw new RoomTypeNotFoundException("Unable to create new room as the room type record does not exist");

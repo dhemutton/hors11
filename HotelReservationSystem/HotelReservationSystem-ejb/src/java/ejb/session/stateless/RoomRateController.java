@@ -54,7 +54,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             em.persist(roomRate);
             em.flush();
         } catch (PersistenceException ex) {
-            throw new RoomRateExistException("Room Rate already exists");
+            throw new RoomRateExistException("Room Rate already exists or input details are too lengthy.");
         }
         Date date = new Date();
         date.setHours(0);

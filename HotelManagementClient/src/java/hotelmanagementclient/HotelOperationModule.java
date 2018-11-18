@@ -25,6 +25,7 @@ import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeCannotHaveDuplicatePublishedOrNormalException;
 import exceptions.RoomTypeExistException;
 import exceptions.RoomTypeNotFoundException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -166,7 +167,7 @@ class HotelOperationModule {
             scanner.nextLine();
             System.out.print("Enter description> ");
             roomType.setDescription(scanner.nextLine().trim());
-            System.out.print("Enter size of room type> ");
+            System.out.print("Enter size of room type (enter in square metres) > ");
             roomType.setSize(scanner.nextInt());
             scanner.nextLine();
             System.out.print("Enter bed details> ");
@@ -701,9 +702,17 @@ class HotelOperationModule {
             scanner.nextLine();
             //If room rate is PROMO/PEAK, prompt for start and end date
             Date endDate, startDate;
-            System.out.println("Enter Rate Per Night: ");
-            roomRate.setRatePerNight(scanner.nextBigDecimal());
-            scanner.nextLine();
+            while (true) {
+                System.out.println("Enter Rate Per Night: ");
+                BigDecimal amt = scanner.nextBigDecimal();
+                scanner.nextLine();
+
+                if (amt.compareTo(new BigDecimal(0)) >= 0) {
+                    roomRate.setRatePerNight(amt);
+                    break;
+                }
+                System.out.println("Enter a valid amount!");
+            }
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             if (roomRate.getRateType() == PROMO || roomRate.getRateType() == PEAK) {
                 while (true) {
@@ -844,8 +853,11 @@ class HotelOperationModule {
                     System.out.println("Invalid option selected. Please try again");
                 }
             }
-        } catch (RoomRateNotFoundException | InputMismatchException ex) {
-            System.out.println("An error has occurred while retrieving the room rate" + ex.getMessage() + "!\n");
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving the room rate " + ex.getMessage() + "!\n");
+        } catch (InputMismatchException ex) {
+            System.out.println("Invalid input! \n");
+
         }
     }
 
@@ -863,10 +875,21 @@ class HotelOperationModule {
 
         System.out.println("Change Rate Per Night?  (Enter 'Y' to change) ");
         if (scanner.nextLine().trim().equals("Y")) {
-            System.out.println("Enter Rate Per Night: ");
-            roomRate.setRatePerNight(scanner.nextBigDecimal());
-            scanner.nextLine();
+            while (true) {
+                try {
+                    System.out.println("Enter Rate Per Night: ");
+                    BigDecimal amt = scanner.nextBigDecimal();
+                    if (amt.compareTo(new BigDecimal(0)) >= 0) {
+                        roomRate.setRatePerNight(amt);
+                        break;
+                    }
+                    scanner.nextLine();
+                    System.out.println("Enter a valid amount!");
+                } catch (NumberFormatException ex) {
+                    System.out.println("Enter a valid amount!");
 
+                }
+            }
         }
         Date startDate = new Date();
         Date endDate;
@@ -877,9 +900,6 @@ class HotelOperationModule {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         if (roomRate.getRateType().equals(PEAK) || roomRate.getRateType().equals(PROMO)) {
 
-            System.out.println("Enter Rate Per Night: ");
-            roomRate.setRatePerNight(scanner.nextBigDecimal());
-            scanner.nextLine();
             while (true) {
                 while (true) {
                     System.out.println("Please enter start date (dd/mm/yyyy):");
@@ -940,7 +960,7 @@ class HotelOperationModule {
         System.out.println("Room rate " + roomRate.getName() + " is enabled. (Update room rate to disable)");
 
         roomRateControllerRemote.updateRoomRate(roomRate, roomTypeId);
-        System.out.println("Room rate updated successfully!: \n");
+        System.out.println("Room rate updated successfully! \n");
     }
 
     private void doDeleteRoomRate(RoomRate roomRate) {
