@@ -1,10 +1,13 @@
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
+import enums.BookingStatusEnum;
 import enums.ExceptionTypeEnum;
+import static enums.ExceptionTypeEnum.UNASSIGNED;
 import static enums.RateTypeEnum.PEAK;
 import static enums.RateTypeEnum.PROMO;
 import java.util.ArrayList;
@@ -19,6 +22,9 @@ import javax.persistence.Query;
 
 @Stateless
 public class DailyController {
+
+    @EJB
+    private BookingControllerLocal bookingController;
 
     @EJB
     private RoomRateControllerLocal roomRateController;
@@ -54,7 +60,11 @@ public class DailyController {
         System.out.println("Day 2 reservation list size: " + day2ReservationList.size());
         //Obtain a list of all reservation that requires upgrades (deduct all assigned check in rooms from following method)
         List<Reservation> day2ReservationUpgrade = day2ReservationList;
-
+        List<Booking> bookings = bookingController.retrieveAllBookingsOnStartDate(today);
+        for(int i=bookings.size()-1; i>=0; i--) {
+            bookings.get(i).setBookingStatus(BookingStatusEnum.COMPLETED);
+            bookingController.updateBooking(bookings.get(i));
+        }
         //Declare all rooms from ending reservations to be vacant
         for (Reservation reservation : day1ReservationList) {
             Room room = reservation.getRoom();
@@ -84,7 +94,7 @@ public class DailyController {
                 for (Reservation reservation : day2ReservationList) {
                     if (reservation.getInitialRoomType() == roomType) {
                         temp = reservation;
-                        
+
                         break;
                     }
                 }
@@ -94,7 +104,9 @@ public class DailyController {
                 Room room = vacantRoomsByType.get(i);
                 temp.setRoom(room);
                 temp.setFinalRoomType(roomType);
-                temp.setExceptionType(ExceptionTypeEnum.NONE);
+                if (temp.getExceptionType() == UNASSIGNED) {
+                    temp.setExceptionType(ExceptionTypeEnum.NONE);
+                }
                 room.setIsVacant(Boolean.FALSE);
                 reservationController.updateReservation(temp);
                 roomController.mergeRoom(room);
@@ -122,7 +134,7 @@ public class DailyController {
             } else {
                 for (int i = 0; i < roomUpgradesRequired; i++) {
                     Boolean upgraded = false;
-                    Reservation temp = null;               
+                    Reservation temp = null;
                     for (Reservation reservation : day2ReservationUpgrade) {
                         if (reservation.getInitialRoomType() == roomType) {
                             temp = reservation;
@@ -132,28 +144,30 @@ public class DailyController {
                     if (temp == null) {
                         break;
                     }
-                    
-                    for(int k=upgradeLevel; k>0; k--) {
-                        if(upgraded == true) {
-                                    break;
-                                }
-                        System.out.println("Checking room upgrade at rank "+k);
-                        System.out.println("Available rooms left: "+vacantRoomList.size());
+
+                    for (int k = upgradeLevel; k > 0; k--) {
+                        if (upgraded == true) {
+                            break;
+                        }
+                        System.out.println("Checking room upgrade at rank " + k);
+                        System.out.println("Available rooms left: " + vacantRoomList.size());
                         for (int j = 0; j < vacantRoomList.size(); j++) {
                             if (vacantRoomList.get(j).getRoomType().getRanking() == k) {
                                 Room room = vacantRoomList.get(j);
                                 temp.setRoom(room);
                                 temp.setFinalRoomType(room.getRoomType());
-                                temp.setExceptionType(ExceptionTypeEnum.TYPE1);
+                                if (temp.getExceptionType() == UNASSIGNED) {
+                                    temp.setExceptionType(ExceptionTypeEnum.TYPE1);
+                                }
                                 room.setIsVacant(Boolean.FALSE);
                                 reservationController.updateReservation(temp);
                                 roomController.mergeRoom(room);
                                 vacantRoomList.remove(room);
                                 day2ReservationUpgrade.remove(temp);
                                 System.out.println("Reservation " + temp.getReservationId() + " had a room type upgrade from" + temp.getInitialRoomType().getName() + " to " + temp.getFinalRoomType().getName() + " with room " + room.getRoomId());
-                                System.out.println("Rooms left to upgrade: "+day2ReservationUpgrade.size());
+                                System.out.println("Rooms left to upgrade: " + day2ReservationUpgrade.size());
                                 upgraded = true;
-                                if(upgraded == true) {
+                                if (upgraded == true) {
                                     break;
                                 }
                             }
@@ -162,13 +176,13 @@ public class DailyController {
                 }
             }
         }
-        
+
         System.out.println("Vacant rooms after room assignment(with upgrade): " + vacantRoomList.size());
         //After completing all upgrades, assign remainder of reservation to type 2 error
-        for(int i=0; i<day2ReservationUpgrade.size(); i++) {
-            if(day2ReservationUpgrade.get(i).getFinalRoomType()==null) {
+        for (int i = 0; i < day2ReservationUpgrade.size(); i++) {
+            if (day2ReservationUpgrade.get(i).getFinalRoomType() == null) {
                 day2ReservationUpgrade.get(i).setExceptionType(ExceptionTypeEnum.TYPE2);
-                System.out.println("Reservation "+day2ReservationUpgrade.get(i).getId()+" has no room upgrade available");
+                System.out.println("Reservation " + day2ReservationUpgrade.get(i).getId() + " has no room upgrade available");
             }
         }
         //Check for early check in
@@ -192,12 +206,11 @@ public class DailyController {
         Date today = new Date();
         List<RoomRate> roomRates = roomRateController.retrieveAllEnabledRoomRates();
         int count = roomRates.size();
-        for(int i=0; i<count; i++) {
-            if(roomRates.get(i).getRateType()==PROMO||roomRates.get(i).getRateType()==PEAK) {
-                if(roomRates.get(i).getStartDate().after(today)||roomRates.get(i).getEndDate().before(today)) {
+        for (int i = 0; i < count; i++) {
+            if (roomRates.get(i).getRateType() == PROMO || roomRates.get(i).getRateType() == PEAK) {
+                if (roomRates.get(i).getStartDate().after(today) || roomRates.get(i).getEndDate().before(today)) {
                     roomRates.get(i).setIsValid(Boolean.TRUE);
-                }
-                else {
+                } else {
                     roomRates.get(i).setIsValid(Boolean.FALSE);
                 }
                 em.merge(roomRates.get(i));
@@ -205,7 +218,7 @@ public class DailyController {
             }
         }
     }
-    
+
     @Schedule(hour = "0")
     public void deleteAllRoomRates() {
         //Delete all room rates with no room types(assumed that room type was deleted)
@@ -264,5 +277,5 @@ public class DailyController {
             }
         }
     }
-    
+
 }
