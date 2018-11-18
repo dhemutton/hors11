@@ -7,6 +7,7 @@ import entity.Partner;
 import enums.EmployeeTypeEnum;
 import exceptions.EmployeeExistException;
 import exceptions.PartnerExistException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,33 +27,37 @@ class SystemAdministratorModule {
     public void runSystemAdminModule(Employee employee) {
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("*** HoRS :: System Administration ***\n");
+            try {
+                System.out.println("*** HoRS :: System Administration ***\n");
 
-            System.out.println("1. Create new employee");
-            System.out.println("2. View all employees");
-            System.out.println("3. Create new partner");
-            System.out.println("4. View all partners");
-            System.out.println("5. Logout");
-            int choice = sc.nextInt();
-            if (choice == 1) {
-                doCreateEmployee();
-            } else if (choice == 2) {
-                doViewAllEmployees();
-            } else if (choice == 3) {
-                doCreatePartner();
-            } else if (choice == 4) {
-                doViewAllPartners();
-            } else if (choice == 5) {
-                System.out.println("Logging out...");
-                System.out.println();
-                System.out.println("(╯°□°）╯︵ ┻━┻)");
-                System.out.println();
+                System.out.println("1. Create new employee");
+                System.out.println("2. View all employees");
+                System.out.println("3. Create new partner");
+                System.out.println("4. View all partners");
+                System.out.println("5. Logout");
+                int choice = sc.nextInt();
+                if (choice == 1) {
+                    doCreateEmployee();
+                } else if (choice == 2) {
+                    doViewAllEmployees();
+                } else if (choice == 3) {
+                    doCreatePartner();
+                } else if (choice == 4) {
+                    doViewAllPartners();
+                } else if (choice == 5) {
+                    System.out.println("Logging out...");
+                    System.out.println();
+                    System.out.println("(╯°□°）╯︵ ┻━┻)");
+                    System.out.println();
 
-                System.out.println("Goodbye~");
-                employeeControllerRemote.updateEmployeeLogin(employee, false);
-                break;
-            } else {
-                System.out.println("Invalid entry. Please try again");
+                    System.out.println("Goodbye~");
+                    employeeControllerRemote.updateEmployeeLogin(employee, false);
+                    break;
+                } else {
+                    System.out.println("Invalid entry. Please try again");
+                }
+            } catch (InputMismatchException ex) {
+                System.out.println("An error has occurred while creating the new employee: " + ex.getMessage() + "!\n");
             }
         }
     }
@@ -104,8 +109,9 @@ class SystemAdministratorModule {
         } catch (EmployeeExistException ex) {
             System.out.println("An error has occurred while creating the new employee: " + ex.getMessage() + "!\n");
 
+        } catch (InputMismatchException ex) {
+            System.out.println("An error has occurred while creating the new employee: " + ex.getMessage() + "!\n");
         }
-
     }
 
     private void doViewAllEmployees() {
@@ -154,9 +160,9 @@ class SystemAdministratorModule {
         if (listOfPartners.size() == 0) {
             System.out.println("No partners to view");
         } else {
-            System.out.printf("%-5s%-20s\n", "ID", "Username");
+            System.out.printf("%-5s%-20s%-25s\n", "ID", "Username", "Manager");
             for (Partner partner : listOfPartners) {
-                System.out.printf("%-5d%-20s\n", partner.getPartnerId(), partner.getUsername());
+                System.out.printf("%-5d%-20s%-25s\n", partner.getPartnerId(), partner.getUsername(), partner.getIsManager());
             }
             System.out.println();
         }

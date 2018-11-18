@@ -121,7 +121,7 @@ class FrontOfficeModule {
 
         //EDITED to show room type inventory
         HashMap<Long, Integer> map = new HashMap<>();
-        for (RoomType rt : roomTypeControllerRemote.retrieveAllEnabledAndIsUsedRoomType()) {
+        for (RoomType rt : roomTypeControllerRemote.retrieveAllRoomtype()) {
             int maxRoomInventory = roomControllerRemote.retrieveAllEnabledRoomsFromRoomType(rt).size();
             map.put(rt.getRoomTypeId(), maxRoomInventory);
         }

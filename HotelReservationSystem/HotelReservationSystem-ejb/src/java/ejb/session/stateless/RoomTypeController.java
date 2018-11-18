@@ -63,7 +63,8 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
 
     @Override
     public List<RoomType> retrieveAllEnabledAndIsUsedRoomTypesForWalkIn() {
-        Query query = em.createQuery("SELECT r FROM RoomType r JOIN r.roomRates rr WHERE r.isEnabled = true AND r.isUsed = true AND rr.rateType LIKE 'PUBLISHED'");
+        Query query = em.createQuery("SELECT r FROM RoomType r JOIN r.roomRates rr WHERE r.isEnabled = true AND r.isUsed = true AND rr.rateType LIKE 'PUBLISHED' AND rr.isEnabled = true");
+
         return query.getResultList();
     }
 
@@ -135,7 +136,7 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         query.setParameter("rt", rt);
         query.setParameter("today", today);
         List<Reservation> reservations = query.getResultList();
-        if (ranking == 1) {
+        if (ranking == 1) {  //immediately type 2 error
             for (Reservation reservation : reservations) {
                 reservation.setInitialRoomType(roomTypes.get(ranking));
                 reservation.setFinalRoomType(roomTypes.get(ranking));

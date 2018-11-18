@@ -55,82 +55,86 @@ class HotelOperationModule {
 
     public void runHotelOperationsModule(Employee employee) {
         Scanner sc = new Scanner(System.in);
-        if (employee.getEmployeeType().equals(OPERATIONSMANAGER)) { //Operations Manager
-            while (true) {
-                System.out.println("*** HoRS :: Hotel Operations :: Operations Manager ***\n");
+        try {
+            if (employee.getEmployeeType().equals(OPERATIONSMANAGER)) { //Operations Manager
+                while (true) {
+                    System.out.println("*** HoRS :: Hotel Operations :: Operations Manager ***\n");
 
-                System.out.println("Room Type Management");
-                System.out.println();
-                System.out.println("1. Create new room type");
-                System.out.println("2. View room type details");
-                System.out.println("3. View all room types");
+                    System.out.println("Room Type Management");
+                    System.out.println();
+                    System.out.println("1. Create new room type");
+                    System.out.println("2. View room type details");
+                    System.out.println("3. View all room types");
 
-                System.out.println("******************************************************************");
-                System.out.println();
+                    System.out.println("******************************************************************");
+                    System.out.println();
 
-                System.out.println("Room Management");
-                System.out.println();
-                System.out.println("4. Create new room");
-                System.out.println("5. Update room");
-                System.out.println("6. Delete room");
-                System.out.println("7. View all rooms");
+                    System.out.println("Room Management");
+                    System.out.println();
+                    System.out.println("4. Create new room");
+                    System.out.println("5. Update room");
+                    System.out.println("6. Delete room");
+                    System.out.println("7. View all rooms");
 
-                System.out.println("******************************************************************");
-                System.out.println();
+                    System.out.println("******************************************************************");
+                    System.out.println();
 
-                System.out.println("8. View room allocation Exception Report"); //show type 1 and type 2
-                System.out.println("9. Logout");
+                    System.out.println("8. View room allocation Exception Report"); //show type 1 and type 2
+                    System.out.println("9. Logout");
 
-                int choice = sc.nextInt();
-                if (choice == 1) {
-                    doCreateRoomType();
-                } else if (choice == 2) {
-                    doViewRoomTypeDetails();
-                } else if (choice == 3) {
-                    doViewAllRoomTypes();
+                    int choice = sc.nextInt();
+                    if (choice == 1) {
+                        doCreateRoomType();
+                    } else if (choice == 2) {
+                        doViewRoomTypeDetails();
+                    } else if (choice == 3) {
+                        doViewAllRoomTypes();
 
-                } else if (choice == 4) {
-                    doCreateRoom();
-                } else if (choice == 5) {
-                    doUpdateRoomDetails();
-                } else if (choice == 6) {
-                    doDeleteRoom();
-                } else if (choice == 7) {
-                    doViewAllRoom();
-                } else if (choice == 8) {
-                    doRoomAllocationExceptionReport();
-                } else if (choice == 9) {
-                    System.out.println("Logging out...");
-                    employeeControllerRemote.updateEmployeeLogin(employee, false);
-                    break;
-                } else {
-                    System.out.println("Invalid entry. Please try again");
+                    } else if (choice == 4) {
+                        doCreateRoom();
+                    } else if (choice == 5) {
+                        doUpdateRoomDetails();
+                    } else if (choice == 6) {
+                        doDeleteRoom();
+                    } else if (choice == 7) {
+                        doViewAllRoom();
+                    } else if (choice == 8) {
+                        doRoomAllocationExceptionReport();
+                    } else if (choice == 9) {
+                        System.out.println("Logging out...");
+                        employeeControllerRemote.updateEmployeeLogin(employee, false);
+                        break;
+                    } else {
+                        System.out.println("Invalid entry. Please try again");
+                    }
+                }
+            } else {                //Sales Manager
+                while (true) {
+                    System.out.println("*** HoRS :: Hotel Operations :: Sales Manager ***\n");
+
+                    System.out.println("1. Create new room rate");
+                    System.out.println("2. View room rate details");
+                    System.out.println("3. View all room rates");
+
+                    System.out.println("4. Exit");
+                    int choice = sc.nextInt();
+                    if (choice == 1) {
+                        doCreateRoomRate();
+                    } else if (choice == 2) {
+                        doViewRoomRateDetails();
+                    } else if (choice == 3) {
+                        doViewAllRoomRate();
+                    } else if (choice == 4) {
+                        System.out.println("Logging out...");
+                        employeeControllerRemote.updateEmployeeLogin(employee, false);
+                        break;
+                    } else {
+                        System.out.println("Invalid entry. Please try again");
+                    }
                 }
             }
-        } else {                //Sales Manager
-            while (true) {
-                System.out.println("*** HoRS :: Hotel Operations :: Sales Manager ***\n");
-
-                System.out.println("1. Create new room rate");
-                System.out.println("2. View room rate details");
-                System.out.println("3. View all room rates");
-
-                System.out.println("4. Exit");
-                int choice = sc.nextInt();
-                if (choice == 1) {
-                    doCreateRoomRate();
-                } else if (choice == 2) {
-                    doViewRoomRateDetails();
-                } else if (choice == 3) {
-                    doViewAllRoomRate();
-                } else if (choice == 4) {
-                    System.out.println("Logging out...");
-                    employeeControllerRemote.updateEmployeeLogin(employee, false);
-                    break;
-                } else {
-                    System.out.println("Invalid entry. Please try again");
-                }
-            }
+        } catch (InputMismatchException ex) {
+            System.out.println("An error has occurred while creating the new employee: " + ex.getMessage() + "!\n");
         }
     }
 
@@ -212,19 +216,25 @@ class HotelOperationModule {
             if (roomType.getRoomRates().isEmpty()) {
                 System.out.println("No room rates");
             } else {
-                for (RoomRate roomRate : roomType.getRoomRates()) {
-                    System.out.println("Rate Type: " + roomRate.getRateType());
-                    System.out.println("Rate Name: " + roomRate.getName());
-                    System.out.println("Rate Per Night: " + roomRate.getRatePerNight());
-                    System.out.println("Room Rate Start Date: " + roomRate.getStartDate());
-                    System.out.println("Room Rate End Date: " + roomRate.getEndDate());
-                    System.out.println("Room Rate Enabled? " + roomRate.getIsEnabled());
-                    System.out.println("Room Rate Valid? " + roomRate.getIsValid());
-                    System.out.println();
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-                    System.out.println("*************************************");
-                    System.out.println();
+                System.out.println("------------------------------------------------------------------------------------------------------------------");
+
+                System.out.printf("%-40s %-20s %-15s %-20s %-20s\n", "Room Rate Name", "Rate Type", "Rate/Night", "Start Date", "End Date");
+                System.out.println();
+
+                System.out.println("------------------------------------------------------------------------------------------------------------------");
+
+                for (RoomRate roomRate : roomType.getRoomRates()) {
+                    if (roomRate.getRateType() == PROMO || roomRate.getRateType() == PEAK) {
+                        System.out.printf("%-40s %-20s %-15.2f %-20s %-20s\n", roomRate.getName(), roomRate.getRateType().toString(), roomRate.getRatePerNight(), df.format(roomRate.getStartDate()), df.format(roomRate.getEndDate()));
+                    } else {
+                        System.out.printf("%-40s %-20s %-15.2f %-20s %-20s\n", roomRate.getName(), roomRate.getRateType().toString(), roomRate.getRatePerNight(), null, null);
+                    }
                 }
+                System.out.println();
+                System.out.println("***************************************************************************************************************************");
+
             }
             System.out.println();
 

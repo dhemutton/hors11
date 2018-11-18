@@ -43,8 +43,7 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
 
             return employee;
         } catch (PersistenceException ex) {
-
-            throw new EmployeeExistException("Employee with same NRIC already exists");
+            throw new EmployeeExistException("Employee with same NRIC already exists or input details are too lengthy.");
         }
     }
 

@@ -409,6 +409,7 @@ class MainApp {
             System.out.println("End Date: " + df.format(booking.getEndDate()));
             System.out.println("Booking Type: " + booking.getBookingType());
             System.out.println("Booking Status: " + booking.getBookingStatus());
+
             System.out.println("Total Cost: " + booking.getCost());
             List<Reservation> reservations = reservationControllerRemote.retrieveAllReservationFromBooking(booking.getBookingId());
             List<RoomType> ranking = roomTypeControllerRemote.retrieveAllRoomtype();
